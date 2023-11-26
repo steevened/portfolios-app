@@ -33,10 +33,12 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <div className="hidden lg:block fixed h-full top-[60px] border-r p-2.5 w-full max-w-[250px]">
+            <div className="hidden lg:block fixed h-full top-[60px] border-r p-2.5 w-full max-w-[250px] ">
               <Menu />
             </div>
-            {children}
+            <div className="lg:ml-[250px] mt-[60px] px-5 py-2.5">
+              {children}
+            </div>
           </ThemeProvider>
         </NextAuthSessionProvider>
       </body>
