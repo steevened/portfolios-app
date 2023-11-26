@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import Menu from './menu';
+import Link from "next/link";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import Menu from "./menu";
 
 export default function Navbar() {
   return (
@@ -16,7 +16,7 @@ export default function Navbar() {
             </div>
             <Link href="/" className="flex ">
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                TryNow
+                FirstDev
               </span>
             </Link>
 
@@ -33,14 +33,14 @@ export default function Navbar() {
                     fill="none"
                     viewBox="0 0 20 20"
                   >
-                    {' '}
+                    {" "}
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />{' '}
+                    />{" "}
                   </svg>
                 </div>
                 <Input
@@ -70,7 +70,7 @@ export default function Navbar() {
                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                   clip-rule="evenodd"
                 ></path>
-              </svg>{' '}
+              </svg>{" "}
               Postear
             </button>
             <button
@@ -89,9 +89,9 @@ export default function Navbar() {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
               </svg>
@@ -151,9 +151,9 @@ export default function Navbar() {
                     fill="currentColor"
                     viewBox="0 0 18 18"
                   >
-                    {' '}
-                    <path d="M15.977.783A1 1 0 0 0 15 0H3a1 1 0 0 0-.977.783L.2 9h4.239a2.99 2.99 0 0 1 2.742 1.8 1.977 1.977 0 0 0 3.638 0A2.99 2.99 0 0 1 13.561 9H17.8L15.977.783ZM6 2h6a1 1 0 1 1 0 2H6a1 1 0 0 1 0-2Zm7 5H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Z" />{' '}
-                    <path d="M1 18h16a1 1 0 0 0 1-1v-6h-4.439a.99.99 0 0 0-.908.6 3.978 3.978 0 0 1-7.306 0 .99.99 0 0 0-.908-.6H0v6a1 1 0 0 0 1 1Z" />{' '}
+                    {" "}
+                    <path d="M15.977.783A1 1 0 0 0 15 0H3a1 1 0 0 0-.977.783L.2 9h4.239a2.99 2.99 0 0 1 2.742 1.8 1.977 1.977 0 0 0 3.638 0A2.99 2.99 0 0 1 13.561 9H17.8L15.977.783ZM6 2h6a1 1 0 1 1 0 2H6a1 1 0 0 1 0-2Zm7 5H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Z" />{" "}
+                    <path d="M1 18h16a1 1 0 0 0 1-1v-6h-4.439a.99.99 0 0 0-.908.6 3.978 3.978 0 0 1-7.306 0 .99.99 0 0 0-.908-.6H0v6a1 1 0 0 0 1 1Z" />{" "}
                   </svg>
                   <div className="text-sm font-medium text-gray-900 dark:text-white">
                     Inbox
@@ -223,9 +223,9 @@ export default function Navbar() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M1.75 15.363a4.954 4.954 0 0 0 2.638 1.574c2.345.572 4.653-.434 5.155-2.247.502-1.813-1.313-3.79-3.657-4.364-2.344-.574-4.16-2.551-3.658-4.364.502-1.813 2.81-2.818 5.155-2.246A4.97 4.97 0 0 1 10 5.264M6 17.097v1.82m0-17.5v2.138"
                     />
                   </svg>
@@ -265,9 +265,9 @@ export default function Navbar() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
                     />
                   </svg>
@@ -302,11 +302,11 @@ const SideMenuSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size={'icon'} variant={'ghost'}>
+        <Button size={"icon"} variant={"ghost"}>
           <HamburgerMenuIcon className="w-6 h-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side={'left'}>
+      <SheetContent side={"left"}>
         <div className="my-5">
           <Menu />
         </div>
