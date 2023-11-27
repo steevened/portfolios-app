@@ -1,5 +1,8 @@
-import { getServerSession } from "next-auth/next";
+import { getServerAuthSession } from "@/lib/auth";
 import SignIn from "./sign-in";
+import SignOut from "./sign-out";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,13 +10,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import authOptions from "@/lib/auth";
-import SignOut from "./sign-out";
 
 export default async function UserButton() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
 
   if (!session?.user) return <SignIn />;
 

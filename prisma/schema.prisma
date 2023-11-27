@@ -46,7 +46,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   profile       Profile?
-  projects       Project[]
+  projects      Project[]
 }
 
 model VerificationToken {
@@ -58,18 +58,18 @@ model VerificationToken {
 }
 
 model Profile {
-  id     String @id @default(cuid())
-  bio    String
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  id        String         @id @default(cuid())
+  bio       String
+  userId    String         @unique
+  user      User           @relation(fields: [userId], references: [id])
   developer DeveloperRole?
 }
 
 model DeveloperRole {
-  id   String @id @default(cuid())
-  name String @unique
-  developerId String @unique
-  developer Profile @relation(fields: [developerId], references: [id])
+  id          String  @id @default(cuid())
+  name        String  @unique
+  developerId String  @unique
+  developer   Profile @relation(fields: [developerId], references: [id])
 }
 
 model Technology {
@@ -79,23 +79,21 @@ model Technology {
   projects ProjectTechnology[]
 }
 
-
-
 model Project {
   id           String              @id @default(cuid())
   name         String
   slug         String              @unique
-  description  String
+  description  String?
   liveUrl      String?
   githubUrl    String?
   technologies ProjectTechnology[]
-  published Boolean @default(false)
+  published    Boolean             @default(false)
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
   views        Int                 @default(0)
   authorId     String
   author       User                @relation(fields: [authorId], references: [id])
-  gallery ProjectGallery[] 
+  gallery      ProjectGallery[]
 }
 
 model ProjectTechnology {
@@ -107,12 +105,9 @@ model ProjectTechnology {
   @@id([projectId, technologyId])
 }
 
-
-
 model ProjectGallery {
-  id String @id @default(cuid())
-  url String
+  id        String  @id @default(cuid())
+  url       String
   projectId String
-  project Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
 }
-

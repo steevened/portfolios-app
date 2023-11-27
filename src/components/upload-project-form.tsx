@@ -26,23 +26,8 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Textarea } from "./ui/textarea";
-
-const projectSchema = z.object({
-  name: z.string().min(3).max(50),
-  liveUrl: z
-    .string()
-    .url({
-      message: "Invalid url.",
-    })
-    .or(z.string().optional()),
-  githubUrl: z
-    .string()
-    .url({
-      message: "Invalid url.",
-    })
-    .or(z.string().optional()),
-  description: z.string().min(10).max(1000).or(z.string().optional()),
-});
+import { useToast } from "@/components/ui/use-toast";
+import { projectSchema } from "@/lib/schemas/project.schema";
 
 export function UploadProjectForm({
   technologies,
@@ -51,6 +36,7 @@ export function UploadProjectForm({
   technologies: Technology[];
   onContinue: () => void;
 }) {
+  const { toast } = useToast();
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
   >([]);
@@ -65,9 +51,34 @@ export function UploadProjectForm({
     },
   });
 
-  function onSubmit(data: z.infer<typeof projectSchema>) {
-    console.log(data);
-    onContinue();
+  async function onSubmit(data: z.infer<typeof projectSchema>) {
+    if (technologiesSelected.length <= 0) {
+      return toast({
+        variant: "destructive",
+        title: "Wait!",
+        description: "You must select at least one technology.",
+      });
+    }
+
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: data.name,
+          liveUrl: data.liveUrl,
+          githubUrl: data.githubUrl,
+          description: data.description,
+          technologies: technologiesSelected.map((t) => t.id),
+        }),
+      });
+      onContinue();
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -177,32 +188,25 @@ export function UploadProjectForm({
               ))}
             </div>
           </div>
-          <div className="grid w-full gap-1.5">
-            <Label htmlFor="message">Description</Label>
-            <Textarea
-              rows={4}
-              placeholder="Type your project description."
-              id="message"
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Project name</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      rows={4}
-                      placeholder="Type your project name."
-                      {...field}
-                    />
-                  </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    rows={4}
+                    placeholder="Type your project description."
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <DialogFooter>
           <DialogClose asChild>
