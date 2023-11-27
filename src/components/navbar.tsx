@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import Link from "next/link";
 import Menu from "./menu";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import UserButton from "./user-button";
 
 export default function Navbar() {
@@ -21,7 +20,7 @@ export default function Navbar() {
               </span>
             </Link>
 
-            <form action="#" method="GET" className="hidden lg:block lg:pl-2">
+            {/* <form action="#" method="GET" className="hidden lg:block lg:pl-2">
               <label htmlFor="topbar-search" className="sr-only">
                 Search
               </label>
@@ -52,10 +51,10 @@ export default function Navbar() {
                   placeholder="Search"
                 />
               </div>
-            </form>
+            </form> */}
           </div>
           <div className="flex items-center lg:order-2">
-            <button
+            {/* <button
               id="toggleSidebarMobileSearch"
               type="button"
               className="p-2 text-gray-500 rounded-lg lg:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -77,7 +76,7 @@ export default function Navbar() {
                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
               </svg>
-            </button>
+            </button> */}
 
             <UserButton />
           </div>

@@ -1,5 +1,3 @@
-import TechnologiesGroup from "@/components/technologies-group";
-
 export default function DiscoverLayout({
   children,
 }: {

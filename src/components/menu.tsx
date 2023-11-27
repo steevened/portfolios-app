@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 
 export default function Menu() {
   return (
@@ -8,7 +8,8 @@ export default function Menu() {
         <Link
           className={buttonVariants({
             variant: "secondary",
-            className: "w-full space-x-2",
+            className:
+              "w-full flex gap-2 lg:flex-col lg:h-full lg:gap-1 lg:text-xs lg:aspect-square",
           })}
           href={"/"}
         >

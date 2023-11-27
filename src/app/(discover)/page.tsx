@@ -10,7 +10,7 @@ export default function Home({
   return (
     <div>
       <TechnologiesGroup searchParams={searchParams} />
-      <div className="max-w-screen-md mx-auto"></div>
+      <div className=""></div>
     </div>
   );
 }
