@@ -9,7 +9,9 @@ export default function Home({
 }) {
   return (
     <div>
-      <TechnologiesGroup searchParams={searchParams} />
+      <div className="fixed">
+        <TechnologiesGroup searchParams={searchParams} />
+      </div>
       <div className=""></div>
     </div>
   );
