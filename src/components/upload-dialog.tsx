@@ -38,7 +38,7 @@ export default function UploadDialog({
       </DialogTrigger>
       <DialogContent className="max-w-screen-md @container">
         <ScrollArea className="h-full max-h-[80svh]">
-          <div className="px-1">
+          <div className="p-4">
             <DialogHeader>
               <DialogTitle>Upload project</DialogTitle>
               <DialogDescription>

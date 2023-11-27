@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/theme-provider";
-import Link from "next/link";
-import Navbar from "@/components/navbar";
 import Menu from "@/components/menu";
+import Navbar from "@/components/navbar";
 import { NextAuthSessionProvider } from "@/components/session-provider";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { getServerSession } from "next-auth";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -39,6 +39,7 @@ export default async function RootLayout({
             <div className="lg:ml-[100px] mt-[55px]  px-5 py-2.5  lg:p-2.5  relative">
               {children}
             </div>
+            <Toaster />
           </ThemeProvider>
         </NextAuthSessionProvider>
       </body>
