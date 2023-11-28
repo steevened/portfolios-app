@@ -1,19 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Technology } from "@prisma/client";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Project, Technology } from '@prisma/client';
+import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from "./ui/command";
-import { DialogClose, DialogFooter } from "./ui/dialog";
+} from './ui/command';
+import { DialogClose, DialogFooter } from './ui/dialog';
 import {
   Form,
   FormControl,
@@ -21,50 +21,60 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Textarea } from "./ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { projectSchema } from "@/lib/schemas/project.schema";
+} from './ui/form';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Textarea } from './ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import { projectSchema } from '@/lib/schemas/project.schema';
+import { ProjectWithTechnologies } from '@/lib/definitions/types';
 
 export function UploadProjectForm({
   technologies,
   onContinue,
+  projectOnDraft,
 }: {
   technologies: Technology[];
   onContinue: () => void;
+  projectOnDraft: ProjectWithTechnologies | null;
 }) {
   const { toast } = useToast();
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
-  >([]);
+  >(projectOnDraft?.technologies.map((t) => t.technology) || []);
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
-    defaultValues: {
-      name: "",
-      liveUrl: "",
-      githubUrl: "",
-      description: "",
-    },
+    defaultValues: projectOnDraft
+      ? {
+          name: projectOnDraft.name,
+          liveUrl: projectOnDraft.liveUrl || '',
+          githubUrl: projectOnDraft.githubUrl || '',
+          description: projectOnDraft.description || '',
+        }
+      : {
+          name: '',
+          liveUrl: '',
+          githubUrl: '',
+          description: '',
+        },
   });
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
     if (technologiesSelected.length <= 0) {
       return toast({
-        variant: "destructive",
-        title: "Wait!",
-        description: "You must select at least one technology.",
+        variant: 'destructive',
+        title: 'Wait!',
+        description: 'You must select at least one technology.',
       });
     }
 
     try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
+      const res = await fetch('/api/projects', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: data.name,
@@ -208,9 +218,9 @@ export function UploadProjectForm({
             )}
           />
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-y-2.5">
           <DialogClose asChild>
-            <Button type="button" variant={"ghost"}>
+            <Button type="button" variant={'ghost'}>
               Cancel
             </Button>
           </DialogClose>

@@ -1,7 +1,7 @@
-"use client";
-import { UploadIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import { Button } from "./ui/button";
+'use client';
+import { UploadIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { Button } from './ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,15 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { UploadProjectForm } from "./upload-project-form";
-import { Technology } from "@prisma/client";
-import { ScrollArea } from "./ui/scroll-area";
+} from './ui/dialog';
+import { UploadProjectForm } from './upload-project-form';
+import { Project, ProjectTechnology, Technology } from '@prisma/client';
+import { ScrollArea } from './ui/scroll-area';
+import { ProjectWithTechnologies } from '@/lib/definitions/types';
 
 export default function UploadDialog({
   technologies,
+  projectOnDraft,
 }: {
   technologies: Technology[];
+  projectOnDraft: ProjectWithTechnologies | null;
 }) {
   const [step, setStep] = useState<1 | 2>(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +35,7 @@ export default function UploadDialog({
   return (
     <Dialog open={isOpen} onOpenChange={handleSetIsOpen}>
       <DialogTrigger asChild>
-        <Button variant={"ghost"} className="rounded-full aspect-square p-0">
+        <Button variant={'ghost'} className="rounded-full aspect-square p-0">
           <UploadIcon />
         </Button>
       </DialogTrigger>
@@ -41,13 +44,14 @@ export default function UploadDialog({
           <div className="p-4">
             <DialogHeader>
               <DialogTitle>Upload project</DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="max-sm:text-sm">
                 Click on the button below to upload your project
               </DialogDescription>
             </DialogHeader>
             {step === 1 ? (
               <UploadProjectForm
                 technologies={technologies}
+                projectOnDraft={projectOnDraft}
                 onContinue={() => {
                   setStep(2);
                 }}
