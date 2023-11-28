@@ -1,11 +1,11 @@
 import { getServerAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
-import { Project } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerAuthSession();
 
   if (!session || !session.user)
@@ -17,9 +17,16 @@ export async function POST(request: NextRequest) {
         status: 401,
       }
     );
+  const { id } = params;
+
+  const body = await request.json();
 
   try {
-    const project = await prisma.project.create({
+    const projectUpdated = await prisma.project.update({
+      where: {
+        id,
+      },
+
       data: {
         ...body,
         technologies: {
@@ -29,16 +36,19 @@ export async function POST(request: NextRequest) {
             };
           }),
         },
-        slug: body.name.toLowerCase().replace(' ', '-'),
-        authorId: session.user.id,
       },
     });
+
     return NextResponse.json(
-      { message: 'Operation successful', data: project },
-      { status: 201 }
+      {
+        message: 'Operation successful',
+        data: projectUpdated,
+      },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
+
     return NextResponse.json(
       { message: 'Operation failed', error },
       { status: 500 }

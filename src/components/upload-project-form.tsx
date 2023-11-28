@@ -30,6 +30,55 @@ import { useToast } from '@/components/ui/use-toast';
 import { projectSchema } from '@/lib/schemas/project.schema';
 import { ProjectWithTechnologies } from '@/lib/definitions/types';
 
+async function createPost({
+  data,
+  technologiesSelected,
+}: {
+  data: z.infer<typeof projectSchema>;
+  technologiesSelected: Technology[];
+}) {
+  const res = await fetch('/api/projects', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: data.name,
+      liveUrl: data.liveUrl,
+      githubUrl: data.githubUrl,
+      description: data.description,
+      technologies: technologiesSelected.map((t) => t.id),
+    }),
+  });
+  return await res.json();
+}
+
+async function updatePost({
+  data,
+  technologiesSelected,
+  id,
+}: {
+  data: z.infer<typeof projectSchema>;
+  technologiesSelected: Technology[];
+  id: string;
+}) {
+  const res = await fetch(`/api/projects/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: data.name,
+      liveUrl: data.liveUrl,
+      githubUrl: data.githubUrl,
+      description: data.description,
+      technologies: technologiesSelected.map((t) => t.id),
+    }),
+  });
+
+  return res;
+}
+
 export function UploadProjectForm({
   technologies,
   onContinue,
@@ -71,21 +120,19 @@ export function UploadProjectForm({
     }
 
     try {
-      const res = await fetch('/api/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          liveUrl: data.liveUrl,
-          githubUrl: data.githubUrl,
-          description: data.description,
-          technologies: technologiesSelected.map((t) => t.id),
-        }),
-      });
-      onContinue();
-      return await res.json();
+      if (projectOnDraft) {
+        const res = await updatePost({
+          data,
+          technologiesSelected,
+          id: projectOnDraft.id,
+        });
+        onContinue();
+        return await res.json();
+      } else {
+        const res = await createPost({ data, technologiesSelected });
+        onContinue();
+        return await res.json();
+      }
     } catch (error) {
       console.log(error);
     }

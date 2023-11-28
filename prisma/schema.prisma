@@ -92,7 +92,7 @@ model Project {
   updatedAt    DateTime            @updatedAt
   views        Int                 @default(0)
   authorId     String
-  author       User                @relation(fields: [authorId], references: [id])
+  author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   gallery      ProjectGallery[]
 }
 
