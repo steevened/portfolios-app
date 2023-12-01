@@ -28,14 +28,11 @@ export async function PUT(
       },
 
       data: {
-        ...body,
-        technologies: {
-          connect: body.technologies.map((technologyId: number) => {
-            return {
-              technologyId,
-            };
-          }),
-        },
+        // ...body,
+        slug: body.name.toLowerCase().trim().replace(' ', '-'),
+        technologies: body.technologies.map((technologyId: number) => ({
+          technologyId,
+        })),
       },
     });
 

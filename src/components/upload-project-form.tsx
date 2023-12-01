@@ -50,7 +50,7 @@ async function createPost({
       technologies: technologiesSelected.map((t) => t.id),
     }),
   });
-  return await res.json();
+  return res;
 }
 
 async function updatePost({
@@ -109,6 +109,8 @@ export function UploadProjectForm({
           description: '',
         },
   });
+
+  console.log(projectOnDraft);
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
     if (technologiesSelected.length <= 0) {

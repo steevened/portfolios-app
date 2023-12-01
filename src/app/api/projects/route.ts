@@ -1,6 +1,5 @@
 import { getServerAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
-import { Project } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -22,15 +21,15 @@ export async function POST(request: NextRequest) {
     const project = await prisma.project.create({
       data: {
         ...body,
+        slug: body.name.toLowerCase().trim().replace(' ', '-'),
+        authorId: session.user.id,
         technologies: {
-          connect: body.technologies.map((technologyId: number) => {
+          create: body.technologies.map((technologyId: number) => {
             return {
               technologyId,
             };
           }),
         },
-        slug: body.name.toLowerCase().replace(' ', '-'),
-        authorId: session.user.id,
       },
     });
     return NextResponse.json(
