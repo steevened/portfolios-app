@@ -8,6 +8,7 @@ import { NextAuthSessionProvider } from "@/components/session-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { getServerSession } from "next-auth";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,8 @@ export default async function RootLayout({
   const session = await getServerSession();
   return (
     <html lang="en">
-      <body className={`${inter.className} dark`}>
+      <body className={`${inter.className} `}>
+        <NextTopLoader />
         <NextAuthSessionProvider session={session}>
           <ThemeProvider
             attribute="class"

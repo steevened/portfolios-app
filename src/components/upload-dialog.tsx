@@ -1,7 +1,9 @@
-'use client';
-import { UploadIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
-import { Button } from './ui/button';
+"use client";
+import { ProjectWithTechnologies } from "@/lib/definitions/types";
+import { Technology } from "@prisma/client";
+import { UploadIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,11 +11,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
-import { UploadProjectForm } from './upload-project-form';
-import { Project, ProjectTechnology, Technology } from '@prisma/client';
-import { ScrollArea } from './ui/scroll-area';
-import { ProjectWithTechnologies } from '@/lib/definitions/types';
+} from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
+import { UploadGalleryForm } from "./upload-gallery-form";
+import { UploadProjectForm } from "./upload-project-form";
 
 export default function UploadDialog({
   technologies,
@@ -35,7 +36,7 @@ export default function UploadDialog({
   return (
     <Dialog open={isOpen} onOpenChange={handleSetIsOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'} className="rounded-full aspect-square p-0">
+        <Button variant="outline" className="rounded-full" size="icon">
           <UploadIcon />
         </Button>
       </DialogTrigger>
@@ -57,7 +58,14 @@ export default function UploadDialog({
                 }}
               />
             ) : (
-              <div>step 2</div>
+              <>
+                {projectOnDraft && projectOnDraft.id ? (
+                  <UploadGalleryForm
+                    projectId={projectOnDraft.id}
+                    setStep={setStep}
+                  />
+                ) : null}
+              </>
             )}
           </div>
         </ScrollArea>

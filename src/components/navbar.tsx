@@ -1,13 +1,14 @@
-import { getServerAuthSession } from '@/lib/auth';
-import { getAllTechnologies } from '@/lib/services/technologies.service';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
-import Menu from './menu';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import UploadDialog from './upload-dialog';
-import UserButton from './user-button';
-import { getProjectOnDraft } from '@/lib/services/projects.service';
+import { getServerAuthSession } from "@/lib/auth";
+import { getAllTechnologies } from "@/lib/services/technologies.service";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import Menu from "./menu";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import UploadDialog from "./upload-dialog";
+import UserButton from "./user-button";
+import { getProjectOnDraft } from "@/lib/services/projects.service";
+import { ThemeToggle } from "./toggle-theme";
 
 export default async function Navbar() {
   const technologies = await getAllTechnologies();
@@ -35,6 +36,7 @@ export default async function Navbar() {
               />
             ) : null}
             <UserButton />
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -46,11 +48,11 @@ const SideMenuSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size={'icon'} variant={'ghost'}>
+        <Button size={"icon"} variant={"ghost"}>
           <HamburgerMenuIcon className="w-6 h-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side={'left'}>
+      <SheetContent side={"left"}>
         <div className="my-5">
           <Menu />
         </div>

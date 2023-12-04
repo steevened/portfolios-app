@@ -281,7 +281,7 @@ export function UploadProjectForm({
         </div>
         <DialogFooter className="gap-y-2.5">
           <DialogClose asChild>
-            <Button type="button" variant={"ghost"}>
+            <Button type="button" variant={"outline"}>
               Cancel
             </Button>
           </DialogClose>
