@@ -1,6 +1,7 @@
-import { getServerAuthSession } from '@/lib/auth';
-import { prisma } from '@/lib/db/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { getServerAuthSession } from "@/lib/auth";
+import { prisma } from "@/lib/db/prisma";
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
   request: NextRequest,
@@ -11,7 +12,7 @@ export async function PUT(
   if (!session || !session.user)
     return NextResponse.json(
       {
-        message: 'Unauthorized',
+        message: "Unauthorized",
       },
       {
         status: 401,
@@ -22,23 +23,29 @@ export async function PUT(
   const body = await request.json();
 
   try {
+    const { technologies, ...restBody } = body;
     const projectUpdated = await prisma.project.update({
       where: {
         id,
       },
 
       data: {
-        // ...body,
-        slug: body.name.toLowerCase().trim().replace(' ', '-'),
-        technologies: body.technologies.map((technologyId: number) => ({
-          technologyId,
-        })),
+        ...restBody,
+        slug: restBody.name.toLowerCase().trim().replace(" ", "-"),
+        technologies: {
+          deleteMany: {},
+          create: technologies.map((technologyId: number) => {
+            return {
+              technologyId,
+            };
+          }),
+        },
       },
     });
 
     return NextResponse.json(
       {
-        message: 'Operation successful',
+        message: "Operation successful",
         data: projectUpdated,
       },
       { status: 200 }
@@ -47,7 +54,7 @@ export async function PUT(
     console.log(error);
 
     return NextResponse.json(
-      { message: 'Operation failed', error },
+      { message: "Operation failed", error },
       { status: 500 }
     );
   }

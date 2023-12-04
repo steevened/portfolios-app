@@ -1,5 +1,7 @@
 import { prisma } from "../db/prisma";
+import { unstable_noStore as noStore } from "next/cache";
 
-export async function getAllTechnologies() {
+export const getAllTechnologies = async () => {
+  noStore();
   return await prisma.technology.findMany();
-}
+};

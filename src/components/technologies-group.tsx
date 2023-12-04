@@ -1,6 +1,5 @@
-import { prisma } from "@/lib/db/prisma";
-import ToggleTechnology from "./toggle-technology";
 import { getAllTechnologies } from "@/lib/services/technologies.service";
+import ToggleTechnology from "./toggle-technology";
 
 export default async function TechnologiesGroup({
   searchParams,
@@ -9,7 +8,6 @@ export default async function TechnologiesGroup({
     [key: string]: string | string[] | undefined;
   };
 }) {
-  console.log({ searchParams });
   const technologies = await getAllTechnologies();
   return <ToggleTechnology technologies={technologies} />;
 }
