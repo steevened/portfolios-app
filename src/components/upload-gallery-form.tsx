@@ -4,32 +4,49 @@ import { Button } from "./ui/button";
 import { DialogFooter } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useRouter } from "next/navigation";
+import { useToast } from "./ui/use-toast";
 
 export const UploadGalleryForm = ({
   setStep,
   projectId,
+  onContinue,
 }: {
   setStep: Dispatch<SetStateAction<1 | 2>>;
+  onContinue: () => void;
   projectId: string;
 }) => {
   const [file, setFile] = useState<File | undefined>(undefined);
+  const router = useRouter();
+
+  const { toast } = useToast();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.set("file", file as File);
+    try {
+      const formData = new FormData();
+      formData.set("file", file as File);
 
-    const res = await fetch(
-      `/api/projects/${projectId}/gallery?skip=${!!!file}`,
-      {
+      await fetch(`/api/projects/${projectId}/gallery?skip=${!!!file}`, {
         method: "POST",
         body: formData,
-      }
-    );
+      });
 
-    const data = await res.json();
-    console.log(data);
+      router.refresh();
+      onContinue();
+      return toast({
+        variant: "default",
+        title: "Success!",
+        description: "Your project has been successfully uploaded",
+      });
+    } catch (error) {
+      return toast({
+        variant: "destructive",
+        title: "Error!",
+        description: "Something went wrong, please try again",
+      });
+    }
   };
 
   return (

@@ -63,6 +63,7 @@ export default function UploadDialog({
                   <UploadGalleryForm
                     projectId={projectOnDraft.id}
                     setStep={setStep}
+                    onContinue={() => setIsOpen(false)}
                   />
                 ) : null}
               </>

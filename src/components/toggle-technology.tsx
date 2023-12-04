@@ -58,78 +58,82 @@ export default function ToggleTechnology({
   }, [techArray]);
 
   return (
-    <div
-      ref={tabsContainerRef}
-      className="flex justify-start w-min  gap-2.5 items-center"
-    >
-      <label
-        className="flex items-center  gap-2.5"
-        role="button"
-        onClick={handleClickInside}
+    <div className="w-full overflow-x-auto snap-x scrollbar-hide">
+      <div
+        ref={tabsContainerRef}
+        className="flex justify-start w-min  gap-2.5 items-center "
       >
-        <span
-          className={buttonVariants({
-            size: "sm",
-            variant: "secondary",
-            className: "p-0",
-          })}
+        <label
+          className="flex items-center  gap-2.5"
+          role="button"
+          onClick={handleClickInside}
         >
-          <MagnifyingGlassIcon className="font-semibold" />
-        </span>
-        {isSearchOpen ? (
-          <Input
-            value={searchValue}
-            className="h-8 min-w-[150px]"
-            placeholder="Search technology"
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-        ) : null}
-      </label>
-      <Toggle
-        size={"sm"}
-        pressed={techArray.length === 0}
-        onPressedChange={(pressed) => {
-          if (pressed) {
-            setTechArray([]);
-          }
-        }}
-        value="all"
-      >
-        All
-      </Toggle>
-      {technologies
-        .filter((t) => t.name.toUpperCase().includes(searchValue.toUpperCase()))
-        .map((technology) => (
-          <Toggle
-            size={"sm"}
-            pressed={techArray.includes(technology.slug)}
-            onPressedChange={(pressed) => {
-              if (pressed) {
-                if (techArray.includes(technology.slug)) {
-                  setTechArray((prevValues) => {
-                    return prevValues.filter((v) => v !== technology.slug);
-                  });
-                  router.replace(
-                    pathname,
-                    createQueryString("tech", techArray.join("_"))
-                  );
+          <span
+            className={buttonVariants({
+              size: "sm",
+              variant: "secondary",
+              className: "p-0",
+            })}
+          >
+            <MagnifyingGlassIcon className="font-semibold" />
+          </span>
+          {isSearchOpen ? (
+            <Input
+              value={searchValue}
+              className="h-8 min-w-[150px]"
+              placeholder="Search technology"
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          ) : null}
+        </label>
+        <Toggle
+          size={"sm"}
+          pressed={techArray.length === 0}
+          onPressedChange={(pressed) => {
+            if (pressed) {
+              setTechArray([]);
+            }
+          }}
+          value="all"
+        >
+          All
+        </Toggle>
+        {technologies
+          .filter((t) =>
+            t.name.toUpperCase().includes(searchValue.toUpperCase())
+          )
+          .map((technology) => (
+            <Toggle
+              size={"sm"}
+              pressed={techArray.includes(technology.slug)}
+              onPressedChange={(pressed) => {
+                if (pressed) {
+                  if (techArray.includes(technology.slug)) {
+                    setTechArray((prevValues) => {
+                      return prevValues.filter((v) => v !== technology.slug);
+                    });
+                    router.replace(
+                      pathname,
+                      createQueryString("tech", techArray.join("_"))
+                    );
+                  } else {
+                    setTechArray((prevValues) =>
+                      prevValues.concat(technology.slug)
+                    );
+                  }
                 } else {
                   setTechArray((prevValues) =>
-                    prevValues.concat(technology.slug)
+                    prevValues.filter((v) => v !== technology.slug)
                   );
                 }
-              } else {
-                setTechArray((prevValues) =>
-                  prevValues.filter((v) => v !== technology.slug)
-                );
-              }
-            }}
-            key={technology.id}
-            value={technology.slug}
-          >
-            {technology.name}
-          </Toggle>
-        ))}
+              }}
+              key={technology.id}
+              value={technology.slug}
+            >
+              {technology.name}
+            </Toggle>
+          ))}
+      </div>
     </div>
   );
 }

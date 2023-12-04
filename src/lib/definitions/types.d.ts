@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 
 export type ProjectWithTechnologies = Prisma.ProjectGetPayload<{
   include: {
@@ -9,3 +9,24 @@ export type ProjectWithTechnologies = Prisma.ProjectGetPayload<{
     };
   };
 }>;
+
+const projectWithGalleryAndTechnologies =
+  Prisma.validator<Prisma.ProjectDefaultArgs>({
+    include: {
+      gallery: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
+      technologies: {
+        include: {
+          technology: true,
+        },
+      },
+    },
+  });
+
+export type ProjectWithGalleryAndTechnologies = Prisma.ProjectGetPayload<
+  typeof projectWithGalleryAndTechnologies
+>;

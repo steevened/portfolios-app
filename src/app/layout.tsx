@@ -25,7 +25,7 @@ export default async function RootLayout({
   const session = await getServerSession();
   return (
     <html lang="en">
-      <body className={`${inter.className} `}>
+      <body className={`${inter.className} overflow-x-hidden `}>
         <NextTopLoader />
         <NextAuthSessionProvider session={session}>
           <ThemeProvider
@@ -38,7 +38,7 @@ export default async function RootLayout({
             <div className="hidden lg:block fixed h-full top-[55px] border-r p-2.5 w-full max-w-[100px]">
               <Menu />
             </div>
-            <div className="lg:ml-[100px] mt-[55px]  px-5 py-2.5  lg:p-2.5  relative">
+            <div className="lg:ml-[100px] mt-[55px]  px-5 py-2.5  lg:p-2.5 ">
               {children}
             </div>
             <Toaster />
