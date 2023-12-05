@@ -2,19 +2,10 @@ import ProjectDropDowd from '@/components/project-dropdown';
 import TechnologiesGroup from '@/components/technologies-group';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { buttonVariants } from '@/components/ui/button';
 import { getServerAuthSession } from '@/lib/auth';
 import { getAllProjects } from '@/lib/services/projects.service';
 import { getUserById } from '@/lib/services/user.service';
-import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
 export default async function Home({

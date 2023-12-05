@@ -1,9 +1,9 @@
-"use client";
-import { ProjectWithTechnologies } from "@/lib/definitions/types";
-import { Technology } from "@prisma/client";
-import { UploadIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import { Button } from "./ui/button";
+'use client';
+import { ProjectWithTechnologies } from '@/lib/definitions/types';
+import { Technology } from '@prisma/client';
+import { UploadIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { Button } from './ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,17 +11,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { ScrollArea } from "./ui/scroll-area";
-import { UploadGalleryForm } from "./upload-gallery-form";
-import { UploadProjectForm } from "./upload-project-form";
+} from './ui/dialog';
+import { ScrollArea } from './ui/scroll-area';
+import { UploadGalleryForm } from './upload-gallery-form';
+import { UploadProjectForm } from './upload-project-form';
+import { getProjectUnpublished } from '@/lib/services/projects.service';
 
 export default function UploadDialog({
   technologies,
-  projectOnDraft,
+  projectUnpublished,
 }: {
   technologies: Technology[];
-  projectOnDraft: ProjectWithTechnologies | null;
+  projectUnpublished: Awaited<ReturnType<typeof getProjectUnpublished>>;
 }) {
   const [step, setStep] = useState<1 | 2>(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -52,16 +53,16 @@ export default function UploadDialog({
             {step === 1 ? (
               <UploadProjectForm
                 technologies={technologies}
-                projectOnDraft={projectOnDraft}
+                projectUnpublished={projectUnpublished}
                 onContinue={() => {
                   setStep(2);
                 }}
               />
             ) : (
               <>
-                {projectOnDraft && projectOnDraft.id ? (
+                {projectUnpublished && projectUnpublished.id ? (
                   <UploadGalleryForm
-                    projectId={projectOnDraft.id}
+                    projectId={projectUnpublished.id}
                     setStep={setStep}
                     onContinue={() => setIsOpen(false)}
                   />

@@ -25,7 +25,7 @@ export const PUT = async (
         id,
       },
       data: {
-        published: false,
+        isOnDraft: true,
       },
     });
     return NextResponse.json(

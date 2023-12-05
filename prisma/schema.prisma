@@ -47,6 +47,7 @@ model User {
   sessions      Session[]
   profile       Profile?
   projects      Project[]
+  draft         Draft?
 }
 
 model VerificationToken {
@@ -94,6 +95,17 @@ model Project {
   authorId     String
   author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   gallery      ProjectGallery[]
+  isOnDraft    Boolean             @default(true)
+  draft        Draft               @relation(fields: [id], references: [projectId], onDelete: Cascade)
+}
+
+model Draft {
+  userId    String    @unique
+  projectId String    @unique
+  projects  Project[]
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@id([userId, projectId])
 }
 
 model ProjectTechnology {
