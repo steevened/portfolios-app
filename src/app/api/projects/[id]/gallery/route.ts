@@ -1,8 +1,8 @@
-import { getServerAuthSession } from "@/lib/auth";
-import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { prisma } from "@/lib/db/prisma";
+import { getServerAuthSession } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { writeFile } from 'fs/promises';
+import path from 'path';
+import { prisma } from '@/lib/db/prisma';
 
 export async function POST(
   request: NextRequest,
@@ -13,7 +13,7 @@ export async function POST(
   if (!session || !session.user)
     return NextResponse.json(
       {
-        message: "Unauthorized",
+        message: 'Unauthorized',
       },
       {
         status: 401,
@@ -24,8 +24,8 @@ export async function POST(
   const formData = await request.formData();
 
   const { searchParams } = new URL(request.url);
-  const skipString = searchParams.get("skip") as "true" | "false";
-  const skip = skipString === "true";
+  const skipString = searchParams.get('skip') as 'true' | 'false';
+  const skip = skipString === 'true';
 
   if (!formData || skip) {
     try {
@@ -39,7 +39,7 @@ export async function POST(
       });
       return NextResponse.json(
         {
-          message: "Operation successful",
+          message: 'Operation successful',
           data: projectPublished,
         },
         {
@@ -49,21 +49,23 @@ export async function POST(
     } catch (error) {
       console.log(error);
       return NextResponse.json(
-        { message: "Operation failed", error },
+        { message: 'Operation failed', error },
         { status: 500 }
       );
     }
   }
 
   try {
-    const file = formData.get("file") as File;
+    const file = formData.get('file') as File;
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const filePath = path.join(process.cwd(), "public", file.name);
+    const filePath = path.join(process.cwd(), 'public', file.name);
 
-    const fileLink = `http://localhost:3000/${filePath.split(/\\/).slice(-1)}`;
+    const normalizedPath = path.normalize(filePath);
+
+    const fileLink = `http://localhost:3000/${path.basename(normalizedPath)}`;
     console.log(fileLink);
 
     writeFile(filePath, buffer);
@@ -84,7 +86,7 @@ export async function POST(
 
     return NextResponse.json(
       {
-        message: "Operation successful",
+        message: 'Operation successful',
         data: projectPublished,
       },
       {
@@ -94,7 +96,7 @@ export async function POST(
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { message: "Operation failed", error },
+      { message: 'Operation failed', error },
       { status: 500 }
     );
   }
