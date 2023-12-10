@@ -38,3 +38,7 @@ next-env.d.ts
 
 # database
 /postgres
+
+
+# local images
+/public/img
