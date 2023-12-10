@@ -63,7 +63,7 @@ export async function POST(
 
     const filePath = path.join(process.cwd(), "public/img", file.name);
 
-    const fileLink = `http://localhost:3000/${filePath.split(/\\/).slice(-1)}`;
+    const fileLink = `http://localhost:3000/${path.basename(normalizedPath)}`;
     console.log(fileLink);
 
     writeFile(filePath, buffer);

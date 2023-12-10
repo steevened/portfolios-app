@@ -1,5 +1,5 @@
-import { prisma } from "../db/prisma";
-import { unstable_noStore as noStore } from "next/cache";
+import { prisma } from '../db/prisma';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function getAllProjects({
   searchParams,
@@ -10,12 +10,13 @@ export async function getAllProjects({
 }) {
   const { tech } = searchParams;
 
-  const technologies = tech ? tech.split("_") : undefined;
+  const technologies = tech ? tech.split('_') : undefined;
 
   noStore();
   const projects = await prisma.project.findMany({
     where: {
       published: true,
+      isOnDraft: false,
       technologies: {
         some: {
           technology: {
@@ -40,7 +41,7 @@ export async function getAllProjects({
       },
     },
     orderBy: {
-      updatedAt: "desc",
+      updatedAt: 'desc',
     },
   });
   return projects;
@@ -48,6 +49,24 @@ export async function getAllProjects({
 
 export async function getProjectOnDraft() {
   noStore();
+  const project = await prisma.project.findFirst({
+    where: {
+      published: false,
+    },
+    include: {
+      technologies: {
+        include: {
+          technology: true,
+        },
+      },
+    },
+  });
+  return project;
+}
+
+export async function getProjectUnpublished() {
+  noStore();
+
   const project = await prisma.project.findFirst({
     where: {
       published: false,

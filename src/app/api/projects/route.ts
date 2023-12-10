@@ -1,7 +1,7 @@
-import { getServerAuthSession } from "@/lib/auth";
-import { prisma } from "@/lib/db/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { getServerAuthSession } from '@/lib/auth';
+import { prisma } from '@/lib/db/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   if (!session || !session.user)
     return NextResponse.json(
       {
-        message: "Unauthorized",
+        message: 'Unauthorized',
       },
       {
         status: 401,
@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
     const project = await prisma.project.create({
       data: {
         ...body,
-        slug: body.name.toLowerCase().trim().replace(" ", "-"),
+        slug: body.name.toLowerCase().trim().replace(' ', '-'),
+        isOnDraft: false,
         authorId: session.user.id,
         technologies: {
           create: body.technologies.map((technologyId: number) => {
@@ -33,15 +34,15 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-    revalidateTag("projects");
+    revalidateTag('projects');
     return NextResponse.json(
-      { message: "Operation successful", data: project },
+      { message: 'Operation successful', data: project },
       { status: 201 }
     );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { message: "Operation failed", error },
+      { message: 'Operation failed', error },
       { status: 500 }
     );
   }
