@@ -19,16 +19,18 @@ export async function POST(request: NextRequest) {
     );
 
   try {
+    const userDraft = await prisma.draft.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+    });
+
     const project = await prisma.project.create({
       data: {
         ...body,
         slug: body.name.toLowerCase().trim().replace(" ", "-"),
         isOnDraft: true,
-        draft: {
-          connect: {
-            userId: session.user.id,
-          },
-        },
+        draftId: userDraft?.id || undefined,
         authorId: session.user.id,
         technologies: {
           create: body.technologies.map((technologyId: number) => {

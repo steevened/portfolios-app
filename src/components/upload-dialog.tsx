@@ -1,9 +1,9 @@
-'use client';
-import { ProjectWithTechnologies } from '@/lib/definitions/types';
-import { Technology } from '@prisma/client';
-import { UploadIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
-import { Button } from './ui/button';
+"use client";
+import { getProjectUnpublished } from "@/lib/services/projects.service";
+import { Technology } from "@prisma/client";
+import { UploadIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,11 +11,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
-import { ScrollArea } from './ui/scroll-area';
-import { UploadGalleryForm } from './upload-gallery-form';
-import { UploadProjectForm } from './upload-project-form';
-import { getProjectUnpublished } from '@/lib/services/projects.service';
+} from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
+import { UploadGalleryForm } from "./upload-gallery-form";
+import { UploadProjectForm } from "./upload-project-form";
 
 export default function UploadDialog({
   technologies,

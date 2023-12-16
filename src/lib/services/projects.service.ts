@@ -85,7 +85,7 @@ export async function getProjectUnpublished() {
   return project;
 }
 
-export async function createPost({
+export async function createProject({
   data,
   technologiesSelected,
 }: {
@@ -112,7 +112,7 @@ export async function createPost({
   return res;
 }
 
-export async function updatePost({
+export async function updateProject({
   data,
   technologiesSelected,
   id,

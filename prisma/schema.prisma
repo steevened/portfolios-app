@@ -96,8 +96,8 @@ model Project {
   author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   gallery      ProjectGallery[]
   isOnDraft    Boolean             @default(true)
-  drafId       String?
-  draft        Draft?              @relation(fields: [drafId], references: [id])
+  draftId       String?
+  draft        Draft?              @relation(fields: [draftId], references: [id])
 }
 
 model Draft {

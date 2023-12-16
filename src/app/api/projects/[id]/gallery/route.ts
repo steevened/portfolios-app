@@ -35,6 +35,8 @@ export async function POST(
         },
         data: {
           published: true,
+          draftId: null,
+          isOnDraft: false,
         },
       });
       return NextResponse.json(
@@ -75,6 +77,8 @@ export async function POST(
       },
       data: {
         published: true,
+        draftId: null,
+        isOnDraft: false,
         gallery: {
           create: {
             url: fileLink,

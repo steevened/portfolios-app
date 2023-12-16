@@ -1,9 +1,9 @@
 import { useToast } from "@/components/ui/use-toast";
 import { projectSchema } from "@/lib/schemas/project.schema";
 import {
-  createPost,
+  createProject,
   getProjectUnpublished,
-  updatePost,
+  updateProject,
 } from "@/lib/services/projects.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Technology } from "@prisma/client";
@@ -78,7 +78,7 @@ export function UploadProjectForm({
 
     try {
       if (projectUnpublished) {
-        const res = await updatePost({
+        const res = await updateProject({
           data,
           technologiesSelected,
           id: projectUnpublished.id,
@@ -88,7 +88,7 @@ export function UploadProjectForm({
         onContinue();
         return await res.json();
       } else {
-        const res = await createPost({ data, technologiesSelected });
+        const res = await createProject({ data, technologiesSelected });
         if (res.status !== 201) return;
         router.refresh();
         onContinue();
