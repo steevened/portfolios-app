@@ -63,8 +63,9 @@ export async function POST(
 
     const filePath = path.join(process.cwd(), "public/img", file.name);
 
+    const normalizedPath = path.normalize(filePath);
+
     const fileLink = `http://localhost:3000/${path.basename(normalizedPath)}`;
-    console.log(fileLink);
 
     writeFile(filePath, buffer);
 

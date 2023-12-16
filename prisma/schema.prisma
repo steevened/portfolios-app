@@ -96,16 +96,15 @@ model Project {
   author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   gallery      ProjectGallery[]
   isOnDraft    Boolean             @default(true)
-  draft        Draft               @relation(fields: [id], references: [projectId], onDelete: Cascade)
+  drafId       String?
+  draft        Draft?              @relation(fields: [drafId], references: [id])
 }
 
 model Draft {
-  userId    String    @unique
-  projectId String    @unique
-  projects  Project[]
-  user      User      @relation(fields: [userId], references: [id])
-
-  @@id([userId, projectId])
+  id       String    @id @default(cuid())
+  userId   String    @unique
+  projects Project[]
+  user     User      @relation(fields: [userId], references: [id])
 }
 
 model ProjectTechnology {

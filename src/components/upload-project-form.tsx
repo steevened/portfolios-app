@@ -1,22 +1,27 @@
-import { useToast } from '@/components/ui/use-toast';
-import { ProjectWithTechnologies } from '@/lib/definitions/types';
-import { projectSchema } from '@/lib/schemas/project.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Technology } from '@prisma/client';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
+import { useToast } from "@/components/ui/use-toast";
+import { projectSchema } from "@/lib/schemas/project.schema";
+import {
+  createPost,
+  getProjectUnpublished,
+  updatePost,
+} from "@/lib/services/projects.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Technology } from "@prisma/client";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from './ui/command';
-import { DialogClose, DialogFooter } from './ui/dialog';
+} from "./ui/command";
+import { DialogClose, DialogFooter } from "./ui/dialog";
 import {
   Form,
   FormControl,
@@ -24,66 +29,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Textarea } from './ui/textarea';
-import { useRouter } from 'next/navigation';
-import { getProjectUnpublished } from '@/lib/services/projects.service';
-
-async function createPost({
-  data,
-  technologiesSelected,
-}: {
-  data: z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-}) {
-  const res = await fetch('/api/projects', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: data.name,
-      liveUrl: data.liveUrl,
-      githubUrl: data.githubUrl,
-      description: data.description,
-      technologies: technologiesSelected.map((t) => t.id),
-    }),
-    next: {
-      tags: ['projects'],
-    },
-  });
-
-  return res;
-}
-
-async function updatePost({
-  data,
-  technologiesSelected,
-  id,
-}: {
-  data: z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-  id: string;
-}) {
-  const res = await fetch(`/api/projects/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: data.name,
-      liveUrl: data.liveUrl,
-      githubUrl: data.githubUrl,
-      description: data.description,
-      technologies: technologiesSelected.map((t) => t.id),
-    }),
-  });
-
-  return res;
-}
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Textarea } from "./ui/textarea";
 
 export function UploadProjectForm({
   technologies,
@@ -105,24 +55,24 @@ export function UploadProjectForm({
     defaultValues: projectUnpublished
       ? {
           name: projectUnpublished.name,
-          liveUrl: projectUnpublished.liveUrl || '',
-          githubUrl: projectUnpublished.githubUrl || '',
-          description: projectUnpublished.description || '',
+          liveUrl: projectUnpublished.liveUrl || "",
+          githubUrl: projectUnpublished.githubUrl || "",
+          description: projectUnpublished.description || "",
         }
       : {
-          name: '',
-          liveUrl: '',
-          githubUrl: '',
-          description: '',
+          name: "",
+          liveUrl: "",
+          githubUrl: "",
+          description: "",
         },
   });
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
     if (technologiesSelected.length <= 0) {
       return toast({
-        variant: 'destructive',
-        title: 'Wait!',
-        description: 'You must select at least one technology.',
+        variant: "destructive",
+        title: "Wait!",
+        description: "You must select at least one technology.",
       });
     }
 
@@ -139,6 +89,7 @@ export function UploadProjectForm({
         return await res.json();
       } else {
         const res = await createPost({ data, technologiesSelected });
+        if (res.status !== 201) return;
         router.refresh();
         onContinue();
         return await res.json();
@@ -282,7 +233,7 @@ export function UploadProjectForm({
         </div>
         <DialogFooter className="gap-y-2.5">
           <DialogClose asChild>
-            <Button type="button" variant={'outline'}>
+            <Button type="button" variant={"outline"}>
               Cancel
             </Button>
           </DialogClose>

@@ -1,5 +1,8 @@
-import { prisma } from '../db/prisma';
-import { unstable_noStore as noStore } from 'next/cache';
+import { z } from "zod";
+import { prisma } from "../db/prisma";
+import { unstable_noStore as noStore } from "next/cache";
+import { projectSchema } from "../schemas/project.schema";
+import { Technology } from "@prisma/client";
 
 export async function getAllProjects({
   searchParams,
@@ -10,7 +13,7 @@ export async function getAllProjects({
 }) {
   const { tech } = searchParams;
 
-  const technologies = tech ? tech.split('_') : undefined;
+  const technologies = tech ? tech.split("_") : undefined;
 
   noStore();
   const projects = await prisma.project.findMany({
@@ -41,7 +44,7 @@ export async function getAllProjects({
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: "desc",
     },
   });
   return projects;
@@ -80,4 +83,57 @@ export async function getProjectUnpublished() {
     },
   });
   return project;
+}
+
+export async function createPost({
+  data,
+  technologiesSelected,
+}: {
+  data: z.infer<typeof projectSchema>;
+  technologiesSelected: Technology[];
+}) {
+  const res = await fetch("/api/projects", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: data.name,
+      liveUrl: data.liveUrl,
+      githubUrl: data.githubUrl,
+      description: data.description,
+      technologies: technologiesSelected.map((t) => t.id),
+    }),
+    next: {
+      tags: ["projects"],
+    },
+  });
+
+  return res;
+}
+
+export async function updatePost({
+  data,
+  technologiesSelected,
+  id,
+}: {
+  data: z.infer<typeof projectSchema>;
+  technologiesSelected: Technology[];
+  id: string;
+}) {
+  const res = await fetch(`/api/projects/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: data.name,
+      liveUrl: data.liveUrl,
+      githubUrl: data.githubUrl,
+      description: data.description,
+      technologies: technologiesSelected.map((t) => t.id),
+    }),
+  });
+
+  return res;
 }
