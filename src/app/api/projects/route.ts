@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
     const project = await prisma.project.create({
       data: {
         ...body,
-        slug: body.name.toLowerCase().trim().replace(" ", "-"),
+        slug:
+          body.name.toLowerCase().trim().replace(" ", "-") + "-" + Date.now(),
         isOnDraft: true,
         draftId: userDraft?.id || undefined,
         authorId: session.user.id,

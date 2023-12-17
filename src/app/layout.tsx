@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 import { NextAuthSessionProvider } from "@/components/session-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { getServerSession } from "next-auth";
-import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +24,6 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} overflow-x-hidden `}>
-        <NextTopLoader />
         <NextAuthSessionProvider session={session}>
           <ThemeProvider
             attribute="class"

@@ -1,19 +1,16 @@
-import { getServerAuthSession } from '@/lib/auth';
-import { getProjectUnpublished } from '@/lib/services/projects.service';
-import { getAllTechnologies } from '@/lib/services/technologies.service';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
-import Menu from './menu';
-import { ThemeToggle } from './toggle-theme';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import UploadDialog from './upload-dialog';
-import UserButton from './user-button';
+import { getServerAuthSession } from "@/lib/auth";
+import { HamburgerMenuIcon, UploadIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import Menu from "./menu";
+import { ThemeToggle } from "./toggle-theme";
+import { Button, buttonVariants } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import UserButton from "./user-button";
 
 export default async function Navbar() {
-  const technologies = await getAllTechnologies();
+  // const technologies = await getAllTechnologies();
   const session = await getServerAuthSession();
-  const projectUnpublished = await getProjectUnpublished();
+  // const projectUnpublished = await getProjectUnpublished();
   return (
     <header className="antialiased">
       <nav className=" px-4 z-10 bg-background/80 backdrop-blur-sm lg:px-6 py-2.5 border-b fixed w-full top-0">
@@ -30,11 +27,22 @@ export default async function Navbar() {
           </div>
           <div className="flex items-center gap-2.5">
             {session && session.user ? (
-              <UploadDialog
-                technologies={technologies}
-                projectUnpublished={projectUnpublished}
-              />
-            ) : null}
+              <Link
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "icon",
+                  className: "!rounded-full",
+                })}
+                href="/create"
+              >
+                <UploadIcon />
+              </Link>
+            ) : //  </Button>
+            // <UploadDialog
+            //   technologies={technologies}
+            //   projectUnpublished={projectUnpublished}
+            // />
+            null}
             <UserButton />
             <ThemeToggle />
           </div>
@@ -48,11 +56,11 @@ const SideMenuSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size={'icon'} variant={'ghost'}>
+        <Button size={"icon"} variant={"ghost"}>
           <HamburgerMenuIcon className="w-6 h-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side={'left'}>
+      <SheetContent side={"left"}>
         <div className="my-5">
           <Menu />
         </div>

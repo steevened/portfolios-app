@@ -137,3 +137,25 @@ export async function updateProject({
 
   return res;
 }
+
+export async function getProjectById(projectId: string) {
+  const res = await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      technologies: {
+        include: {
+          technology: true,
+        },
+      },
+      gallery: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
+    },
+  });
+  return res;
+}
