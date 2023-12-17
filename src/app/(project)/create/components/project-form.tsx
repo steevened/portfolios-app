@@ -1,28 +1,13 @@
 "use client";
-import { useToast } from "@/components/ui/use-toast";
-import { projectSchema } from "@/lib/schemas/project.schema";
-import {
-  createProject,
-  getProjectUnpublished,
-  updateProject,
-} from "@/lib/services/projects.service";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Technology } from "@prisma/client";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from "./ui/command";
-import { DialogClose, DialogFooter } from "./ui/dialog";
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -30,42 +15,53 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Textarea } from "./ui/textarea";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { projectSchema } from "@/lib/schemas/project.schema";
+import {
+  getProjectUnpublished,
+  getProjectById,
+} from "@/lib/services/projects.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Technology } from "@prisma/client";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export function UploadProjectForm({
-  technologies,
-  onContinue,
-  projectUnpublished,
-}: {
+type Props = {
+  initialProject?: Awaited<
+    ReturnType<typeof getProjectUnpublished | typeof getProjectById>
+  >;
   technologies: Technology[];
-  onContinue: () => void;
-  projectUnpublished?: Awaited<ReturnType<typeof getProjectUnpublished>>;
-}) {
-  const router = useRouter();
+};
+
+export default function ProjectDetails({
+  initialProject,
+  technologies,
+}: Props) {
   const { toast } = useToast();
+
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
-  >(projectUnpublished?.technologies.map((t) => t.technology) || []);
+  >(initialProject?.technologies.map((t) => t.technology) || []);
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
-    defaultValues: projectUnpublished
-      ? {
-          name: projectUnpublished.name,
-          liveUrl: projectUnpublished.liveUrl || "",
-          githubUrl: projectUnpublished.githubUrl || "",
-          description: projectUnpublished.description || "",
-        }
-      : {
-          name: "",
-          liveUrl: "",
-          githubUrl: "",
-          description: "",
-        },
+    defaultValues: {
+      name: initialProject?.name || "",
+      liveUrl: initialProject?.liveUrl || "",
+      githubUrl: initialProject?.githubUrl || "",
+      description: initialProject?.description || "",
+    },
   });
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
@@ -78,22 +74,31 @@ export function UploadProjectForm({
     }
 
     try {
-      if (projectUnpublished) {
-        const res = await updateProject({
-          data,
-          technologiesSelected,
-          id: projectUnpublished.id,
+      if (initialProject) {
+        toast({
+          title: "Project updated!",
+          description: "Your project has been updated.",
         });
-        if (res.status !== 200) return;
-        router.refresh();
-        onContinue();
-        return await res.json();
+        // const res = await updateProject({
+        //   data,
+        //   technologiesSelected,
+        //   id: initialProject.id,
+        // });
+        // if (res.status !== 200) return;
+        // router.refresh();
+        // onContinue();
+        // return await res.json();
       } else {
-        const res = await createProject({ data, technologiesSelected });
-        if (res.status !== 201) return;
-        router.refresh();
-        onContinue();
-        return await res.json();
+        toast({
+          title: "Project created!",
+          description: "Your project has been created.",
+        });
+
+        // const res = await createProject({ data, technologiesSelected });
+        // if (res.status !== 201) return;
+        // router.refresh();
+        // onContinue();
+        // return await res.json();
       }
     } catch (error) {
       console.log(error);
@@ -103,7 +108,7 @@ export function UploadProjectForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-5 my-5">
+        <div className="flex flex-col gap-y-2.5 my-2.5 text-left">
           <FormField
             control={form.control}
             name="name"
@@ -118,7 +123,7 @@ export function UploadProjectForm({
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-y-5 @md:flex-row gap-x-2.5 ">
+          <div className="flex flex-col gap-2.5 @md:flex-row  ">
             <FormField
               control={form.control}
               name="liveUrl"
@@ -154,8 +159,8 @@ export function UploadProjectForm({
               )}
             />
           </div>
-          <div className="grid items-center gap-1.5">
-            <Label>Used technologies</Label>
+          <div className="grid items-center gap-2.5 ">
+            <Label className="mt-2.5">Used technologies</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -232,14 +237,9 @@ export function UploadProjectForm({
             )}
           />
         </div>
-        {/* <DialogFooter className="gap-y-2.5">
-          <DialogClose asChild>
-            <Button type="button" variant={"outline"}>
-              Cancel
-            </Button>
-          </DialogClose>
+        <div className="text-start">
           <Button>Continue</Button>
-        </DialogFooter> */}
+        </div>
       </form>
     </Form>
   );
