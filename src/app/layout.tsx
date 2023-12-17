@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import ClientProviders from "@/components/client-providers";
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 import { NextAuthSessionProvider } from "@/components/session-provider";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,12 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${inter.className} overflow-x-hidden `}>
         <NextAuthSessionProvider session={session}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ClientProviders>
             <Navbar />
             <div className="hidden lg:block fixed h-full top-[55px] border-r p-2.5 w-full max-w-[100px]">
               <Menu />
@@ -38,8 +32,7 @@ export default async function RootLayout({
             <div className="lg:ml-[100px] mt-[55px]  px-5 py-2.5  lg:p-2.5 ">
               {children}
             </div>
-            <Toaster />
-          </ThemeProvider>
+          </ClientProviders>
         </NextAuthSessionProvider>
       </body>
     </html>

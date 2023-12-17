@@ -2,7 +2,8 @@ import { z } from "zod";
 import { prisma } from "../db/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 import { projectSchema } from "../schemas/project.schema";
-import { Technology } from "@prisma/client";
+import { Project, Technology } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 export async function getAllProjects({
   searchParams,
@@ -91,7 +92,10 @@ export async function createProject({
 }: {
   data: z.infer<typeof projectSchema>;
   technologiesSelected: Technology[];
-}) {
+}): Promise<{
+  message: string;
+  data: Project;
+}> {
   const res = await fetch("/api/projects", {
     method: "POST",
     headers: {
@@ -109,7 +113,7 @@ export async function createProject({
     },
   });
 
-  return res;
+  return res.json();
 }
 
 export async function updateProject({
@@ -120,7 +124,10 @@ export async function updateProject({
   data: z.infer<typeof projectSchema>;
   technologiesSelected: Technology[];
   id: string;
-}) {
+}): Promise<{
+  message: string;
+  data: Project;
+}> {
   const res = await fetch(`/api/projects/${id}`, {
     method: "PUT",
     headers: {
@@ -135,7 +142,7 @@ export async function updateProject({
     }),
   });
 
-  return res;
+  return res.json();
 }
 
 export async function getProjectById(projectId: string) {

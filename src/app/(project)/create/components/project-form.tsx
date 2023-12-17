@@ -29,10 +29,14 @@ import { projectSchema } from "@/lib/schemas/project.schema";
 import {
   getProjectUnpublished,
   getProjectById,
+  updateProject,
+  createProject,
 } from "@/lib/services/projects.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Technology } from "@prisma/client";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,6 +53,7 @@ export default function ProjectDetails({
   technologies,
 }: Props) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
@@ -64,6 +69,14 @@ export default function ProjectDetails({
     },
   });
 
+  const createProjectMutation = useMutation({
+    mutationFn: createProject,
+  });
+
+  const updateProjectMutation = useMutation({
+    mutationFn: updateProject,
+  });
+
   async function onSubmit(data: z.infer<typeof projectSchema>) {
     if (technologiesSelected.length <= 0) {
       return toast({
@@ -75,30 +88,29 @@ export default function ProjectDetails({
 
     try {
       if (initialProject) {
-        toast({
-          title: "Project updated!",
-          description: "Your project has been updated.",
-        });
-        // const res = await updateProject({
-        //   data,
-        //   technologiesSelected,
-        //   id: initialProject.id,
-        // });
-        // if (res.status !== 200) return;
-        // router.refresh();
-        // onContinue();
-        // return await res.json();
-      } else {
-        toast({
-          title: "Project created!",
-          description: "Your project has been created.",
-        });
+        updateProjectMutation.mutate(
+          {
+            data,
+            technologiesSelected,
+            id: initialProject.id,
+          },
+          {
+            onSuccess: ({ data }) => {
+              router.push(`/create/${data.id}/gallery`);
 
-        // const res = await createProject({ data, technologiesSelected });
-        // if (res.status !== 201) return;
-        // router.refresh();
-        // onContinue();
-        // return await res.json();
+              //   router.refresh();
+            },
+          }
+        );
+      } else {
+        createProjectMutation.mutate(
+          { data, technologiesSelected },
+          {
+            onSuccess: async ({ data }) => {
+              router.push(`/create/${data.id}/gallery`);
+            },
+          }
+        );
       }
     } catch (error) {
       console.log(error);
@@ -160,7 +172,7 @@ export default function ProjectDetails({
             />
           </div>
           <div className="grid items-center gap-2.5 ">
-            <Label className="mt-2.5">Used technologies</Label>
+            <Label>Used technologies</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
