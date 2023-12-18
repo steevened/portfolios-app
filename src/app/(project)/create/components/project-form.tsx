@@ -52,6 +52,7 @@ export default function ProjectDetails({
   initialProject,
   technologies,
 }: Props) {
+  console.log(initialProject);
   const { toast } = useToast();
   const router = useRouter();
 
