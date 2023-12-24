@@ -1,9 +1,8 @@
+import { Project, Technology } from "@prisma/client";
+import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 import { prisma } from "../db/prisma";
-import { unstable_noStore as noStore } from "next/cache";
 import { projectSchema } from "../schemas/project.schema";
-import { Project, Technology } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 export async function getAllProjects({
   searchParams,
@@ -96,6 +95,7 @@ export async function createProject({
   message: string;
   data: Project;
 }> {
+  noStore();
   const res = await fetch("/api/projects", {
     method: "POST",
     headers: {
@@ -128,6 +128,7 @@ export async function updateProject({
   message: string;
   data: Project;
 }> {
+  noStore();
   const res = await fetch(`/api/projects/${id}`, {
     method: "PUT",
     headers: {
@@ -146,6 +147,7 @@ export async function updateProject({
 }
 
 export async function getProjectById(projectId: string) {
+  noStore();
   const res = await prisma.project.findUnique({
     where: {
       id: projectId,

@@ -4,6 +4,7 @@ import {
 } from "@/lib/services/projects.service";
 import { getAllTechnologies } from "@/lib/services/technologies.service";
 import { Technology } from "@prisma/client";
+import ProjectForm from "../create/components/project-form";
 
 type Props = {
   origin: "create" | "update";
@@ -49,7 +50,13 @@ const CreateProjectForm = ({
   technologies: Technology[];
   projectUnpublished: Awaited<ReturnType<typeof getProjectUnpublished>>;
 }) => {
-  return <div>create </div>;
+  return (
+    <ProjectForm
+      technologies={technologies}
+      initialProject={projectUnpublished}
+      origin="create"
+    />
+  );
 };
 
 const UpdateProjectForm = ({
@@ -59,5 +66,11 @@ const UpdateProjectForm = ({
   project: Awaited<ReturnType<typeof getProjectById>>;
   technologies: Technology[];
 }) => {
-  return <div>{JSON.stringify(project)}</div>;
+  return (
+    <ProjectForm
+      technologies={technologies}
+      initialProject={project}
+      origin="update"
+    />
+  );
 };

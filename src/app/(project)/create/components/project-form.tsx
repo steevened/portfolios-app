@@ -46,11 +46,18 @@ type Props = {
     ReturnType<typeof getProjectUnpublished | typeof getProjectById>
   >;
   technologies: Technology[];
+  origin: "create" | "update";
 };
 
-export default function ProjectForm({ initialProject, technologies }: Props) {
+export default function ProjectForm({
+  initialProject,
+  technologies,
+  origin,
+}: Props) {
   const { toast } = useToast();
   const router = useRouter();
+
+  console.log(initialProject);
 
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
@@ -93,9 +100,12 @@ export default function ProjectForm({ initialProject, technologies }: Props) {
           },
           {
             onSuccess: ({ data }) => {
-              router.push(`/create/${data.id}/gallery`);
-
-              //   router.refresh();
+              router.refresh();
+              router.push(
+                origin === "create"
+                  ? `/create/${data.id}/gallery`
+                  : `/${data.id}/update/gallery`
+              );
             },
           }
         );
@@ -104,6 +114,7 @@ export default function ProjectForm({ initialProject, technologies }: Props) {
           { data, technologiesSelected },
           {
             onSuccess: async ({ data }) => {
+              router.refresh();
               router.push(`/create/${data.id}/gallery`);
             },
           }
