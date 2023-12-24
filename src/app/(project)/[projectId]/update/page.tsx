@@ -1,6 +1,5 @@
 import { getProjectById } from "@/lib/services/projects.service";
-import ProjectForm from "../../create/components/project-form";
-import { getAllTechnologies } from "@/lib/services/technologies.service";
+import ProjectFormProvider from "../../components/project-form-provider";
 
 export default async function Page({
   params,
@@ -11,9 +10,5 @@ export default async function Page({
 }) {
   const projectById = await getProjectById(params.projectId);
 
-  const technologies = await getAllTechnologies();
-
-  return (
-    <ProjectForm technologies={technologies} initialProject={projectById} />
-  );
+  return <ProjectFormProvider origin="update" initialProject={projectById} />;
 }
