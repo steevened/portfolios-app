@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { unpublishProject } from '@/lib/actions/unpublish';
-import { DotsVerticalIcon } from '@radix-ui/react-icons';
+import { unpublishProject } from "@/lib/actions/unpublish";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,8 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
-import { Button } from './ui/button';
+} from "./ui/alert-dialog";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,23 +21,24 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { useToast } from './ui/use-toast';
+} from "./ui/dropdown-menu";
+import { useToast } from "./ui/use-toast";
+import Link from "next/link";
 
-const ProjectDropDowd = ({ projectId }: { projectId: string }) => {
+const ProjectDropDown = ({ projectId }: { projectId: string }) => {
   const { toast } = useToast();
   const onConfirm = async () => {
     const res = await fetch(`/api/projects/${projectId}/draft`, {
-      method: 'PUT',
+      method: "PUT",
       next: {
-        tags: ['projects'],
+        tags: ["projects"],
       },
     });
 
     if (res.ok) {
       toast({
-        title: 'Project moved to draft',
-        description: 'Project has been moved to draft',
+        title: "Project moved to draft",
+        description: "Project has been moved to draft",
       });
     }
   };
@@ -47,8 +48,8 @@ const ProjectDropDowd = ({ projectId }: { projectId: string }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            size={'icon'}
-            variant={'ghost'}
+            size={"icon"}
+            variant={"ghost"}
             className="hover:bg-foreground/10"
           >
             <DotsVerticalIcon />
@@ -57,7 +58,9 @@ const ProjectDropDowd = ({ projectId }: { projectId: string }) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/${projectId}/update`}>Edit</Link>
+          </DropdownMenuItem>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </AlertDialogTrigger>
@@ -81,4 +84,4 @@ const ProjectDropDowd = ({ projectId }: { projectId: string }) => {
   );
 };
 
-export default ProjectDropDowd;
+export default ProjectDropDown;

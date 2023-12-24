@@ -1,12 +1,12 @@
-import ProjectDropDowd from '@/components/project-dropdown';
-import TechnologiesGroup from '@/components/technologies-group';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
-import { getServerAuthSession } from '@/lib/auth';
-import { getAllProjects } from '@/lib/services/projects.service';
-import { getUserById } from '@/lib/services/user.service';
-import Image from 'next/image';
+import ProjectDropDown from "@/components/project-dropdown";
+import TechnologiesGroup from "@/components/technologies-group";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { getServerAuthSession } from "@/lib/auth";
+import { getAllProjects } from "@/lib/services/projects.service";
+import { getUserById } from "@/lib/services/user.service";
+import Image from "next/image";
 
 export default async function Home({
   searchParams,
@@ -48,7 +48,7 @@ const ProjectItemCard = async ({
         <div className=" flex items-start justify-between">
           <UserCard userId={project.authorId} updatedAt={project.updatedAt} />
           {user?.user.id === project.authorId ? (
-            <ProjectDropDowd projectId={project.id} />
+            <ProjectDropDown projectId={project.id} />
           ) : null}
         </div>
         <div className="">
@@ -72,8 +72,8 @@ const ProjectItemCard = async ({
             <a
               rel="noopener noreferrer"
               className={buttonVariants({
-                size: 'sm',
-                className: '',
+                size: "sm",
+                className: "",
               })}
               href={project.liveUrl}
               target="_blank"
@@ -85,8 +85,8 @@ const ProjectItemCard = async ({
             <a
               rel="noopener noreferrer"
               className={buttonVariants({
-                size: 'sm',
-                className: '',
+                size: "sm",
+                className: "",
               })}
               target="_blank"
               href={project.githubUrl}
@@ -131,10 +131,10 @@ const UserCard = async ({
       <div>
         <h5 className="text-sm font-medium leading-none">{user?.name}</h5>
         <small className="text-xs leading-none text-muted-foreground">
-          {updatedAt.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
+          {updatedAt.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
           })}
         </small>
       </div>
@@ -151,7 +151,7 @@ const UserAvatar = async ({
 }) => {
   return (
     <Avatar className="w-12 h-12">
-      {image ? <AvatarImage src={image} alt={name ?? ''} /> : null}
+      {image ? <AvatarImage src={image} alt={name ?? ""} /> : null}
       <AvatarFallback className="uppercase">{name.slice(0, 2)}</AvatarFallback>
     </Avatar>
   );
