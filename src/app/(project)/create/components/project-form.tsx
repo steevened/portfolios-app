@@ -27,10 +27,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { projectSchema } from "@/lib/schemas/project.schema";
 import {
-  getProjectUnpublished,
-  getProjectById,
-  updateProject,
   createProject,
+  getProjectById,
+  getProjectUnpublished,
+  updateProject,
 } from "@/lib/services/projects.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Technology } from "@prisma/client";
@@ -48,13 +48,14 @@ type Props = {
   technologies: Technology[];
 };
 
-export default function ProjectDetails({
-  initialProject,
-  technologies,
-}: Props) {
-  console.log(initialProject);
+export default function ProjectForm({ initialProject, technologies }: Props) {
+  console.log(!!initialProject);
   const { toast } = useToast();
   const router = useRouter();
+
+  // const { goNext } = useProjectFormStore();
+
+  // useDebounce
 
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
