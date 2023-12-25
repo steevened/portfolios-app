@@ -41,12 +41,13 @@ export default function Page({
 
     try {
       const formData = new FormData();
+
       files.forEach((file) => {
-        formData.set("file", file);
+        formData.append("files", file);
       });
 
       await fetch(
-        `/api/projects/${params.projectId}/gallery?skip=${!!!files.length}`,
+        `/api/projects/${params.projectId}/gallery?skip=${!!!files}`,
         {
           method: "POST",
           body: formData,
@@ -81,11 +82,11 @@ export default function Page({
             className={`${index === 5 ? "hidden" : ""}
           }`}
           >
-            <UploadImageCard file={file} index={index} setFiles={setFiles} />
+            <UploadImageCard file={file} files={files} setFiles={setFiles} />
           </li>
         ))}
         <li className={`${files.length >= 5 ? "hidden" : ""}`}>
-          <label className="border p-5 flex items-center justify-center border-dashed aspect-video rounded-lg w-full relative group cursor-pointer hover:bg-muted/90 transition-colors overflow-hidden">
+          <label className="border-2 p-5 flex items-center justify-center border-dashed aspect-video rounded-lg w-full relative group cursor-pointer hover:bg-muted/90 transition-colors overflow-hidden">
             <FilePlusIcon className="w-20 h-20 text-muted-foreground group-hover:text-muted-foreground/50 transition-colors" />
             <input
               // id="upload-image"

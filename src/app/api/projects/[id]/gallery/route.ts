@@ -58,18 +58,24 @@ export async function POST(
   }
 
   try {
-    const file = formData.get("file") as File;
+    const files = formData.getAll("files") as File[];
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const fileLinks = files.map(async (file) => {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
 
-    const filePath = path.join(process.cwd(), "public/img", file.name);
+      const filePath = path.join(process.cwd(), "public/img", file.name);
 
-    const normalizedPath = path.normalize(filePath);
+      const normalizedPath = path.normalize(filePath);
 
-    const fileLink = `http://localhost:3000/${path.basename(normalizedPath)}`;
+      const fileLink = `http://localhost:3000/img/${path.basename(
+        normalizedPath
+      )}`;
 
-    writeFile(filePath, buffer);
+      writeFile(filePath, buffer);
+
+      return fileLink;
+    });
 
     const projectPublished = await prisma.project.update({
       where: {
@@ -80,8 +86,10 @@ export async function POST(
         draftId: null,
         isOnDraft: false,
         gallery: {
-          create: {
-            url: fileLink,
+          createMany: {
+            data: await Promise.all(
+              fileLinks.map(async (filelink) => ({ url: await filelink }))
+            ),
           },
         },
       },
@@ -90,7 +98,7 @@ export async function POST(
     return NextResponse.json(
       {
         message: "Operation successful",
-        data: projectPublished,
+        data: { projectPublished },
       },
       {
         status: 200,
