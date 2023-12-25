@@ -30,7 +30,7 @@ import {
   getProjectUnpublished,
   getProjectById,
   updateProject,
-  createProject,
+  upsertProject,
 } from "@/lib/services/projects.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Technology } from "@prisma/client";
@@ -57,7 +57,7 @@ export default function ProjectForm({
   const { toast } = useToast();
   const router = useRouter();
 
-  console.log(initialProject);
+  // console.log(initialProject);
 
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
@@ -73,8 +73,8 @@ export default function ProjectForm({
     },
   });
 
-  const createProjectMutation = useMutation({
-    mutationFn: createProject,
+  const upsertProjectMutation = useMutation({
+    mutationFn: upsertProject,
   });
 
   const updateProjectMutation = useMutation({
@@ -91,7 +91,24 @@ export default function ProjectForm({
     }
 
     try {
-      if (initialProject) {
+      if (origin === "create") {
+        upsertProjectMutation.mutate(
+          {
+            data: {
+              ...data,
+              id: initialProject?.id || "",
+            },
+            technologiesSelected,
+          },
+          {
+            onSuccess: ({ data: resData }) => {
+              router.refresh();
+              router.push(`/create/${resData.id}/gallery`);
+            },
+          }
+        );
+      } else {
+        if (!initialProject) return;
         updateProjectMutation.mutate(
           {
             data,
@@ -101,25 +118,41 @@ export default function ProjectForm({
           {
             onSuccess: ({ data }) => {
               router.refresh();
-              router.push(
-                origin === "create"
-                  ? `/create/${data.id}/gallery`
-                  : `/${data.id}/update/gallery`
-              );
-            },
-          }
-        );
-      } else {
-        createProjectMutation.mutate(
-          { data, technologiesSelected },
-          {
-            onSuccess: async ({ data }) => {
-              router.refresh();
-              router.push(`/create/${data.id}/gallery`);
+              router.push(`/${data.id}/update/gallery`);
             },
           }
         );
       }
+
+      // if (initialProject) {
+      //   updateProjectMutation.mutate(
+      //     {
+      //       data,
+      //       technologiesSelected,
+      //       id: initialProject.id,
+      //     },
+      //     {
+      //       onSuccess: ({ data }) => {
+      //         router.refresh();
+      //         router.push(
+      //           origin === "create"
+      //             ? `/create/${data.id}/gallery`
+      //             : `/${data.id}/update/gallery`
+      //         );
+      //       },
+      //     }
+      //   );
+      // } else {
+      //   createProjectMutation.mutate(
+      //     { data, technologiesSelected },
+      //     {
+      //       onSuccess: async ({ data }) => {
+      //         router.refresh();
+      //         router.push(`/create/${data.id}/gallery`);
+      //       },
+      //     }
+      //   );
+      // }
     } catch (error) {
       console.log(error);
     }

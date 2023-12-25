@@ -30,7 +30,6 @@ export async function PUT(
 
       data: {
         ...restBody,
-        // slug: restBody.name.toLowerCase().trim().replace(" ", "-"),
         technologies: {
           deleteMany: {},
           create: technologies.map((technologyId: number) => {

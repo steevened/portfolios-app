@@ -85,36 +85,36 @@ export async function getProjectUnpublished() {
   return project;
 }
 
-export async function createProject({
-  data,
-  technologiesSelected,
-}: {
-  data: z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-}): Promise<{
-  message: string;
-  data: Project;
-}> {
-  noStore();
-  const res = await fetch("/api/projects", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: data.name,
-      liveUrl: data.liveUrl,
-      githubUrl: data.githubUrl,
-      description: data.description,
-      technologies: technologiesSelected.map((t) => t.id),
-    }),
-    next: {
-      tags: ["projects"],
-    },
-  });
+// export async function createProject({
+//   data,
+//   technologiesSelected,
+// }: {
+//   data: z.infer<typeof projectSchema>;
+//   technologiesSelected: Technology[];
+// }): Promise<{
+//   message: string;
+//   data: Project;
+// }> {
+//   noStore();
+//   const res = await fetch("/api/projects", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       name: data.name,
+//       liveUrl: data.liveUrl,
+//       githubUrl: data.githubUrl,
+//       description: data.description,
+//       technologies: technologiesSelected.map((t) => t.id),
+//     }),
+//     next: {
+//       tags: ["projects"],
+//     },
+//   });
 
-  return res.json();
-}
+//   return res.json();
+// }
 
 export async function updateProject({
   data,
@@ -144,6 +144,38 @@ export async function updateProject({
   });
 
   return res.json();
+}
+
+type UpsertProject = {
+  id?: string;
+} & z.infer<typeof projectSchema>;
+
+export async function upsertProject({
+  data,
+  technologiesSelected,
+}: {
+  data: UpsertProject;
+  technologiesSelected: Technology[];
+}) {
+  noStore();
+  try {
+    const res = await fetch(`/api/projects`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        technologies: technologiesSelected.map((t) => t.id),
+      }),
+      next: {
+        tags: ["project"],
+      },
+    });
+    return res.json();
+  } catch (error) {
+    return { error };
+  }
 }
 
 export async function getProjectById(projectId: string) {

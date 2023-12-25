@@ -6,6 +6,12 @@ import { ThemeToggle } from "./toggle-theme";
 import { Button, buttonVariants } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import UserButton from "./user-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export default async function Navbar() {
   // const technologies = await getAllTechnologies();
@@ -27,22 +33,26 @@ export default async function Navbar() {
           </div>
           <div className="flex items-center gap-2.5">
             {session && session.user ? (
-              <Link
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "icon",
-                  className: "!rounded-full",
-                })}
-                href="/create"
-              >
-                <UploadIcon />
-              </Link>
-            ) : //  </Button>
-            // <UploadDialog
-            //   technologies={technologies}
-            //   projectUnpublished={projectUnpublished}
-            // />
-            null}
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "icon",
+                        className: "!rounded-full",
+                      })}
+                      href="/create"
+                    >
+                      <UploadIcon strokeWidth={"2"} />
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Upload project</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : null}
             <UserButton />
             <ThemeToggle />
           </div>
