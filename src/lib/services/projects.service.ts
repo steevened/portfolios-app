@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 import { prisma } from "../db/prisma";
 import { projectSchema } from "../schemas/project.schema";
+import { getServerAuthSession } from "../auth";
 
 export async function getAllProjects({
   searchParams,
@@ -50,30 +51,19 @@ export async function getAllProjects({
   return projects;
 }
 
-export async function getProjectOnDraft() {
-  noStore();
-  const project = await prisma.project.findFirst({
-    where: {
-      published: false,
-    },
-    include: {
-      technologies: {
-        include: {
-          technology: true,
-        },
-      },
-    },
-  });
-  return project;
-}
-
 export async function getProjectUnpublished() {
-  noStore();
+  const session = await getServerAuthSession();
+  if (!session?.user?.id) return null;
 
+  noStore();
   const project = await prisma.project.findFirst({
     where: {
       published: false,
+      AND: {
+        authorId: session?.user?.id,
+      },
     },
+
     include: {
       technologies: {
         include: {
@@ -84,37 +74,6 @@ export async function getProjectUnpublished() {
   });
   return project;
 }
-
-// export async function createProject({
-//   data,
-//   technologiesSelected,
-// }: {
-//   data: z.infer<typeof projectSchema>;
-//   technologiesSelected: Technology[];
-// }): Promise<{
-//   message: string;
-//   data: Project;
-// }> {
-//   noStore();
-//   const res = await fetch("/api/projects", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       name: data.name,
-//       liveUrl: data.liveUrl,
-//       githubUrl: data.githubUrl,
-//       description: data.description,
-//       technologies: technologiesSelected.map((t) => t.id),
-//     }),
-//     next: {
-//       tags: ["projects"],
-//     },
-//   });
-
-//   return res.json();
-// }
 
 export async function updateProject({
   data,
@@ -146,15 +105,13 @@ export async function updateProject({
   return res.json();
 }
 
-type UpsertProject = {
-  id?: string;
-} & z.infer<typeof projectSchema>;
-
 export async function upsertProject({
   data,
   technologiesSelected,
 }: {
-  data: UpsertProject;
+  data: {
+    id?: string;
+  } & z.infer<typeof projectSchema>;
   technologiesSelected: Technology[];
 }) {
   noStore();

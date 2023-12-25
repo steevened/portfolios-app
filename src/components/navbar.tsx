@@ -33,7 +33,7 @@ export default async function Navbar() {
           </div>
           <div className="flex items-center gap-2.5">
             {session && session.user ? (
-              <TooltipProvider delayDuration={100}>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
