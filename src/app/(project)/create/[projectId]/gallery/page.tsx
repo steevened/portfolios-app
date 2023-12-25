@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import UploadImageCard from "../../components/upload-image-card";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 
 export default function Page({
   params,
@@ -18,6 +19,22 @@ export default function Page({
   const router = useRouter();
 
   const { toast } = useToast();
+
+  const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+
+    if (files.length >= 5) return;
+
+    if (files.some((file) => file.name === e.target.files![0].name)) {
+      return toast({
+        variant: "destructive",
+        title: "Error!",
+        description: "You have already uploaded this image",
+      });
+    }
+
+    setFiles((prev) => prev.concat(e.target.files![0]));
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,17 +75,26 @@ export default function Page({
           files.length > 0 ? "grid-cols-1 @xl:grid-cols-2" : "grid-cols-1"
         }  gap-2.5 `}
       >
-        {Array.from({
-          length: files.length + 1,
-        }).map((_, index) => (
+        {files.map((file, index) => (
           <li
             key={index}
             className={`${index === 5 ? "hidden" : ""}
           }`}
           >
-            <UploadImageCard files={files} index={index} setFiles={setFiles} />
+            <UploadImageCard file={file} index={index} setFiles={setFiles} />
           </li>
         ))}
+        <li className={`${files.length >= 5 ? "hidden" : ""}`}>
+          <label className="border p-5 flex items-center justify-center border-dashed aspect-video rounded-lg w-full relative group cursor-pointer hover:bg-muted/90 transition-colors overflow-hidden">
+            <FilePlusIcon className="w-20 h-20 text-muted-foreground group-hover:text-muted-foreground/50 transition-colors" />
+            <input
+              // id="upload-image"
+              onChange={handleAddImage}
+              type="file"
+              className="hidden"
+            />
+          </label>
+        </li>
       </ul>
 
       <div className="flex gap-x-1.5">

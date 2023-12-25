@@ -17,38 +17,42 @@ export async function getAllProjects({
   const technologies = tech ? tech.split("_") : undefined;
 
   noStore();
-  const projects = await prisma.project.findMany({
-    where: {
-      published: true,
-      isOnDraft: false,
-      technologies: {
-        some: {
-          technology: {
-            slug: {
-              in: technologies,
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        published: true,
+        isOnDraft: false,
+        technologies: {
+          some: {
+            technology: {
+              slug: {
+                in: technologies,
+              },
             },
           },
         },
       },
-    },
-    include: {
-      technologies: {
-        include: {
-          technology: true,
+      include: {
+        technologies: {
+          include: {
+            technology: true,
+          },
+        },
+        gallery: {
+          select: {
+            id: true,
+            url: true,
+          },
         },
       },
-      gallery: {
-        select: {
-          id: true,
-          url: true,
-        },
+      orderBy: {
+        updatedAt: "desc",
       },
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-  });
-  return projects;
+    });
+    return projects;
+  } catch (error) {
+    return { error };
+  }
 }
 
 export async function getProjectUnpublished() {

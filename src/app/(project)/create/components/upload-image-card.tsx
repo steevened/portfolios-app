@@ -1,96 +1,65 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Cross1Icon, FilePlusIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 export default function UploadImageCard({
-  index,
-  files,
   setFiles,
+  file,
 }: {
   index: number;
-  files: File[];
   setFiles: Dispatch<SetStateAction<File[]>>;
+  file: File;
 }) {
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const handleDeleteImage = () => {
+    setFiles((prev) => prev.filter((item) => item.name !== file.name));
+  };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || !e.target.files) return;
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
 
     setFiles((prev) =>
-      prev
-        .filter((file) => file.name !== e.target.files![0].name)
-        .concat(e.target.files![0])
+      prev.map((item) => {
+        if (item.name === file.name) {
+          return e.target.files![0];
+        }
+        return item;
+      })
     );
-    setImagePreview(URL.createObjectURL(e.target.files![0]));
   };
 
-  const handleDeleteImage = () => {
-    // console.log("delete image", { index, file: files[index] });
-    // setImagePreview("");
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // console.log({ index, imagePreview });
   return (
-    <label
-      htmlFor={`image-${index}`}
-      className="border p-5 flex items-center justify-center border-dashed aspect-video rounded-lg w-full relative group cursor-pointer hover:bg-muted/90 transition-colors overflow-hidden"
-    >
-      <div
-        className={`flex flex-col items-center justify-center gap-2.5 ${
-          imagePreview ? "opacity-0" : ""
-        }`}
-      >
-        <FilePlusIcon className="w-20 h-20 text-muted group-hover:text-foreground/50 transition-colors" />
+    <div className="border border-dashed aspect-video rounded-lg w-full relative group cursor-pointer hover:bg-muted/90 transition-colors overflow-hidden">
+      <Image
+        src={URL.createObjectURL(file)}
+        alt="image preview"
+        fill
+        className="object-contain w-full h-full z-10 group-hover:opacity-50 transition-opacity"
+      />
 
-        <input
-          onChange={handleChange}
-          id={`image-${index}`}
-          type="file"
-          className="hidden"
-        />
+      <div className="flex gap-2.5 absolute top-0 right-0 m-2.5">
+        <Button
+          variant="secondary"
+          onClick={handleDeleteImage}
+          type="button"
+          className="z-20 rounded-full  hover:!text-red-800 hover:!bg-red-300/80 !shadow-md hover:!shadow-lg transition-all"
+          size={"icon"}
+        >
+          <Cross1Icon className="w-5 h-5" />
+        </Button>
+        <label
+          // htmlFor="upload-image"
+          className={buttonVariants({
+            variant: "secondary",
+            size: "icon",
+            className:
+              "z-20 !rounded-full cursor-pointer !text-green-800 hover:!bg-green-300/80 !shadow-md hover:!shadow-lg transition-all",
+          })}
+        >
+          <UpdateIcon className="w-5 h-5" />
+          <input type="file" className="hidden" onChange={handleChangeImage} />
+        </label>
       </div>
-      <div
-        className={`absolute inset-0 flex items-center justify-center ${
-          !imagePreview ? "opacity-0" : "opacity-100"
-        } transition-opacity
-        }`}
-      >
-        {imagePreview ? (
-          <Image
-            src={imagePreview}
-            alt="image preview"
-            fill
-            className="object-contain w-full h-full z-10 group-hover:opacity-50 transition-opacity"
-          />
-        ) : null}
-        <div className="flex gap-2.5 absolute top-0 right-0 m-2.5">
-          <Button
-            variant="secondary"
-            onClick={handleDeleteImage}
-            type="button"
-            className="z-20 rounded-full"
-            size={"icon"}
-          >
-            <Cross1Icon className="w-5 h-5" />
-          </Button>
-          <label
-            htmlFor={`image-${index}`}
-            className={buttonVariants({
-              variant: "secondary",
-              size: "icon",
-              className: "z-20 !rounded-full cursor-pointer",
-            })}
-            // type="button"
-            // variant="secondary"
-            // className="z-20 rounded-full"
-            // size={"icon"}
-          >
-            <UpdateIcon className="w-5 h-5" />
-          </label>
-        </div>
-      </div>
-    </label>
+    </div>
   );
 }
