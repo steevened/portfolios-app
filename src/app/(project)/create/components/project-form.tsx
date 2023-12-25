@@ -82,13 +82,13 @@ export default function ProjectForm({
   });
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
-    if (technologiesSelected.length <= 0) {
-      return toast({
-        variant: "destructive",
-        title: "Wait!",
-        description: "You must select at least one technology.",
-      });
-    }
+    // if (technologiesSelected.length <= 0) {
+    //   return toast({
+    //     variant: "destructive",
+    //     title: "Wait!",
+    //     description: "You must select at least one technology.",
+    //   });
+    // }
 
     try {
       if (origin === "create") {
@@ -123,36 +123,6 @@ export default function ProjectForm({
           }
         );
       }
-
-      // if (initialProject) {
-      //   updateProjectMutation.mutate(
-      //     {
-      //       data,
-      //       technologiesSelected,
-      //       id: initialProject.id,
-      //     },
-      //     {
-      //       onSuccess: ({ data }) => {
-      //         router.refresh();
-      //         router.push(
-      //           origin === "create"
-      //             ? `/create/${data.id}/gallery`
-      //             : `/${data.id}/update/gallery`
-      //         );
-      //       },
-      //     }
-      //   );
-      // } else {
-      //   createProjectMutation.mutate(
-      //     { data, technologiesSelected },
-      //     {
-      //       onSuccess: async ({ data }) => {
-      //         router.refresh();
-      //         router.push(`/create/${data.id}/gallery`);
-      //       },
-      //     }
-      //   );
-      // }
     } catch (error) {
       console.log(error);
     }
