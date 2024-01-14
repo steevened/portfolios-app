@@ -1,5 +1,6 @@
 import { getUserById } from "@/lib/services/user.service";
 import UserAvatar from "./user-avatar";
+import Link from "next/link";
 
 export default async function UserCard({
   userId,
@@ -12,10 +13,20 @@ export default async function UserCard({
   return (
     <div className="flex items-start gap-2">
       {user ? (
-        <UserAvatar image={user?.image as string} name={user?.name as string} />
+        <UserAvatar
+          id={userId}
+          image={user?.image as string}
+          name={user?.name as string}
+        />
       ) : null}
       <div>
-        <h5 className="text-sm font-medium leading-none">{user?.name}</h5>
+        <div className="w-min">
+          <Link href={`/user/${user?.id}`} className="">
+            <h5 className="text-sm font-medium leading-none hover:text-primary transition-colors">
+              {user?.name}
+            </h5>
+          </Link>
+        </div>
         <small className="text-xs leading-none text-muted-foreground">
           {updatedAt.toLocaleDateString("en-US", {
             year: "numeric",

@@ -1,4 +1,5 @@
 "use client";
+import LoaderButton from "@/components/atoms/loader-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -82,13 +83,13 @@ export default function ProjectForm({
   });
 
   async function onSubmit(data: z.infer<typeof projectSchema>) {
-    // if (technologiesSelected.length <= 0) {
-    //   return toast({
-    //     variant: "destructive",
-    //     title: "Wait!",
-    //     description: "You must select at least one technology.",
-    //   });
-    // }
+    if (technologiesSelected.length <= 0) {
+      return toast({
+        variant: "destructive",
+        title: "Wait!",
+        description: "You must select at least one technology.",
+      });
+    }
 
     try {
       if (origin === "create") {
@@ -261,7 +262,18 @@ export default function ProjectForm({
           />
         </div>
         <div className="text-start">
-          <Button>Continue</Button>
+          <LoaderButton
+            disabled={
+              upsertProjectMutation.status === "pending" ||
+              updateProjectMutation.status === "pending"
+            }
+            isLoading={
+              upsertProjectMutation.status === "pending" ||
+              updateProjectMutation.status === "pending"
+            }
+          >
+            Continue
+          </LoaderButton>
         </div>
       </form>
     </Form>

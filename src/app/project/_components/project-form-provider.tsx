@@ -40,7 +40,7 @@ export default async function ProjectFormProvider({
     },
   };
 
-  return <div>{ProjectCases[origin]()}</div>;
+  return <>{ProjectCases[origin]()}</>;
 }
 
 const CreateProjectForm = ({

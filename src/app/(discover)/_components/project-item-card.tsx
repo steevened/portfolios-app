@@ -3,33 +3,28 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getServerAuthSession } from "@/lib/auth";
 import { getAllProjects } from "@/lib/services/projects.service";
-import Image from "next/image";
-import UserCard from "./user-card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import ProjectGallery from "./project-gallery";
+import UserCard from "./user-card";
+import { getUserById } from "@/lib/services/user.service";
 
 export default async function ProjectItemCard({
   project,
 }: {
   project: Awaited<ReturnType<typeof getAllProjects>>[0];
 }) {
-  const user = await getServerAuthSession();
+  const session = await getServerAuthSession();
 
   return (
-    <div className="rounded-lg bg-card  space-y-2.5 border hover:bg-muted transition-colors">
+    <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border hover:bg-muted transition-colors">
       <div className="p-2.5 space-y-2.5 ">
         <div className=" flex items-start justify-between">
           <UserCard userId={project.authorId} updatedAt={project.updatedAt} />
-          {user?.user.id === project.authorId ? (
+          {session?.user.id === project.authorId ? (
             <ProjectDropDown projectId={project.id} />
           ) : null}
         </div>
         <div className="">
-          <h5 className="">{project.name}</h5>
+          <p className="font-medium">{project.name}</p>
           <p className="text-sm text-muted-foreground">{project.description}</p>
         </div>
       </div>

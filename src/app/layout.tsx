@@ -29,7 +29,7 @@ export default async function RootLayout({
             <div className="hidden lg:block fixed h-full top-[55px] border-r p-2.5 w-full max-w-[100px]">
               <Menu />
             </div>
-            <div className="lg:ml-[100px] mt-[55px]  px-5 py-2.5  lg:p-2.5 ">
+            <div className="lg:ml-[100px] mt-[55px]  sm:px-5 sm:py-2.5  lg:p-2.5 ">
               {children}
             </div>
           </ClientProviders>

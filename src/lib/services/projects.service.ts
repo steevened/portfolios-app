@@ -157,3 +157,26 @@ export async function getProjectById(projectId: string) {
   });
   return res;
 }
+
+export async function getProjectsByUserId(userId: string) {
+  noStore();
+  const res = await prisma.project.findMany({
+    where: {
+      authorId: userId,
+    },
+    include: {
+      technologies: {
+        include: {
+          technology: true,
+        },
+      },
+      gallery: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
+    },
+  });
+  return res;
+}

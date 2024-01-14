@@ -11,7 +11,7 @@ export default function Menu() {
             className:
               "w-full flex gap-2 lg:flex-col lg:h-full lg:gap-1 lg:text-xs lg:aspect-square",
           })}
-          href={"/"}
+          href={"/feed"}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
