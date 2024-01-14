@@ -20,7 +20,7 @@ export default async function ProjectItemCard({
   const user = await getServerAuthSession();
 
   return (
-    <div className="rounded-lg bg-card  space-y-2.5">
+    <div className="rounded-lg bg-card  space-y-2.5 border hover:bg-muted transition-colors">
       <div className="p-2.5 space-y-2.5 ">
         <div className=" flex items-start justify-between">
           <UserCard userId={project.authorId} updatedAt={project.updatedAt} />
