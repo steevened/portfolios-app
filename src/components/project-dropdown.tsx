@@ -1,7 +1,7 @@
 "use client";
 
-import { unpublishProject } from "@/lib/actions/unpublish";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +23,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useToast } from "./ui/use-toast";
-import Link from "next/link";
 
 const ProjectDropDown = ({ projectId }: { projectId: string }) => {
   const { toast } = useToast();
@@ -59,7 +58,7 @@ const ProjectDropDown = ({ projectId }: { projectId: string }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/${projectId}/update`}>Edit</Link>
+            <Link href={`/project/${projectId}/update`}>Edit</Link>
           </DropdownMenuItem>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem>Delete</DropdownMenuItem>

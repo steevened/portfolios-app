@@ -104,7 +104,7 @@ export default function ProjectForm({
           {
             onSuccess: ({ data: resData }) => {
               router.refresh();
-              router.push(`/create/${resData.id}/gallery`);
+              router.push(`/project/create/${resData.id}/gallery`);
             },
           }
         );
@@ -119,7 +119,7 @@ export default function ProjectForm({
           {
             onSuccess: ({ data }) => {
               router.refresh();
-              router.push(`/${data.id}/update/gallery`);
+              router.push(`/project/${data.id}/update/gallery`);
             },
           }
         );

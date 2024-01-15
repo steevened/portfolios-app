@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import { getUserById } from "@/lib/services/user.service";
 import Link from "next/link";
+import EditProfileModal from "./edit-profile-modal";
 import ProfileTabs from "./profile-tabs";
 
 const ProfileHero = ({
@@ -28,9 +29,14 @@ const ProfileHero = ({
         </Avatar>
         <div className=" w-full flex flex-col justify-between">
           <div>
-            <p className="font-semibold text-lg first-letter:uppercase">
-              {user.name}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="font-semibold text-lg first-letter:uppercase">
+                {user.name}
+              </p>
+              {sessionId && sessionId === user.id ? (
+                <EditProfileModal user={user} />
+              ) : null}
+            </div>
             <p className="text-muted-foreground">Front End Developer</p>
           </div>
           <div className="flex gap-2.5 items-center">
@@ -71,6 +77,31 @@ const ProfileHero = ({
                   d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453"
                   fill="currentColor"
                 />
+              </svg>
+            </Link>
+            <Link
+              href={"#"}
+              className={buttonVariants({
+                size: "icon",
+                variant: "ghost",
+              })}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                >
+                  <path d="M19.5 7A9 9 0 0 0 12 3a8.991 8.991 0 0 0-7.484 4"></path>
+                  <path d="M11.5 3a16.989 16.989 0 0 0-1.826 4M12.5 3a16.989 16.989 0 0 1 1.828 4M19.5 17a9 9 0 0 1-7.5 4a8.991 8.991 0 0 1-7.484-4"></path>
+                  <path d="M11.5 21a16.989 16.989 0 0 1-1.826-4m2.826 4a16.989 16.989 0 0 0 1.828-4M2 10l1 4l1.5-4L6 14l1-4m10 0l1 4l1.5-4l1.5 4l1-4M9.5 10l1 4l1.5-4l1.5 4l1-4"></path>
+                </g>
               </svg>
             </Link>
           </div>

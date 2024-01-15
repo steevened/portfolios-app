@@ -22,7 +22,7 @@ export default async function UserCard({
       <div>
         <div className="w-min">
           <Link href={`/user/${user?.id}`} className="">
-            <h5 className="text-sm font-medium leading-none hover:text-primary transition-colors">
+            <h5 className="text-sm font-medium leading-none hover:text-primary transition-colors hover:underline">
               {user?.name}
             </h5>
           </Link>

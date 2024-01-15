@@ -42,7 +42,7 @@ export default async function Navbar() {
                         size: "icon",
                         className: "!rounded-full",
                       })}
-                      href="/create"
+                      href="/project/create"
                     >
                       <UploadIcon strokeWidth={"2"} />
                     </Link>
