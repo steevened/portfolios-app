@@ -20,6 +20,7 @@ export default function EditAvatar({ userId }: { userId: string }) {
           className={buttonVariants({
             size: "sm",
             className: "cursor-pointer",
+            variant: "outline",
           })}
         >
           <input
@@ -30,7 +31,9 @@ export default function EditAvatar({ userId }: { userId: string }) {
           />
           Edit
         </label>
-        <Button size={"sm"}>Remove</Button>
+        <Button size={"sm"} variant={"outline"}>
+          Remove
+        </Button>
       </div>
       <UploadAvatarPreview
         userId={userId}
