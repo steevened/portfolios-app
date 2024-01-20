@@ -41,6 +41,15 @@ const authOptions: NextAuthOptions = {
           userId: user.id,
         },
       });
+      await prisma.profile.upsert({
+        where: {
+          userId: user.id,
+        },
+        update: {},
+        create: {
+          userId: user.id,
+        },
+      });
       return true;
     },
   },

@@ -6,6 +6,7 @@ import { getAllProjects } from "@/lib/services/projects.service";
 import ProjectGallery from "./project-gallery";
 import UserCard from "./user-card";
 import { getUserById } from "@/lib/services/user.service";
+import isUserAuthProfile from "@/lib/helpers/is-user-auth-profile";
 
 export default async function ProjectItemCard({
   project,
@@ -19,7 +20,7 @@ export default async function ProjectItemCard({
       <div className="p-2.5 space-y-2.5 ">
         <div className=" flex items-start justify-between">
           <UserCard userId={project.authorId} updatedAt={project.updatedAt} />
-          {session?.user.id === project.authorId ? (
+          {(await isUserAuthProfile(project.authorId)) ? (
             <ProjectDropDown projectId={project.id} />
           ) : null}
         </div>

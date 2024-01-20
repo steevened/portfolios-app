@@ -14,7 +14,7 @@ export default async function Layout({
   const user = await getUserById(params.userId);
   const session = await getServerAuthSession();
   return (
-    <div className="max-w-screen-sm mx-auto  min-h-screen">
+    <div className="max-w-screen-sm mx-auto min-h-screen">
       <ProfileHero user={user} sessionId={session?.user.id} />
       {children}
     </div>

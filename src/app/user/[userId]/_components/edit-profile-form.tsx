@@ -37,7 +37,6 @@ export default async function EditProfileForm({
         action={async (formData) => {
           "use server";
           const names = formData.get("name") as string;
-          console.log({ names });
           if (!session || !session.user.id) return;
           if (names && names.length > 3) {
             await prisma.user.update({
