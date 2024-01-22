@@ -1,19 +1,9 @@
 import ErrorMessage from "@/components/atoms/error-message";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { prisma } from "@/lib/db/prisma";
+import { updateBio } from "@/lib/actions/user.actions";
 import isUserAuthProfile from "@/lib/helpers/is-user-auth-profile";
-import { revalidatePath } from "next/cache";
-
-const getProfileByUserId = async (userId: string) => {
-  const data = await prisma.profile.findUnique({
-    where: {
-      userId,
-    },
-  });
-
-  return data;
-};
+import { getProfileByUserId } from "@/lib/services/profile.service";
 
 export default async function About({
   params,
@@ -27,25 +17,11 @@ export default async function About({
   }
 
   return (
-    <div className="my-5 px-2.5">
+    <div className="my-5 mx-2.5 sm:mx-0">
       {(await isUserAuthProfile(profile.userId)) ? (
-        <div>
+        <>
           {!profile.bio ? (
-            <form
-              action={async (formData) => {
-                "use server";
-                const bio = formData.get("bio") as string;
-                await prisma.profile.update({
-                  where: {
-                    userId: profile.userId,
-                  },
-                  data: {
-                    bio,
-                  },
-                });
-                revalidatePath(`/user/${profile.userId}/about`);
-              }}
-            >
+            <form action={updateBio}>
               <div className="grid gap-5">
                 <div className="grid gap-1.5">
                   <label htmlFor="bio" className=" block text-muted-foreground">
@@ -65,12 +41,30 @@ export default async function About({
               </div>
             </form>
           ) : (
-            <p>{profile.bio}</p>
+            <Bio bio={profile.bio} />
           )}
-        </div>
+        </>
       ) : (
-        <div></div>
+        <>
+          {profile.bio ? (
+            <Bio bio={profile.bio} />
+          ) : (
+            <div className="border p-2.5 rounded-lg">
+              <h3 className="text-muted-foreground text-lg">Bio</h3>
+              <p>{"There's nothing here yet."}</p>
+            </div>
+          )}
+        </>
       )}
+    </div>
+  );
+}
+
+function Bio({ bio }: { bio: string }) {
+  return (
+    <div className="border p-2.5 rounded-lg grid gap-1.5">
+      <h3 className="text-muted-foreground text-lg">Bio</h3>
+      <p className="text-sm">{bio}</p>
     </div>
   );
 }

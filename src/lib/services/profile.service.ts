@@ -1,19 +1,14 @@
 import { unstable_noStore } from "next/cache";
 import { prisma } from "../db/prisma";
 
-export const getProfileById = async (id: string) => {
-  unstable_noStore();
-  const profile = await prisma.profile.findUnique({
+export const getProfileByUserId = async (userId: string) => {
+  const data = await prisma.profile.findUnique({
     where: {
-      userId: id,
-    },
-    select: {
-      id: true,
-      bio: true,
-      user: true,
+      userId,
     },
   });
-  return profile;
+
+  return data;
 };
 
 export const upsertAvatar = async (file: File) => {

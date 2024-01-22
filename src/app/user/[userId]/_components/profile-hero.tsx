@@ -107,7 +107,7 @@ const ProfileHero = ({
           </div>
         </div>
       </div>
-      <div className="border-y max-sm:px-1 py-1">
+      <div className="border-y sm:border  max-sm:px-1 p-1 sm:rounded-lg">
         <ProfileTabs sessionId={sessionId} userId={user.id} />
       </div>
     </div>
