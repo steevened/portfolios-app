@@ -1,10 +1,8 @@
 import ErrorMessage from "@/components/atoms/error-message";
+import { updateBio } from "@/lib/actions/user.actions";
 import isUserAuthProfile from "@/lib/helpers/is-user-auth-profile";
 import { getProfileByUserId } from "@/lib/services/profile.service";
-import BioForm from "../_components/bio.form";
-import BioModal from "../_components/bio.modal";
 import BioSection from "../_components/bio-section";
-import { updateBio } from "@/lib/actions/user.actions";
 
 export default async function About({
   params,
@@ -47,23 +45,3 @@ export default async function About({
     </div>
   );
 }
-
-// function BioSection({
-//   bio,
-//   isMyProfile = false,
-//   type,
-// }: {
-//   bio: string;
-//   isMyProfile?: boolean;
-//   type: "create" | "update";
-// }) {
-//   return (
-//     <div className="border p-2.5 rounded-lg grid gap-1.5">
-//       <div className="flex items-center justify-between">
-//         <h3 className="text-muted-foreground text-lg">Bio</h3>
-//         {isMyProfile ? <BioModal type={type} /> : null}
-//       </div>
-//       <p className="text-sm">{bio}</p>
-//     </div>
-//   );
-// }
