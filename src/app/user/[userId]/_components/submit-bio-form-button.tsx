@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useFormStatus } from "react-dom";
 
 export default function SubmitBioFormButton(buttonProps?: ButtonProps) {
-  const { pending, data, method, action } = useFormStatus();
+  const { pending } = useFormStatus();
 
   return (
     <LoaderButton

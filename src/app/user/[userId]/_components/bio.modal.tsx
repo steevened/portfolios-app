@@ -2,7 +2,6 @@
 
 import AddButton from "@/components/atoms/add-button";
 import EditButton from "@/components/atoms/edit-button";
-import LoaderButton from "@/components/atoms/loader-button";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,8 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useState } from "react";
 import SubmitBioFormButton from "./submit-bio-form-button";
 
 export default function BioModal({
