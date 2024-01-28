@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import EditButton from "@/components/atoms/edit-button";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { getUserById } from "@/lib/services/user.service";
 import EditProfileForm from "./edit-profile-form";
-import EditButton from "@/components/atoms/edit-button";
 
 export default function EditProfileModal({
   user,

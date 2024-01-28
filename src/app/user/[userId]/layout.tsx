@@ -10,7 +10,7 @@ export default async function Layout({
   };
 }) {
   return (
-    <div className="max-w-screen-sm mx-auto min-h-screen">
+    <div className="max-w-screen-sm mx-auto min-h-screen flex flex-col">
       <ProfileHero params={params} />
       {children}
     </div>

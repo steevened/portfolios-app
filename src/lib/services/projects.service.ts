@@ -17,6 +17,7 @@ export async function getAllProjects({
   const technologies = tech ? tech.split("_") : undefined;
 
   noStore();
+
   const projects = await prisma.project.findMany({
     where: {
       published: true,

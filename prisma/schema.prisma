@@ -59,18 +59,30 @@ model VerificationToken {
 }
 
 model Profile {
-  id        String         @id @default(cuid())
-  bio       String?
-  userId    String         @unique
-  user      User           @relation(fields: [userId], references: [id])
-  developer DeveloperRole?
+  id       String          @id @default(cuid())
+  bio      String?
+  github   String?
+  linkedin String?
+  twitter  String?
+  website  String?
+  userId   String          @unique
+  user     User            @relation(fields: [userId], references: [id])
+  roles    DeveloperRole[]
 }
 
 model DeveloperRole {
-  id          String  @id @default(cuid())
-  name        String  @unique
-  developerId String  @unique
-  developer   Profile @relation(fields: [developerId], references: [id])
+  user   Profile @relation(fields: [userId], references: [id])
+  userId String  @unique
+  role   Role    @relation(fields: [roleId], references: [id])
+  roleId String
+
+  @@id([userId, roleId])
+}
+
+model Role {
+  id    String          @id @default(cuid())
+  name  String          @unique
+  users DeveloperRole[]
 }
 
 model Technology {
@@ -95,7 +107,7 @@ model Project {
   author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   gallery      ProjectGallery[]
   isOnDraft    Boolean             @default(true)
-  draftId       String?
+  draftId      String?
   draft        Draft?              @relation(fields: [draftId], references: [id])
 }
 
