@@ -20,14 +20,9 @@ export default async function About({
       {(await isUserAuthProfile(profile.userId)) ? (
         <>
           {!profile.bio ? (
-            <BioSection action={updateBio} isMyProfile type="create" />
+            <BioSection isMyProfile type="create" />
           ) : (
-            <BioSection
-              action={updateBio}
-              isMyProfile
-              type="update"
-              bio={profile.bio}
-            />
+            <BioSection isMyProfile type="update" bio={profile.bio} />
           )}
         </>
       ) : (

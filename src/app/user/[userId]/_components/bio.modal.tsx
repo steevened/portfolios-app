@@ -14,19 +14,29 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubmitBioFormButton from "./submit-bio-form-button";
+import { useFormState } from "react-dom";
+import { updateBio } from "@/lib/actions/user.actions";
+import { useToast } from "@/components/ui/use-toast";
+
+const initialState = {
+  message: "",
+  code: 0,
+};
 
 export default function BioModal({
   type,
   bio,
-  action,
 }: {
   type: "create" | "update";
   bio?: string;
-  action: (formData: FormData) => Promise<void>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [state, formAction] = useFormState(updateBio, initialState);
+
+  const { toast } = useToast();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -44,7 +54,12 @@ export default function BioModal({
               : "Update your bio."}
           </DialogDescription>
         </DialogHeader>
-        <form action={action}>
+        <form
+          action={formAction}
+          onSubmit={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
           <div className="grid gap-5">
             <div className="grid gap-1.5">
               <label htmlFor="bio" className=" block text-muted-foreground">

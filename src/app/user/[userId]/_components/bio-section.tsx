@@ -4,7 +4,6 @@ type InternalBio = {
   bio?: string;
   isMyProfile: true;
   type: "create" | "update";
-  action: (formData: FormData) => Promise<void>;
 };
 
 type ExternalBio = {
@@ -20,7 +19,7 @@ export default function BioSection(props: Props) {
       <div className="flex items-center justify-between">
         <h3 className="text-muted-foreground text-lg">Bio</h3>
         {props.isMyProfile ? (
-          <BioModal action={props.action} bio={props.bio} type={props.type} />
+          <BioModal bio={props.bio} type={props.type} />
         ) : null}
       </div>
       {!props.bio ? (

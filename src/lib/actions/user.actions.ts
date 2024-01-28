@@ -5,7 +5,13 @@ import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { getProfileByUserId } from "../services/profile.service";
 
-export const updateBio = async (formData: FormData) => {
+export const updateBio = async (
+  prevState: {
+    message: string;
+    code?: number;
+  },
+  formData: FormData
+) => {
   const session = await getServerAuthSession();
   if (!session) throw new Error("Unauthorized");
 
@@ -22,8 +28,9 @@ export const updateBio = async (formData: FormData) => {
         bio,
       },
     });
+    revalidatePath(`/user/${profile.userId}/about`);
+    return { message: "Bio updated successfully", code: 200 };
   } catch (error) {
-    throw new Error("Failed to update bio");
+    return { message: "Error updating bio", code: 500 };
   }
-  revalidatePath(`/user/${profile.userId}/about`);
 };
