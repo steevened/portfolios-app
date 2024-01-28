@@ -1,39 +1,42 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserAvatar from "@/app/(discover)/_components/user-avatar";
 import { buttonVariants } from "@/components/ui/button";
 import { getUserById } from "@/lib/services/user.service";
 import Link from "next/link";
 import EditProfileModal from "./edit-profile-modal";
 import ProfileTabs from "./profile-tabs";
+import { getProfileByUserId } from "@/lib/services/profile.service";
+import { getServerAuthSession } from "@/lib/auth";
+import Error from "../about/error";
+import isMyProfile from "@/lib/helpers/is-my-profile";
 
-const ProfileHero = ({
-  user,
-  sessionId,
+const ProfileHero = async ({
+  params,
 }: {
-  user: Awaited<ReturnType<typeof getUserById>>;
-  sessionId?: string;
+  params: {
+    userId: string;
+  };
 }) => {
-  if (!user) return null;
+  const user = await getUserById(params.userId);
+  const profile = await getProfileByUserId(params.userId);
+  const session = await getServerAuthSession();
+
+  if (!user || !profile) return <Error />;
   return (
     <div>
       <div className="flex gap-2.5 py-5  max-sm:px-2.5">
-        <Avatar className="w-24 h-24 sm:w-32 sm:h-32">
-          {user.image ? (
-            <AvatarImage
-              src={user.image}
-              alt={user.name + "profile image" ?? ""}
-            />
-          ) : null}
-          <AvatarFallback className="uppercase text-2xl">
-            {user.name ? user.name.slice(0, 2) : ""}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar
+          name={user?.name || ""}
+          image={user?.image || ""}
+          id={user?.id}
+          className="w-24 h-24 sm:w-32 sm:h-32"
+        />
         <div className=" w-full flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <p className="font-semibold text-lg first-letter:uppercase">
                 {user.name}
               </p>
-              {sessionId && sessionId === user.id ? (
+              {(await isMyProfile(user.id)) ? (
                 <EditProfileModal user={user} />
               ) : null}
             </div>
@@ -108,7 +111,7 @@ const ProfileHero = ({
         </div>
       </div>
       <div className="border-y sm:border  max-sm:px-1 p-1 sm:rounded-lg">
-        <ProfileTabs sessionId={sessionId} userId={user.id} />
+        <ProfileTabs sessionId={session?.user.id} userId={user.id} />
       </div>
     </div>
   );

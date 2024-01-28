@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/atoms/error-message";
 import { updateBio } from "@/lib/actions/user.actions";
-import isUserAuthProfile from "@/lib/helpers/is-user-auth-profile";
+import isUserAuthProfile from "@/lib/helpers/is-my-profile";
 import { getProfileByUserId } from "@/lib/services/profile.service";
 import BioSection from "../_components/bio-section";
 

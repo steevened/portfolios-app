@@ -8,7 +8,7 @@ export default async function UserAvatar({
   id,
   className,
 }: {
-  name: string;
+  name?: string;
   image?: string;
   id: string;
   className?: string;
@@ -18,7 +18,7 @@ export default async function UserAvatar({
       <Avatar className={(cn("w-12 h-12"), className)}>
         {image ? <AvatarImage src={image} alt={name ?? ""} /> : null}
         <AvatarFallback className="uppercase">
-          {name.slice(0, 2)}
+          {name?.slice(0, 2) || ""}
         </AvatarFallback>
       </Avatar>
     </Link>

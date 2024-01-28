@@ -2,11 +2,10 @@ import ProjectDropDown from "@/components/project-dropdown";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getServerAuthSession } from "@/lib/auth";
+import isUserAuthProfile from "@/lib/helpers/is-my-profile";
 import { getAllProjects } from "@/lib/services/projects.service";
 import ProjectGallery from "./project-gallery";
 import UserCard from "./user-card";
-import { getUserById } from "@/lib/services/user.service";
-import isUserAuthProfile from "@/lib/helpers/is-user-auth-profile";
 
 export default async function ProjectItemCard({
   project,
