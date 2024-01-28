@@ -61,13 +61,22 @@ model VerificationToken {
 model Profile {
   id       String          @id @default(cuid())
   bio      String?
+  userId   String          @unique
+  user     User            @relation(fields: [userId], references: [id])
+  roles    DeveloperRole[]
+  links ProfileLinks?
+}
+
+model ProfileLinks {
+  id String @id @default(cuid())
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   github   String?
   linkedin String?
   twitter  String?
   website  String?
-  userId   String          @unique
-  user     User            @relation(fields: [userId], references: [id])
-  roles    DeveloperRole[]
+
+  @@unique([profileId])
 }
 
 model DeveloperRole {

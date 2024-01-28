@@ -11,6 +11,28 @@ export const getProfileByUserId = async (userId: string) => {
   return data;
 };
 
+export const getProfileRolesByProfileId = async (profileId: string) => {
+  const data = await prisma.developerRole.findMany({
+    where: {
+      userId: profileId,
+    },
+    select: {
+      role: true,
+    },
+  });
+
+  return data;
+};
+
+export default async function getProfileLinks(profileId: string) {
+  const data = await prisma.profileLinks.findUnique({
+    where: {
+      profileId,
+    },
+  });
+  return data;
+}
+
 export const upsertAvatar = async (file: File) => {
   unstable_noStore();
   if (!file) return;
