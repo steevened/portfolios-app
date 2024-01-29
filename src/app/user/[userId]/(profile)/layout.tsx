@@ -1,4 +1,4 @@
-import ProfileHero from "./_components/profile-hero";
+import ProfileHero from "../_components/profile-hero";
 
 export default async function Layout({
   children,
@@ -10,9 +10,9 @@ export default async function Layout({
   };
 }) {
   return (
-    <div className="max-w-screen-sm mx-auto min-h-screen flex flex-col">
+    <>
       <ProfileHero params={params} />
       {children}
-    </div>
+    </>
   );
 }

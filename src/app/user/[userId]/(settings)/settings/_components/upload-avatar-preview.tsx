@@ -18,12 +18,12 @@ export default function UploadAvatarPreview({
   isOpen,
   onOpenChange,
   file,
-  userId,
+  action,
 }: {
   isOpen: boolean;
   file?: File;
   onOpenChange: (open: boolean) => void;
-  userId: string;
+  action: "upload" | "update";
 }) {
   const { toast } = useToast();
   const router = useRouter();
@@ -38,8 +38,10 @@ export default function UploadAvatarPreview({
         router.refresh();
         onOpenChange(false);
         toast({
-          title: "Success",
-          description: "Your avatar has been updated successfully",
+          title: "Success!",
+          description: `Your avatar has been ${
+            action === "update" ? "updated" : "uploaded"
+          } successfully!`,
         });
       },
       onError: () => {

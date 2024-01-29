@@ -7,20 +7,35 @@ export default async function UserAvatar({
   image,
   id,
   className,
+  fallbackClassName,
+  link = true,
 }: {
   name: string;
   image?: string;
-  id: string;
+  id?: string;
   className?: string;
+  fallbackClassName?: string;
+  link?: boolean;
 }) {
+  if (link && id) {
+    return (
+      <Link href={`/user/${id}`}>
+        <Avatar className={(cn("w-12 h-12"), className)}>
+          {image ? <AvatarImage src={image} alt={name ?? ""} /> : null}
+          <AvatarFallback className={cn("uppercase", fallbackClassName)}>
+            {name.slice(0, 2)}
+          </AvatarFallback>
+        </Avatar>
+      </Link>
+    );
+  }
+
   return (
-    <Link href={`/user/${id}`}>
-      <Avatar className={(cn("w-12 h-12"), className)}>
-        {image ? <AvatarImage src={image} alt={name ?? ""} /> : null}
-        <AvatarFallback className="uppercase">
-          {name.slice(0, 2)}
-        </AvatarFallback>
-      </Avatar>
-    </Link>
+    <Avatar className={(cn("w-12 h-12"), className)}>
+      {image ? <AvatarImage src={image} alt={name ?? ""} /> : null}
+      <AvatarFallback className={cn("uppercase", fallbackClassName)}>
+        {name.slice(0, 2)}
+      </AvatarFallback>
+    </Avatar>
   );
 }

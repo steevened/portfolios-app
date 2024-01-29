@@ -1,14 +1,14 @@
-import UserAvatar from "@/app/(discover)/_components/user-avatar";
 import { getServerAuthSession } from "@/lib/auth";
 import isMyProfile from "@/lib/helpers/is-my-profile";
 import { getProfileByUserId } from "@/lib/services/profile.service";
 import { getUserById } from "@/lib/services/user.service";
-import Error from "../about/error";
-import EditProfileModal from "./edit-profile-modal";
+import Error from "../(profile)/about/error";
 import ProfileLinks from "./profile-links";
-import ProfileRolea from "./profile-roles";
+import ProfileRoles from "./profile-roles";
 import ProfileTabs from "./profile-tabs";
 
+import EditButton from "@/components/atoms/edit-button";
+import Link from "next/link";
 import UserImage from "./user-image";
 
 const ProfileHero = async ({
@@ -37,10 +37,12 @@ const ProfileHero = async ({
                 {user.name}
               </p>
               {(await isMyProfile(user.id)) ? (
-                <EditProfileModal user={user} />
+                <Link href={`/user/${user.id}/settings`}>
+                  <EditButton />
+                </Link>
               ) : null}
             </div>
-            <ProfileRolea profileId={profile.id} />
+            <ProfileRoles profileId={profile.id} />
           </div>
           <ProfileLinks profileId={profile.id} />
         </div>

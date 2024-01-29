@@ -2,7 +2,7 @@
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useState } from "react";
-import UploadAvatarPreview from "./upload-avatar-preview";
+import UploadAvatarPreview from "../(settings)/settings/_components/upload-avatar-preview";
 
 export default function EditAvatar({ userId }: { userId: string }) {
   const [file, setFile] = useState<File | undefined>(undefined);
