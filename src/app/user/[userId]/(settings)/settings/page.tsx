@@ -7,6 +7,7 @@ import { getUserById } from "@/lib/services/user.service";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import ProfileImageSection from "./_components/profile-image-section";
+import BioSection from "./_components/bio-section";
 
 export default async function Page({
   params,
@@ -32,12 +33,13 @@ export default async function Page({
           <h3>Settings</h3>
         </div>
       </div>
-      <main className="my-5">
+      <main className="my-5 grid gap-5">
         <ProfileImageSection
           name={user.name || ""}
           image={user.image || ""}
           userId={user.id}
         />
+        <BioSection />
       </main>
     </div>
   );

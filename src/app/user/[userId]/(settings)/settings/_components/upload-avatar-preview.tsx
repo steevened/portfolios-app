@@ -47,7 +47,7 @@ export default function UploadAvatarPreview({
       onError: () => {
         toast({
           title: "Error",
-          description: "Something went wrong, please try again later",
+          description: "Something went wrong, please try again later.",
         });
       },
     });

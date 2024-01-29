@@ -36,7 +36,7 @@ export default function EditAvatar({ userId }: { userId: string }) {
         </Button>
       </div>
       <UploadAvatarPreview
-        userId={userId}
+        action={"update"}
         isOpen={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
         file={file}
