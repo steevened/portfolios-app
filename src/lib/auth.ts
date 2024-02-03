@@ -53,7 +53,7 @@ const authOptions: NextAuthOptions = {
       return true;
     },
   },
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export const getServerAuthSession = () => getServerSession(authOptions);
