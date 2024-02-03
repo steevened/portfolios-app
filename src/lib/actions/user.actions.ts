@@ -6,13 +6,7 @@ import { prisma } from "../db/prisma";
 import { getProfileByUserId } from "../services/profile.service";
 import { getUserById } from "../services/user.service";
 
-export const updateBio = async (
-  prevState: {
-    message: string;
-    code?: number;
-  },
-  formData: FormData
-) => {
+export const updateBio = async (formData: FormData) => {
   const session = await getServerAuthSession();
   if (!session) throw new Error("Unauthorized");
 

@@ -34,8 +34,6 @@ export default function BioModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [state, formAction] = useFormState(updateBio, initialState);
-
   const { toast } = useToast();
 
   return (
@@ -55,7 +53,7 @@ export default function BioModal({
           </DialogDescription>
         </DialogHeader>
         <form
-          action={formAction}
+          action={updateBio}
           onSubmit={() => {
             setIsOpen(!isOpen);
           }}
