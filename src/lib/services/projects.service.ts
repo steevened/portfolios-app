@@ -51,7 +51,7 @@ export async function getAllProjects({
     });
     return projects;
   } catch (error) {
-    throw new Error(error as string);
+    throw new Error("Error getting projects from the database.");
   }
 }
 

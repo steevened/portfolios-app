@@ -6,6 +6,6 @@ export const getAllTechnologies = async () => {
     noStore();
     return await prisma.technology.findMany();
   } catch (error) {
-    throw new Error(error as string);
+    throw new Error("Error getting technologies from the database.");
   }
 };

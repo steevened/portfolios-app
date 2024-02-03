@@ -2,8 +2,8 @@ import ClientProviders from "@/components/client-providers";
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 import { NextAuthSessionProvider } from "@/components/session-provider";
+import { getServerAuthSession } from "@/lib/auth";
 import type { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -19,7 +19,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
+  const session = await getServerAuthSession();
 
   return (
     <html lang="en">
