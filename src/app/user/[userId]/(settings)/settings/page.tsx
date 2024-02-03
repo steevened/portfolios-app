@@ -1,4 +1,4 @@
-import UserAvatar from "@/app/(discover)/_components/user-avatar";
+import UserAvatar from "@/app/feed/_components/user-avatar";
 import BackButton from "@/components/atoms/back-button";
 import { Button } from "@/components/ui/button";
 import { getServerAuthSession } from "@/lib/auth";

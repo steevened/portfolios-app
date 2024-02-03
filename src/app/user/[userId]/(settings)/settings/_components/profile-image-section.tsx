@@ -1,4 +1,4 @@
-import UserAvatar from "@/app/(discover)/_components/user-avatar";
+import UserAvatar from "@/app/feed/_components/user-avatar";
 import { Button } from "@/components/ui/button";
 import UpdateProfileImage from "./update-profile-image";
 import DeleteProfileImage from "./delete-profile-image";
