@@ -70,7 +70,7 @@ export async function POST(
 
       const fileLink = `${
         process.env.NODE_ENV === "production"
-          ? "https://cute-florentine-f4ebd4.netlify.app/"
+          ? "https://porfolios-app.netlify.app/"
           : "http://localhost:3000"
       }/img/${path.basename(normalizedPath)}`;
 
