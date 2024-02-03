@@ -68,9 +68,11 @@ export async function POST(
 
       const normalizedPath = path.normalize(filePath);
 
-      const fileLink = `http://localhost:3000/img/${path.basename(
-        normalizedPath
-      )}`;
+      const fileLink = `${
+        process.env.NODE_ENV === "production"
+          ? "https://cute-florentine-f4ebd4.netlify.app/"
+          : "http://localhost:3000"
+      }/img/${path.basename(normalizedPath)}`;
 
       writeFile(filePath, buffer);
 
