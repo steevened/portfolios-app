@@ -32,24 +32,29 @@ const authOptions: NextAuthOptions = {
       },
     }),
     async signIn({ user }) {
-      await prisma.draft.upsert({
-        where: {
-          userId: user.id,
-        },
-        update: {},
-        create: {
-          userId: user.id,
-        },
-      });
-      await prisma.profile.upsert({
-        where: {
-          userId: user.id,
-        },
-        update: {},
-        create: {
-          userId: user.id,
-        },
-      });
+      try {
+        await prisma.draft.upsert({
+          where: {
+            userId: user.id,
+          },
+          update: {},
+          create: {
+            userId: user.id,
+          },
+        });
+        await prisma.profile.upsert({
+          where: {
+            userId: user.id,
+          },
+          update: {},
+          create: {
+            userId: user.id,
+          },
+        });
+      } catch (error) {
+        throw new Error("Error on sign in. Please try again.");
+      }
+
       return true;
     },
   },
