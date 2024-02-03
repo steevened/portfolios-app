@@ -19,6 +19,16 @@ const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
+      profile(profile) {
+        return {
+          role: profile.role ?? "user",
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+        };
+      },
       clientId: process.env.GITHUB_CLIENT_ID || "",
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
     }),
@@ -29,28 +39,20 @@ const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        role: user.role,
       },
     }),
     async signIn({ user }) {
       try {
-        await prisma.draft.upsert({
-          where: {
-            userId: user.id,
-          },
-          update: {},
-          create: {
-            userId: user.id,
-          },
-        });
-        await prisma.profile.upsert({
-          where: {
-            userId: user.id,
-          },
-          update: {},
-          create: {
-            userId: user.id,
-          },
-        });
+        // await prisma.developer.upsert({
+        //   where: {
+        //     userId: user.id,
+        //   },
+        //   update: {},
+        //   create: {
+        //     userId: user.id,
+        //   },
+        // });
       } catch (error) {
         throw new Error("Error on sign in. Please try again.");
       }
