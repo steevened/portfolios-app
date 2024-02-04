@@ -1,19 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
+import { getUserByUsername } from "@/lib/services/user.service";
 import { notFound } from "next/navigation";
-
-async function getUserByUsername(username: string) {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        username,
-      },
-    });
-
-    return user;
-  } catch (error) {
-    throw new Error(error as string);
-  }
-}
 
 export default async function Page({
   params,
@@ -27,5 +14,5 @@ export default async function Page({
     notFound();
   }
 
-  return <h1>{JSON.stringify(user)}</h1>;
+  return <h1></h1>;
 }

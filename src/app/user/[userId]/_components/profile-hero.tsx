@@ -9,7 +9,7 @@ import ProfileTabs from "./profile-tabs";
 
 import EditButton from "@/components/atoms/edit-button";
 import Link from "next/link";
-import UserImage from "./user-image";
+import UserImage from "../../../[...username]/_components/user-image";
 
 const ProfileHero = async ({
   params,

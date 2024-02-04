@@ -45,15 +45,17 @@ const authOptions: NextAuthOptions = {
     }),
     async signIn({ user }) {
       try {
-        // await prisma.developer.upsert({
-        //   where: {
-        //     userId: user.id,
-        //   },
-        //   update: {},
-        //   create: {
-        //     userId: user.id,
-        //   },
-        // });
+        if (user) {
+          await prisma.developer.upsert({
+            where: {
+              userId: user.id,
+            },
+            update: {},
+            create: {
+              userId: user.id,
+            },
+          });
+        }
       } catch (error) {
         throw new Error("Error on sign in. Please try again.");
       }
