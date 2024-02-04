@@ -8,13 +8,18 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { getUserById } from "@/lib/services/user.service";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function UserButton() {
   const session = await getServerAuthSession();
-
   if (!session?.user) return <SignIn />;
+
+  const user = await getUserById(session?.user.id as string);
 
   return (
     <DropdownMenu>
@@ -39,11 +44,37 @@ export default async function UserButton() {
             <p className="text-sm font-medium leading-none">
               {session.user.name}
             </p>
+
             <p className="text-xs leading-none text-muted-foreground">
-              {session.user.email}
+              {user?.username}
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link
+            className={buttonVariants({
+              variant: "menu",
+              size: "sm",
+            })}
+            href={`/${user?.username}`}
+          >
+            Profile
+          </Link>
+        </DropdownMenuItem>
+        {user && user?.role === "admin" ? (
+          <DropdownMenuItem asChild>
+            <Link
+              className={buttonVariants({
+                variant: "menu",
+                size: "sm",
+              })}
+              href={`dashboard`}
+            >
+              Dashboard
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuItem asChild>
           <SignOut />
         </DropdownMenuItem>

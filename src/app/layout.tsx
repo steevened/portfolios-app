@@ -23,15 +23,23 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} overflow-x-hidden `}>
+      <body className={`${inter.className} overflow-x-hidden bg-primary-muted`}>
         <NextAuthSessionProvider session={session}>
           <ClientProviders>
-            <Navbar />
-            <div className="hidden lg:block fixed h-full top-[55px] border-r p-2.5 w-full max-w-[100px]">
-              <Menu />
+            <div className="sticky top-0 z-10">
+              <Navbar />
             </div>
-            <div className="lg:ml-[100px] mt-[55px]  sm:px-5 sm:py-2.5  lg:p-2.5 ">
-              {children}
+
+            <div className="flex flex-col-reverse md:flex-row h-full">
+              <div className="p-2.5 sticky bottom-0 bg-background/95 backdrop-blur-lg z-10 w-full border-t md:border-t-0 md:border-r md:w-min  justify-center flex md:h-[calc(100svh-57px)] md:top-[57px] ">
+                <Menu />
+              </div>
+              <div
+                //  className="lg:ml-[100px] mt-[55px]  sm:px-5 sm:py-2.5  lg:p-2.5"
+                className="w-full min-h-[calc(100svh-60px)]  grid h-full "
+              >
+                {children}
+              </div>
             </div>
           </ClientProviders>
         </NextAuthSessionProvider>

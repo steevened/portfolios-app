@@ -12,8 +12,6 @@ export default async function ProjectItemCard({
 }: {
   project: Awaited<ReturnType<typeof getAllProjects>>[0];
 }) {
-  const session = await getServerAuthSession();
-
   return (
     <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border hover:bg-muted transition-colors">
       <div className="p-2.5 space-y-2.5 ">

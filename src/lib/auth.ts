@@ -11,6 +11,8 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      username: string;
+      role: "user" | "admin";
     } & DefaultSession["user"];
   }
 }
@@ -23,10 +25,8 @@ const authOptions: NextAuthOptions = {
         return {
           role: profile.role ?? "user",
           id: profile.id,
-          name: profile.name,
-          email: profile.email,
-          image: profile.avatar_url,
           username: profile.login,
+          ...profile,
         };
       },
       clientId: process.env.GITHUB_CLIENT_ID || "",
@@ -39,7 +39,8 @@ const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
-        role: user.role,
+        role: session.user.role,
+        username: session.user.username,
       },
     }),
     async signIn({ user }) {

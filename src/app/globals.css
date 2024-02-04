@@ -56,8 +56,41 @@
   body {
     @apply bg-background text-foreground;
   }
+  h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+
+  h2 {
+    @apply scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0;
+  }
 
   h3 {
-    @apply text-xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  h5 {
+    @apply scroll-m-20 text-lg font-semibold tracking-tight;
+  }
+
+  h6 {
+    @apply scroll-m-20 text-base font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* .bg-primary {
+    @apply bg-background;
+  }
+
+  .bg-primary-muted {
+    @apply bg-muted/50 shadow-inner;
+  } */
+
+  .inner-layout {
+    @apply mx-auto max-w-screen-sm;
   }
 }

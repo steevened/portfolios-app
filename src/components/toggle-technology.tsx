@@ -58,7 +58,7 @@ export default function ToggleTechnology({
   }, [techArray]);
 
   return (
-    <div className="w-full overflow-x-auto snap-x scrollbar-hide">
+    <div className="w-full overflow-x-auto snap-x scrollbar-hide p-2.5">
       <div
         ref={tabsContainerRef}
         className="flex justify-start w-min  gap-2.5 items-center "

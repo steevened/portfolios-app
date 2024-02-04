@@ -19,15 +19,12 @@ export default async function Navbar() {
   // const projectUnpublished = await getProjectUnpublished();
   return (
     <header className="antialiased">
-      <nav className="px-2.5 sm:px-5 z-10 bg-background/80 backdrop-blur-sm lg:px-6 py-2.5 border-b fixed w-full top-0">
+      <nav className="px-2.5 sm:px-5 z-10 bg-background/90 backdrop-blur-sm lg:px-6 py-2.5 border-b w-full">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center gap-4">
-            <div className="block lg:hidden">
-              <SideMenuSheet />
-            </div>
             <Link href="/feed" className="flex ">
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                DevFolio
+              <span className="self-center text-xl font-semibold whitespace-nowrap ">
+                The Showcase
               </span>
             </Link>
           </div>

@@ -10,6 +10,7 @@ export default async function UserCard({
   updatedAt: Date;
 }) {
   const user = await getUserById(userId);
+
   return (
     <div className="flex items-start gap-2">
       {user ? (
