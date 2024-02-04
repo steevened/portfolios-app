@@ -61,7 +61,7 @@ export default async function Layout({
           <div className="col-span-2 border-r h-full p-2.5 hidden @xl:block">
             <DashboardMenu />
           </div>
-          <div className="col-span-12 @xl:col-span-10 border">{children}</div>
+          <div className="col-span-12 @xl:col-span-10">{children}</div>
         </div>
       </div>
     </div>

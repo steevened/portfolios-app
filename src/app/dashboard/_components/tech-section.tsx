@@ -1,13 +1,7 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  createTechnology,
-  deleteTechnology,
-} from "@/lib/actions/technologies.action";
-import { prisma } from "@/lib/db/prisma";
+import { createTechnology } from "@/lib/actions/technologies.action";
 import { getAllTechnologies } from "@/lib/services/technologies.service";
-import { revalidatePath } from "next/cache";
 import TechBadge from "./tech-badge";
 
 export default async function TechSection() {
@@ -16,11 +10,10 @@ export default async function TechSection() {
   return (
     <form action={createTechnology} className="grid gap-5">
       <div>
-        <h3>Technologies</h3>
+        <h3>Programming languages</h3>
         <p className="text-muted-foreground text-sm">
           {technologies.length > 0
-            ? `This is a list of technologies that we use in our projects. You can
-          enable or disable them to see how the application behaves.`
+            ? `This is a list of all the programming languages that the users can choose from. You can add more by clicking the button below.`
             : "No technologies found"}
         </p>
       </div>
