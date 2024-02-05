@@ -11,14 +11,17 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      username: string;
-      role: "user" | "admin";
+      // username: string;
+      // role: "user" | "admin";
     } & DefaultSession["user"];
   }
 }
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "database",
+  },
   providers: [
     GithubProvider({
       profile(profile) {
@@ -26,7 +29,9 @@ const authOptions: NextAuthOptions = {
           role: profile.role ?? "user",
           id: profile.id,
           username: profile.login,
-          ...profile,
+          name: profile.name,
+          email: profile.email,
+          image: profile.avatar_url,
         };
       },
       clientId: process.env.GITHUB_CLIENT_ID || "",
@@ -34,35 +39,34 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session: async ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-        role: session.user.role,
-        username: session.user.username,
-      },
-    }),
-    async signIn({ user }) {
+    session: async ({ session, user }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      };
+    },
+    async signIn({ user, account }) {
+      console.log({ user, account });
       try {
-        if (user) {
-          await prisma.developer.upsert({
-            where: {
-              userId: user.id,
-            },
-            update: {},
-            create: {
-              userId: user.id,
-            },
-          });
-        }
+        // await prisma.developer.upsert({
+        //   where: {
+        //     userId: user.id,
+        //   },
+        //   update: {},
+        //   create: {
+        //     userId: user.id,
+        //   },
+        // });
       } catch (error) {
         throw new Error("Error on sign in. Please try again.");
       }
-
-      return true;
+      return false;
     },
   },
+
   secret: process.env.NEXTAUTH_SECRET,
 };
 
