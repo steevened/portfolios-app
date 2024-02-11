@@ -1,28 +1,26 @@
 import { unstable_noStore } from "next/cache";
 import { prisma } from "../db/prisma";
+import { getUserByUsername } from "./user.service";
 
-// export const getProfileByUserId = async (userId: string) => {
-//   const data = await prisma.profile.findUnique({
-//     where: {
-//       userId,
-//     },
-//   });
+export async function getDeveloperProfile({ username }: { username: string }) {
+  try {
+    const user = await getUserByUsername(username);
+    if (!user) return null;
 
-//   return data;
-// };
-
-// export const getProfileRolesByProfileId = async (profileId: string) => {
-//   const data = await prisma.developerRole.findMany({
-//     where: {
-//       userId: profileId,
-//     },
-//     select: {
-//       role: true,
-//     },
-//   });
-
-//   return data;
-// };
+    const developer = await prisma.developer.upsert({
+      where: {
+        userId: user.id,
+      },
+      update: {},
+      create: {
+        userId: user.id,
+      },
+    });
+    return developer;
+  } catch (error) {
+    throw new Error("Error getting developer profile");
+  }
+}
 
 export default async function getDeveloperLinks(developerId: string) {
   const data = await prisma.developerLinks.findUnique({

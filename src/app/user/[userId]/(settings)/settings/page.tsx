@@ -1,13 +1,10 @@
-import UserAvatar from "@/app/feed/_components/user-avatar";
 import BackButton from "@/components/atoms/back-button";
-import { Button } from "@/components/ui/button";
 import { getServerAuthSession } from "@/lib/auth";
 import isMyProfile from "@/lib/helpers/is-my-profile";
 import { getUserById } from "@/lib/services/user.service";
-import Image from "next/image";
 import { redirect } from "next/navigation";
-import ProfileImageSection from "./_components/profile-image-section";
 import BioSection from "./_components/bio-section";
+import ProfileImageSection from "./_components/profile-image-section";
 
 export default async function Page({
   params,

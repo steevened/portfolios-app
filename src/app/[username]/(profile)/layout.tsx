@@ -1,22 +1,8 @@
-import { prisma } from "@/lib/db/prisma";
+import { getDeveloperProfile } from "@/lib/services/developer.service";
 import { getUserByUsername } from "@/lib/services/user.service";
-import ProfileHeader from "./_components/profile-header";
+import DeveloperTabs from "../_components/developer-tabs";
+import ProfileHeader from "../_components/profile-header";
 import NotFound from "./not-found";
-import DeveloperTabs from "./_components/developer-tabs";
-
-async function upsertProfile(userId: string) {
-  if (!userId) return null;
-  const profile = await prisma.developer.upsert({
-    where: {
-      userId,
-    },
-    update: {},
-    create: {
-      userId,
-    },
-  });
-  return profile;
-}
 
 export default async function Layout({
   children,
@@ -29,13 +15,9 @@ export default async function Layout({
 }) {
   const user = await getUserByUsername(String(params.username));
 
-  if (!user) {
-    return NotFound();
-  }
+  const developer = await getDeveloperProfile({ username: params.username });
 
-  const developer = await upsertProfile(user.id);
-
-  if (!developer) {
+  if (!developer || !user) {
     return NotFound();
   }
 
