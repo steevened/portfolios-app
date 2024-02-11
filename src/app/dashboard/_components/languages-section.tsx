@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createTechnology } from "@/lib/actions/technologies.action";
+import { prisma } from "@/lib/db/prisma";
 import { getAllTechnologies } from "@/lib/services/technologies.service";
 import TechBadge from "./language-badge";
-import { prisma } from "@/lib/db/prisma";
 
 export default async function TechSection() {
   const technologies = await getAllTechnologies();

@@ -3,32 +3,31 @@
 import { revalidatePath } from "next/cache";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
-import { getProfileByUserId } from "../services/profile.service";
 import { getUserById } from "../services/user.service";
 
-export const updateBio = async (formData: FormData) => {
-  const session = await getServerAuthSession();
-  if (!session) throw new Error("Unauthorized");
+// export const updateBio = async (formData: FormData) => {
+//   const session = await getServerAuthSession();
+//   if (!session) throw new Error("Unauthorized");
 
-  const profile = await getProfileByUserId(session.user.id);
-  if (!profile) throw new Error("Profile not found");
+//   const profile = await getProfileByUserId(session.user.id);
+//   if (!profile) throw new Error("Profile not found");
 
-  try {
-    const bio = formData.get("bio") as string;
-    await prisma.profile.update({
-      where: {
-        userId: profile.userId,
-      },
-      data: {
-        bio,
-      },
-    });
-    revalidatePath(`/user/${profile.userId}/about`);
-    return { message: "Bio updated successfully", code: 200 };
-  } catch (error) {
-    return { message: "Error updating bio", code: 500 };
-  }
-};
+//   try {
+//     const bio = formData.get("bio") as string;
+//     await prisma.profile.update({
+//       where: {
+//         userId: profile.userId,
+//       },
+//       data: {
+//         bio,
+//       },
+//     });
+//     revalidatePath(`/user/${profile.userId}/about`);
+//     return { message: "Bio updated successfully", code: 200 };
+//   } catch (error) {
+//     return { message: "Error updating bio", code: 500 };
+//   }
+// };
 
 export const deleteUserImage = async () => {
   const session = await getServerAuthSession();

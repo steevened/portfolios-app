@@ -48,23 +48,6 @@ const authOptions: NextAuthOptions = {
         },
       };
     },
-    async signIn({ user, account }) {
-      console.log({ user, account });
-      try {
-        // await prisma.developer.upsert({
-        //   where: {
-        //     userId: user.id,
-        //   },
-        //   update: {},
-        //   create: {
-        //     userId: user.id,
-        //   },
-        // });
-      } catch (error) {
-        throw new Error("Error on sign in. Please try again.");
-      }
-      return false;
-    },
   },
 
   secret: process.env.NEXTAUTH_SECRET,

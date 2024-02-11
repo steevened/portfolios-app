@@ -8,7 +8,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { upsertAvatar } from "@/lib/services/profile.service";
+import { upsertAvatar } from "@/lib/services/developer.service";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";

@@ -1,28 +1,29 @@
 import { buttonVariants } from "@/components/ui/button";
-import getProfileLinks from "@/lib/services/developer.service";
+import getDeveloperLinks from "@/lib/services/developer.service";
 import Link from "next/link";
 
-export default async function ProfileLinks({
-  profileId,
+export default async function DeveloperLinks({
+  developerId,
 }: {
-  profileId: string;
+  developerId: string;
 }) {
-  const profileLinks = await getProfileLinks(profileId);
+  const developerLinks = await getDeveloperLinks(developerId);
 
-  if (!profileLinks) return null;
+  if (!developerLinks) return null;
   else if (
-    !profileLinks.linkedin &&
-    !profileLinks.twitter &&
-    !profileLinks.github &&
-    !profileLinks.website
+    !developerLinks.linkedin &&
+    !developerLinks.twitter &&
+    !developerLinks.github &&
+    !developerLinks.website
   )
     return null;
 
   return (
     <div className="flex gap-2.5 items-center">
-      {profileLinks.github ? (
+      {developerLinks.github ? (
         <Link
-          href={"#"}
+          href={developerLinks?.github || ""}
+          target="_blank"
           className={buttonVariants({
             size: "icon",
             variant: "ghost",
@@ -43,9 +44,10 @@ export default async function ProfileLinks({
         </Link>
       ) : null}
 
-      {profileLinks.linkedin ? (
+      {developerLinks.linkedin ? (
         <Link
-          href={"#"}
+          href={developerLinks?.linkedin || ""}
+          target="_blank"
           className={buttonVariants({
             size: "icon",
             variant: "ghost",
@@ -65,13 +67,14 @@ export default async function ProfileLinks({
         </Link>
       ) : null}
 
-      {profileLinks.twitter ? (
+      {developerLinks.twitter ? (
         <Link
           className={buttonVariants({
             size: "icon",
             variant: "ghost",
           })}
-          href={profileLinks?.twitter || ""}
+          href={developerLinks?.twitter || ""}
+          target="_blank"
         >
           <svg
             viewBox="0 0 256 209"
@@ -81,15 +84,16 @@ export default async function ProfileLinks({
           >
             <path
               d="M256 25.45c-9.42 4.177-19.542 7-30.166 8.27 10.845-6.5 19.172-16.793 23.093-29.057a105.183 105.183 0 0 1-33.351 12.745C205.995 7.201 192.346.822 177.239.822c-29.006 0-52.523 23.516-52.523 52.52 0 4.117.465 8.125 1.36 11.97-43.65-2.191-82.35-23.1-108.255-54.876-4.52 7.757-7.11 16.78-7.11 26.404 0 18.222 9.273 34.297 23.365 43.716a52.312 52.312 0 0 1-23.79-6.57c-.003.22-.003.44-.003.661 0 25.447 18.104 46.675 42.13 51.5a52.592 52.592 0 0 1-23.718.9c6.683 20.866 26.08 36.05 49.062 36.475-17.975 14.086-40.622 22.483-65.228 22.483-4.24 0-8.42-.249-12.529-.734 23.243 14.902 50.85 23.597 80.51 23.597 96.607 0 149.434-80.031 149.434-149.435 0-2.278-.05-4.543-.152-6.795A106.748 106.748 0 0 0 256 25.45"
-              fill="#55acee"
+              fill="currentColor"
             />
           </svg>
         </Link>
       ) : null}
 
-      {profileLinks?.website ? (
+      {developerLinks?.website ? (
         <Link
-          href={"#"}
+          href={developerLinks?.website || ""}
+          target="_blank"
           className={buttonVariants({
             size: "icon",
             variant: "ghost",

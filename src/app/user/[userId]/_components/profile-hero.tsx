@@ -1,6 +1,6 @@
 import { getServerAuthSession } from "@/lib/auth";
 import isMyProfile from "@/lib/helpers/is-my-profile";
-import { getProfileByUserId } from "@/lib/services/profile.service";
+// import { getProfileByUserId } from "@/lib/services/developer.service";
 import { getUserById } from "@/lib/services/user.service";
 import Error from "../(profile)/about/error";
 import ProfileLinks from "./profile-links";
@@ -9,7 +9,7 @@ import ProfileTabs from "./profile-tabs";
 
 import EditButton from "@/components/atoms/edit-button";
 import Link from "next/link";
-import UserImage from "@/app/(user)/[...username]/_components/user-image";
+// import UserImage from "@/app/(user)/[...username]/_components/user-image";
 
 const ProfileHero = async ({
   params,
@@ -19,17 +19,17 @@ const ProfileHero = async ({
   };
 }) => {
   const user = await getUserById(params.userId);
-  const profile = await getProfileByUserId(params.userId);
+  // const profile = await getProfileByUserId(params.userId);
   const session = await getServerAuthSession();
 
-  if (!user || !profile) return <Error />;
+  // if (!user || !profile) return <Error />;
   return (
     <div>
       <div className="flex gap-2.5 py-5 max-sm:px-2.5">
-        <UserImage
+        {/* <UserImage
           imageUrl={(user.image as string) || undefined}
           name={user.name || ""}
-        />
+        /> */}
         <div className=" w-full flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
@@ -42,9 +42,9 @@ const ProfileHero = async ({
                 </Link>
               ) : null}
             </div>
-            <ProfileRoles profileId={profile.id} />
+            {/* <ProfileRoles profileId={profile.id} /> */}
           </div>
-          <ProfileLinks profileId={profile.id} />
+          {/* <ProfileLinks profileId={profile.id} /> */}
         </div>
       </div>
       <div className="border-y sm:border  max-sm:px-1 p-1 sm:rounded-lg">

@@ -1,7 +1,7 @@
 import ErrorMessage from "@/components/atoms/error-message";
-import { updateBio } from "@/lib/actions/user.actions";
+// import { updateBio } from "@/lib/actions/user.actions";
 import isUserAuthProfile from "@/lib/helpers/is-my-profile";
-import { getProfileByUserId } from "@/lib/services/profile.service";
+// import { getProfileByUserId } from "@/lib/services/developer.service";
 import BioSection from "../../_components/bio-section";
 
 export default async function About({
@@ -9,15 +9,15 @@ export default async function About({
 }: {
   params: { userId: string };
 }) {
-  const profile = await getProfileByUserId(params.userId);
+  // const profile = await getProfileByUserId(params.userId);
 
-  if (!profile) {
-    return <ErrorMessage />;
-  }
+  // if (!profile) {
+  //   return <ErrorMessage />;
+  // }
 
   return (
     <div className="my-5 mx-2.5 sm:mx-0">
-      {(await isUserAuthProfile(profile.userId)) ? (
+      {/* {(await isUserAuthProfile(profile.userId)) ? (
         <>
           {!profile.bio ? (
             <BioSection isMyProfile type="create" />
@@ -36,7 +36,7 @@ export default async function About({
             </div>
           )}
         </>
-      )}
+      )} */}
     </div>
   );
 }

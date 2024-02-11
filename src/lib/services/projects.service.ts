@@ -1,9 +1,9 @@
 import { Project, Technology } from "@prisma/client";
 import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
+import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { projectSchema } from "../schemas/project.schema";
-import { getServerAuthSession } from "../auth";
 
 export async function getAllProjects({
   searchParams,
@@ -183,4 +183,39 @@ export async function getProjectsByUserId(userId: string) {
     },
   });
   return res;
+}
+
+export async function getProjectsByUsername(username: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) return null;
+
+    const projects = await prisma.project.findMany({
+      where: {
+        authorId: user.id,
+      },
+      include: {
+        technologies: {
+          include: {
+            technology: true,
+          },
+        },
+        gallery: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+      },
+    });
+
+    return projects;
+  } catch (error) {
+    throw new Error("Error getting projects from the database.");
+  }
 }
