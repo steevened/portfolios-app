@@ -21,9 +21,12 @@ export default async function ProfileHeader({
       <div className=" w-full flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between">
-            <p className="font-semibold text-lg first-letter:uppercase">
-              {user.name}
-            </p>
+            <div>
+              <p className="font-semibold text-lg first-letter:uppercase">
+                {user.name}
+              </p>
+              <p className="text-sm text-muted-foreground">{user.username}</p>
+            </div>
             {(await isMyProfile(user.id)) ? (
               <Link href={`/${user.username}/settings`}>
                 <EditButton text="Edit Profile" />
