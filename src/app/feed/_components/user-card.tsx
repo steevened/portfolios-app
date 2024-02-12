@@ -1,5 +1,5 @@
+import UserAvatar from "@/components/user-avatar";
 import { getUserById } from "@/lib/services/user.service";
-import UserAvatar from "./user-avatar";
 import Link from "next/link";
 
 export default async function UserCard({

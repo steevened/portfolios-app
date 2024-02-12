@@ -26,7 +26,7 @@ export default async function ProfileHeader({
             </p>
             {(await isMyProfile(user.id)) ? (
               <Link href={`/${user.username}/settings`}>
-                <EditButton />
+                <EditButton text="Edit Profile" />
               </Link>
             ) : null}
           </div>

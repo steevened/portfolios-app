@@ -2,8 +2,8 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { useState } from "react";
-import UploadAvatarPreview from "./upload-avatar-preview";
 import { cn } from "@/lib/utils";
+import UploadAvatarPreview from "./upload-avatar-preview";
 
 export default function UpdateProfileImage({
   userId,
@@ -25,7 +25,7 @@ export default function UpdateProfileImage({
       <label
         className={cn(
           buttonVariants({
-            variant: "ghost",
+            // variant: "",
             className: "cursor-pointer",
           })
         )}

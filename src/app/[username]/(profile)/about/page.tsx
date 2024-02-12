@@ -1,6 +1,7 @@
 import NotFoundSection from "@/components/atoms/not-found-section";
 import isMyProfile from "@/lib/helpers/is-my-profile";
 import { getDeveloperProfile } from "@/lib/services/developer.service";
+import BioSection from "./_components/bio-section";
 export default async function Page({
   params,
 }: {
@@ -16,15 +17,11 @@ export default async function Page({
 
   return (
     <div>
-      {(await isMyProfile(developer.userId)) ? (
-        <div>
-          <p>{"You're viewing your own profile."}</p>
-        </div>
-      ) : (
-        <div>
-          <p>{"You're viewing someone else's profile."}</p>
-        </div>
-      )}
+      <BioSection
+        bio={developer.bio || ""}
+        isMyProfile={await isMyProfile(developer.userId)}
+        username={params.username}
+      />
     </div>
   );
 }

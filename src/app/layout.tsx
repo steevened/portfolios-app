@@ -34,10 +34,7 @@ export default async function RootLayout({
               <div className="p-2.5 sticky bottom-0 bg-background/95 backdrop-blur-lg z-10 w-full border-t md:border-t-0 md:border-r md:w-min  justify-center flex md:h-[calc(100svh-57px)] md:top-[57px] ">
                 <Menu />
               </div>
-              <div
-                //  className="lg:ml-[100px] mt-[55px]  sm:px-5 sm:py-2.5  lg:p-2.5"
-                className="w-full min-h-[calc(100svh-60px)]  grid h-full "
-              >
+              <div className="w-full min-h-[calc(100svh-60px)]  grid h-full ">
                 {children}
               </div>
             </div>

@@ -18,7 +18,7 @@ export default function DeleteProfileImage() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"ghostDestructive"}>Delete</Button>
+        <Button variant={"destructive"}>Delete</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

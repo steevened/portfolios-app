@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary/10 text-primary hover:bg-primary/20",
         destructive:
-          "bg-destructive text-destructive-foreground  hover:bg-destructive/90",
+          "bg-destructive/10 text-destructive  hover:bg-destructive/20",
         outline:
           "border border-input bg-transparent  hover:bg-accent hover:text-accent-foreground",
         menu: "w-full hover:!text-primary hover:cursor-pointer hover:!bg-primary/10 hover:!ring-0 !justify-start",
