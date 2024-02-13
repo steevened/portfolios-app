@@ -36,7 +36,7 @@ export default function BioFormSection({
   const form = useForm({
     resolver: zodResolver(bioSchema),
     values: {
-      bio: bio || "",
+      bio: bio || undefined,
     },
 
     mode: "onChange",
@@ -45,9 +45,7 @@ export default function BioFormSection({
   const onSubmit = async (data: z.infer<typeof bioSchema>) => {
     await updateBio({
       username,
-      data: {
-        bio: data.bio?.trim(),
-      },
+      data,
     });
     toast({
       title: "Success!",
