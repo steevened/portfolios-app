@@ -2,9 +2,6 @@ import { getServerAuthSession } from "@/lib/auth";
 import isMyProfile from "@/lib/helpers/is-my-profile";
 // import { getProfileByUserId } from "@/lib/services/developer.service";
 import { getUserById } from "@/lib/services/user.service";
-import Error from "../(profile)/about/error";
-import ProfileLinks from "./profile-links";
-import ProfileRoles from "./profile-roles";
 import ProfileTabs from "./profile-tabs";
 
 import EditButton from "@/components/atoms/edit-button";

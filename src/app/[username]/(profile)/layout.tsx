@@ -22,7 +22,7 @@ export default async function Layout({
   }
 
   return (
-    <main className="p-2.5">
+    <main className="py-2.5">
       <div className="space-y-5">
         <ProfileHeader user={user} developer={developer} />
         <div className="border-y sm:border  max-sm:px-1 p-1 sm:rounded-lg">

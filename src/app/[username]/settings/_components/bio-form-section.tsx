@@ -9,11 +9,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import { updateBio } from "@/lib/actions/user.actions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export default function BioFormSection({
@@ -23,7 +22,6 @@ export default function BioFormSection({
   bio?: string;
   username: string;
 }) {
-  const { toast } = useToast();
   const bioSchema = z.object({
     bio: z
       .string()
@@ -43,14 +41,19 @@ export default function BioFormSection({
   });
 
   const onSubmit = async (data: z.infer<typeof bioSchema>) => {
-    await updateBio({
-      username,
-      data,
-    });
-    toast({
-      title: "Success!",
-      description: "Your bio has been updated successfully",
-    });
+    const updateBioPromise = updateBio;
+    toast.promise(
+      () =>
+        updateBioPromise({
+          username,
+          data,
+        }),
+      {
+        loading: "Saving...",
+        success: "Bio updated!",
+        error: "Failed to update bio",
+      }
+    );
   };
 
   return (

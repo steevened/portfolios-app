@@ -13,13 +13,7 @@ export default async function UserCard({
 
   return (
     <div className="flex items-start gap-2">
-      {user ? (
-        <UserAvatar
-          id={userId}
-          image={user?.image as string}
-          name={user?.name as string}
-        />
-      ) : null}
+      {user ? <UserAvatar user={user} /> : null}
       <div>
         <div className="w-min">
           <Link href={`/user/${user?.id}`} className="">

@@ -53,7 +53,6 @@ export default function BioModal({
           </DialogDescription>
         </DialogHeader>
         <form
-          action={updateBio}
           onSubmit={() => {
             setIsOpen(!isOpen);
           }}

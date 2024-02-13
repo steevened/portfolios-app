@@ -4,7 +4,7 @@ import { updateBio } from "@/lib/actions/user.actions";
 
 export default function BioForm() {
   return (
-    <form action={updateBio}>
+    <form>
       <div className="grid gap-5">
         <div className="grid gap-1.5">
           <label htmlFor="bio" className=" block text-muted-foreground">
