@@ -9,6 +9,8 @@ import DeleteProfileImage from "./_components/delete-profile-image";
 import { getDeveloperProfile } from "@/lib/services/developer.service";
 import BioFormSection from "./_components/bio-form-section";
 import HeadlineFormSection from "./_components/headline-form-section";
+import UserInfoFormSection from "./_components/user-info-form-section";
+import ProfileLinksFormSection from "./_components/profile-links-form-section";
 
 export default async function Page({
   params,
@@ -29,9 +31,11 @@ export default async function Page({
     username: params.username,
   });
 
+  if (!profile) redirect("/");
+
   return (
     <div>
-      <div className="w-full py-2.5 flex gap-2.5">
+      <div className="w-full items-center py-2.5 flex gap-2.5">
         <BackButton />
         <h3>Settings</h3>
       </div>
@@ -57,6 +61,24 @@ export default async function Page({
             )}
           </div>
         </div>
+
+        <SectionContainer id="user-info" title="User info">
+          <div className="mt-2.5">
+            <UserInfoFormSection
+              name={user.name as string}
+              username={user.username as string}
+            />
+          </div>
+        </SectionContainer>
+
+        <SectionContainer id="user-info" title="User info">
+          <div className="mt-2.5">
+            <ProfileLinksFormSection
+              username={user.username as string}
+              links={profile.links}
+            />
+          </div>
+        </SectionContainer>
 
         <SectionContainer id="headline" title="Headline">
           <HeadlineFormSection

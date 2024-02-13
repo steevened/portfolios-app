@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
-import { getUserById } from "../services/user.service";
 import { getDeveloperProfile } from "../services/developer.service";
+import { getUserById } from "../services/user.service";
 
 const authValidator = async (username: string) => {
   const session = await getServerAuthSession();
@@ -14,6 +14,33 @@ const authValidator = async (username: string) => {
   if (user.username !== username) throw new Error("Unauthorized");
 
   return session;
+};
+
+export const updateUser = async ({
+  name,
+  username,
+}: {
+  name: string;
+  username: string;
+}) => {
+  const session = await getServerAuthSession();
+  if (!session) throw new Error("Unauthorized");
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        name,
+        username,
+      },
+    });
+    revalidatePath(`/${username}/settings`);
+    return { message: "Username updated successfully", code: 200 };
+  } catch (error) {
+    return { message: "Error updating username", code: 500 };
+  }
 };
 
 export const updateHeadline = async ({

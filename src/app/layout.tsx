@@ -24,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} overflow-x-hidden bg-primary-muted`}>
+      <body className={`${inter.className} overflow-x-hidden `}>
         <NextAuthSessionProvider session={session}>
           <ClientProviders>
             <div className="sticky top-0 z-10">

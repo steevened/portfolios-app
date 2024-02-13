@@ -12,11 +12,11 @@ export default function DeveloperTabs({ username }: { username: string }) {
   const isAboutActive = pathname === `/${username}/about`;
 
   return (
-    <ul className="flex items-center justify-between gap-x-1">
-      <li className="w-full ">
+    <ul className="flex items-center  gap-x-1">
+      <li className="w-min ">
         <Link
           className={buttonVariants({
-            variant: isProjectsActive ? "default" : "ghost",
+            variant: isProjectsActive ? "default" : "secondary",
             className: "w-full",
           })}
           href={`/${username}`}
@@ -24,11 +24,11 @@ export default function DeveloperTabs({ username }: { username: string }) {
           <p className="font-medium text-sm">Projects</p>
         </Link>
       </li>
-      <li className=" w-full">
+      <li className=" w-min">
         <Link
           href={`/${username}/about`}
           className={buttonVariants({
-            variant: isAboutActive ? "default" : "ghost",
+            variant: isAboutActive ? "default" : "secondary",
             className: "w-full",
           })}
         >

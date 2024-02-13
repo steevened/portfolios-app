@@ -25,8 +25,8 @@ export default function HeadlineFormSection({
   const headlineSchema = z.object({
     headline: z
       .string()
-      .max(100, {
-        message: "Headline must be less than 100 characters",
+      .max(50, {
+        message: "Headline must be less than 50 characters",
       })
       .optional(),
   });

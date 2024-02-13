@@ -28,7 +28,7 @@ const authOptions: NextAuthOptions = {
         return {
           role: profile.role ?? "user",
           id: profile.id,
-          username: profile.login,
+          username: profile.login ?? "",
           name: profile.name,
           email: profile.email,
           image: profile.avatar_url,
@@ -45,6 +45,7 @@ const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: user.id,
+          // role: user.role,
         },
       };
     },

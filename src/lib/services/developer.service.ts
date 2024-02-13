@@ -14,11 +14,26 @@ export async function getDeveloperProfile({ username }: { username: string }) {
       update: {},
       create: {
         userId: user.id,
+        links: {
+          create: {
+            github: `https://github.com/${user.username}`,
+          },
+        },
+      },
+      include: {
+        links: {
+          select: {
+            github: true,
+            twitter: true,
+            linkedin: true,
+            website: true,
+          },
+        },
       },
     });
     return developer;
   } catch (error) {
-    throw new Error("Error getting developer profile");
+    throw new Error(error as string);
   }
 }
 

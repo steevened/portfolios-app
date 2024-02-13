@@ -12,6 +12,8 @@
     --popover-foreground: 204 100% 10%;
     --primary: 204 87.6% 52.7%;
     --primary-foreground: 0 0% 100%;
+    --primary-muted: 205 70% 87%;
+    --primary-muted-foreground: 204 5% 15%;
     --secondary: 220 13% 91%;
     --secondary-foreground: 0 0% 0%;
     --muted: 220 14.3% 95.9%;
@@ -34,6 +36,8 @@
     --popover-foreground: 204 5% 100%;
     --primary: 204 87.6% 52.7%;
     --primary-foreground: 0 0% 100%;
+    --primary-muted: 207 50% 15%;
+    --primary-muted-foreground: 204 5% 100%;
     --secondary: 210 28% 15%;
     --secondary-foreground: 0 0% 100%;
     --muted: 210 28% 15%;
@@ -82,14 +86,6 @@
 }
 
 @layer utilities {
-  /* .bg-primary {
-    @apply bg-background;
-  }
-
-  .bg-primary-muted {
-    @apply bg-muted/50 shadow-inner;
-  } */
-
   .inner-layout {
     @apply mx-auto max-w-screen-sm;
   }

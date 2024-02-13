@@ -25,9 +25,7 @@ export default async function Layout({
     <main className="py-2.5">
       <div className="space-y-2.5">
         <ProfileHeader user={user} developer={developer} />
-        <div className="border-y sm:border  max-sm:px-1 p-1 sm:rounded-lg">
-          <DeveloperTabs username={params.username} />
-        </div>
+        <DeveloperTabs username={params.username} />
         <div>{children}</div>
       </div>
     </main>
