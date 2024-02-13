@@ -105,6 +105,45 @@ export const updateBio = async ({
   }
 };
 
+export const updateProfileLinks = async ({
+  username,
+  data,
+}: {
+  username: string;
+  data: {
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
+}) => {
+  const validSession = await authValidator(username);
+
+  if (!validSession) throw new Error("Unauthorized");
+
+  const profile = await getDeveloperProfile({ username });
+
+  if (!profile) throw new Error("Profile not found");
+
+  try {
+    await prisma.developerLinks.update({
+      where: {
+        developerId: profile.id,
+      },
+      data: {
+        github: data.github,
+        twitter: data.twitter,
+        linkedin: data.linkedin,
+        website: data.website,
+      },
+    });
+    revalidatePath(`/${username}/settings`);
+    return { message: "Links updated successfully", code: 200 };
+  } catch (error) {
+    return { message: "Error updating links", code: 500 };
+  }
+};
+
 export const deleteUserImage = async () => {
   const session = await getServerAuthSession();
   if (!session) throw new Error("Unauthorized");

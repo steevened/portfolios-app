@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateUser } from "@/lib/actions/user.actions";
+import { updateProfileLinks } from "@/lib/actions/user.actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -49,10 +49,11 @@ export default function ProfileLinksFormSection({
   });
 
   const onSubmit = async (data: z.infer<typeof linksSchema>) => {
-    const updatePromise = Promise.resolve;
+    const updatePromise = updateProfileLinks;
     toast.promise(
       updatePromise({
-        links: data,
+        data,
+        username,
       }),
       {
         loading: "Updating links...",
