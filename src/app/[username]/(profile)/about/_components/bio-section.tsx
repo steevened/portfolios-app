@@ -16,7 +16,7 @@ export default function BioSection({
       <div className="flex items-center justify-between">
         <h3 className="text-muted-foreground text-lg ">Bio</h3>
         {isMyProfile ? (
-          <Link href={`/${username}/settings`}>
+          <Link href={`/${username}/settings#bio`}>
             {bio ? (
               <EditButton text="Edit bio" />
             ) : (

@@ -8,6 +8,7 @@ import UpdateProfileImage from "./_components/update-profile-image";
 import DeleteProfileImage from "./_components/delete-profile-image";
 import { getDeveloperProfile } from "@/lib/services/developer.service";
 import BioFormSection from "./_components/bio-form-section";
+import HeadlineFormSection from "./_components/headline-form-section";
 
 export default async function Page({
   params,
@@ -57,14 +58,34 @@ export default async function Page({
           </div>
         </div>
 
-        <div className="rounded-lg bg-muted p-5 space-y-5">
-          <h4>Bio</h4>
-          <BioFormSection
+        <SectionContainer id="headline" title="Headline">
+          <HeadlineFormSection
             username={params.username}
-            bio={profile?.bio || "  "}
+            headline={profile?.headline || ""}
           />
-        </div>
+        </SectionContainer>
+
+        <SectionContainer id="bio" title="Bio">
+          <BioFormSection username={params.username} bio={profile?.bio || ""} />
+        </SectionContainer>
       </div>
+    </div>
+  );
+}
+
+function SectionContainer({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div id={id} className="rounded-lg bg-muted p-5 space-y-2.5">
+      <h4>{title}</h4>
+      {children}
     </div>
   );
 }

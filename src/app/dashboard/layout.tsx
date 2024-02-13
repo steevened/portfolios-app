@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { getUserById } from "@/lib/services/user.service";
 
 export default async function Layout({
   children,
@@ -18,6 +19,13 @@ export default async function Layout({
   if (!session || !session.user) {
     redirect("/");
   }
+
+  const user = await getUserById(session?.user.id as string);
+
+  if (!user || user.role !== "admin") {
+    redirect("/");
+  }
+
   return (
     <div className="flex flex-col h-full @container">
       <div className="border-b p-2.5 bg-muted">

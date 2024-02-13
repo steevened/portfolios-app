@@ -6,6 +6,47 @@ import { prisma } from "../db/prisma";
 import { getUserById } from "../services/user.service";
 import { getDeveloperProfile } from "../services/developer.service";
 
+const authValidator = async (username: string) => {
+  const session = await getServerAuthSession();
+  if (!session) throw new Error("Unauthorized");
+  const user = await getUserById(session.user.id);
+  if (!user) throw new Error("User not found");
+  if (user.username !== username) throw new Error("Unauthorized");
+
+  return session;
+};
+
+export const updateHeadline = async ({
+  username,
+  data,
+}: {
+  username: string;
+  data: { headline?: string };
+}) => {
+  const validSession = await authValidator(username);
+
+  if (!validSession) throw new Error("Unauthorized");
+
+  const profile = await getDeveloperProfile({ username });
+
+  if (!profile) throw new Error("Profile not found");
+
+  try {
+    await prisma.developer.update({
+      where: {
+        userId: profile.userId,
+      },
+      data: {
+        headline: data.headline,
+      },
+    });
+    revalidatePath(`/${username}/settings`);
+    return { message: "Headline updated successfully", code: 200 };
+  } catch (error) {
+    return { message: "Error updating headline", code: 500 };
+  }
+};
+
 export const updateBio = async ({
   username,
   data,
@@ -13,15 +54,15 @@ export const updateBio = async ({
   username: string;
   data: { bio?: string };
 }) => {
-  const session = await getServerAuthSession();
-  if (!session) throw new Error("Unauthorized");
+  const validSession = await authValidator(username);
+
+  if (!validSession) throw new Error("Unauthorized");
 
   const profile = await getDeveloperProfile({ username });
 
   if (!profile) throw new Error("Profile not found");
 
   try {
-    // const bio = formData.get("bio") as string;
     await prisma.developer.update({
       where: {
         userId: profile.userId,

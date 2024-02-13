@@ -19,7 +19,7 @@ export default async function DeveloperLinks({
     return null;
 
   return (
-    <div className="flex gap-2.5 items-center">
+    <>
       {developerLinks.github ? (
         <Link
           href={developerLinks?.github || ""}
@@ -118,6 +118,6 @@ export default async function DeveloperLinks({
           </svg>
         </Link>
       ) : null}
-    </div>
+    </>
   );
 }

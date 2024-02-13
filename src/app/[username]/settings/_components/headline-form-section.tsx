@@ -8,68 +8,63 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { updateBio } from "@/lib/actions/user.actions";
+import { Input } from "@/components/ui/input";
+import { updateHeadline } from "@/lib/actions/user.actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export default function BioFormSection({
-  bio,
+export default function HeadlineFormSection({
+  headline,
   username,
 }: {
-  bio?: string;
+  headline: string;
   username: string;
 }) {
-  const bioSchema = z.object({
-    bio: z
+  const headlineSchema = z.object({
+    headline: z
       .string()
-      .max(500, {
-        message: "Bio must be less than 500 characters",
+      .max(100, {
+        message: "Headline must be less than 100 characters",
       })
       .optional(),
   });
 
   const form = useForm({
-    resolver: zodResolver(bioSchema),
-    values: {
-      bio,
-    },
-
+    resolver: zodResolver(headlineSchema),
     mode: "onChange",
+    values: {
+      headline,
+    },
   });
 
-  const onSubmit = async (data: z.infer<typeof bioSchema>) => {
-    const updateBioPromise = updateBio;
+  const onSubmit = async (data: z.infer<typeof headlineSchema>) => {
+    const updateHeadlinePromise = updateHeadline;
     toast.promise(
       () =>
-        updateBioPromise({
+        updateHeadlinePromise({
           username,
           data,
         }),
       {
         loading: "Saving...",
-        success: "Bio updated!",
-        error: "Failed to update bio",
+        success: "Headline updated!",
+        error: "Failed to update headline",
       }
     );
   };
 
   return (
     <Form {...form}>
-      <form className="space-y-2.5" onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2.5">
         <FormField
           control={form.control}
-          name="bio"
+          name="headline"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Textarea
-                  rows={5}
-                  {...field}
-                  placeholder="Write something about you."
-                />
+                <Input {...field} placeholder="Add a headline" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,12 +74,11 @@ export default function BioFormSection({
           <LoaderButton
             isLoading={form.formState.isSubmitting}
             disabled={
-              !form.formState.isDirty ||
               !form.formState.isValid ||
+              !form.formState.isDirty ||
               form.formState.isSubmitting ||
-              form.formState.isSubmitSuccessful
+              form.formState.isSubmitting
             }
-            type="submit"
           >
             Save
           </LoaderButton>
