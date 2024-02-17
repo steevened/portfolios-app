@@ -1,5 +1,5 @@
 import { getServerAuthSession } from "@/lib/auth";
-import Stepper from "./components/stepper";
+import Stepper from "./_components/stepper";
 import { redirect } from "next/navigation";
 
 export default async function layout({
@@ -13,7 +13,7 @@ export default async function layout({
     redirect("/api/auth/signin?");
   }
   return (
-    <div className="">
+    <div className="p-2.5">
       <Stepper />
       <main className=" mx-auto max-w-screen-md my-5 @container">
         <div className=" text-center">

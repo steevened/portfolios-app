@@ -58,8 +58,6 @@ export default function ProjectForm({
   const { toast } = useToast();
   const router = useRouter();
 
-  // console.log(initialProject);
-
   const [technologiesSelected, setTechnologiesSelected] = useState<
     Technology[]
   >(initialProject?.technologies.map((t) => t.technology) || []);

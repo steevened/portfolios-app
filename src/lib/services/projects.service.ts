@@ -59,7 +59,7 @@ export async function getProjectUnpublished() {
   const session = await getServerAuthSession();
   if (!session?.user?.id) return null;
 
-  noStore();
+  // noStore();
   const project = await prisma.project.findFirst({
     where: {
       published: false,

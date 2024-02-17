@@ -1,4 +1,4 @@
-import Stepper from "../../create/components/stepper";
+import Stepper from "../../create/_components/stepper";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

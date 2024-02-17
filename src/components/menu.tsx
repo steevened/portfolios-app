@@ -25,8 +25,7 @@ export default function Menu() {
                 className={buttonVariants({
                   variant: "secondary",
                   size: "icon",
-                  // className:
-                  // "w-full flex gap-2 lg:flex-col lg:h-full lg:gap-1 lg:text-xs lg:aspect-square",
+                  className: "!bg-secondary",
                 })}
                 href={"/feed"}
               >
@@ -43,7 +42,13 @@ export default function Menu() {
                 {/* <p>Discover</p> */}
               </Link>
             </TooltipTrigger>
-            <TooltipContent side={isMobile ? "top" : "left"}>
+            <TooltipContent
+              className={buttonVariants({
+                variant: "secondary",
+                className: "bg-secondary border !text-muted-foreground",
+              })}
+              side={isMobile ? "top" : "left"}
+            >
               <p>Explore</p>
             </TooltipContent>
           </Tooltip>

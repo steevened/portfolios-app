@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
-import UploadImageCard from "../../components/upload-image-card";
+import UploadImageCard from "../../_components/upload-image-card";
 import { FilePlusIcon } from "@radix-ui/react-icons";
 
 export default function Page({

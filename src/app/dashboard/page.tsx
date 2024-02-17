@@ -6,7 +6,7 @@ export default async function Page() {
       <div className="pb-2.5 border-b">
         <LanguagesSection />
       </div>
-      <div className="py-5 border-b"></div>
+      {/* <div className="py-5 border-b"></div> */}
     </div>
   );
 }

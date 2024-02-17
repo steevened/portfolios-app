@@ -71,7 +71,7 @@ export default async function Page({
           </div>
         </SectionContainer>
 
-        <SectionContainer id="user-info" title="User info">
+        <SectionContainer id="contact-links" title="Contact links">
           <div className="mt-2.5">
             <ProfileLinksFormSection
               username={user.username as string}
@@ -105,7 +105,7 @@ function SectionContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div id={id} className="rounded-lg bg-muted p-5 space-y-2.5">
+    <div id={id} className="rounded-lg bg-muted p-5 space-y-2.5 ">
       <h4>{title}</h4>
       {children}
     </div>

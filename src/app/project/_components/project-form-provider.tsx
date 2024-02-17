@@ -4,7 +4,7 @@ import {
 } from "@/lib/services/projects.service";
 import { getAllTechnologies } from "@/lib/services/technologies.service";
 import { Technology } from "@prisma/client";
-import ProjectForm from "../create/components/project-form";
+import ProjectForm from "../create/_components/project-form";
 
 type Props = {
   origin: "create" | "update";

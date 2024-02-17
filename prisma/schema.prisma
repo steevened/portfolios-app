@@ -106,12 +106,12 @@ model Language {
 }
 
 model ProjectLanguage {
-  proectId   String
+  projectId   String
   languageId String
   language   Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
-  project    Project  @relation(fields: [proectId], references: [id], onDelete: Cascade)
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  @@id([proectId, languageId])
+  @@id([projectId, languageId])
 }
 
 model Project {
