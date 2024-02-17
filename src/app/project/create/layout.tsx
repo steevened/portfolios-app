@@ -14,11 +14,11 @@ export default async function layout({
   }
   return (
     <div className="p-2.5">
-      <Stepper />
+      {/* <Stepper /> */}
       <main className=" mx-auto max-w-screen-md my-5 @container">
         <div className=" text-center">
           <h1 className="text-3xl font-semibold">Create a project</h1>
-          <p> Click on the button below when you are ready.</p>
+          <p> Click on the button below to upload your project.</p>
 
           <div className="my-5">{children}</div>
         </div>

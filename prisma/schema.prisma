@@ -63,23 +63,8 @@ model Developer {
   userId      String                @unique
   user        User                  @relation(fields: [userId], references: [id])
   links       DeveloperLinks?
-  occupations DeveloperOccupation[]
 }
 
-model DeveloperOccupation {
-  developerId  String
-  occupationId String
-  developer    Developer  @relation(fields: [developerId], references: [id])
-  occupation   Occupation @relation(fields: [occupationId], references: [id])
-
-  @@id([developerId, occupationId])
-}
-
-model Occupation {
-  id    String                @id @default(cuid())
-  name  String                @unique
-  users DeveloperOccupation[]
-}
 
 model DeveloperLinks {
   id          String    @id @default(cuid())
@@ -91,12 +76,6 @@ model DeveloperLinks {
   developer   Developer @relation(fields: [developerId], references: [id], onDelete: Cascade)
 }
 
-model Technology {
-  id       String              @id @default(cuid())
-  name     String              @unique
-  slug     String              @unique
-  projects ProjectTechnology[]
-}
 
 model Language {
   id       String            @id @default(cuid())
@@ -131,7 +110,8 @@ model Project {
   draft        Draft?              @relation(fields: [draftId], references: [id])
   gallery      ProjectGallery[]
   languages    ProjectLanguage[]
-  technologies ProjectTechnology[]
+
+  @@unique([name, authorId], name: "unique_project_name")
 }
 
 model Draft {
@@ -139,15 +119,6 @@ model Draft {
   userId   String?   @unique
   user     User?     @relation(fields: [userId], references: [id])
   projects Project[]
-}
-
-model ProjectTechnology {
-  projectId    String
-  technologyId String
-  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  technology   Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
-
-  @@id([projectId, technologyId])
 }
 
 model ProjectGallery {

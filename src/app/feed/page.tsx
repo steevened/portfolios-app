@@ -14,7 +14,7 @@ export default async function Home({
   return (
     <div className="">
       <div className="">
-        <TechnologiesGroup searchParams={searchParams} />
+        {/* <TechnologiesGroup searchParams={searchParams} /> */}
       </div>
       <div className="mx-auto max-w-screen-sm flex flex-col">
         <ProjectList projects={projects} />

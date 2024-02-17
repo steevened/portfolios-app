@@ -1,9 +1,6 @@
-import { Project, Technology } from "@prisma/client";
 import { unstable_noStore as noStore } from "next/cache";
-import { z } from "zod";
-import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
-import { projectSchema } from "../schemas/project.schema";
+import { getServerAuthSession } from "../auth";
 
 export async function getAllProjects({
   searchParams,
@@ -22,22 +19,22 @@ export async function getAllProjects({
       where: {
         published: true,
         isOnDraft: false,
-        technologies: {
-          some: {
-            technology: {
-              slug: {
-                in: technologies,
-              },
-            },
-          },
-        },
+        // technologies: {
+        //   some: {
+        //     technology: {
+        //       slug: {
+        //         in: technologies,
+        //       },
+        //     },
+        //   },
+        // },
       },
       include: {
-        technologies: {
-          include: {
-            technology: true,
-          },
-        },
+        // technologies: {
+        //   include: {
+        //     technology: true,
+        //   },
+        // },
         gallery: {
           select: {
             id: true,
@@ -57,100 +54,65 @@ export async function getAllProjects({
 
 export async function getProjectUnpublished() {
   const session = await getServerAuthSession();
-  if (!session?.user?.id) return null;
+  if (!session || !session.user) {
+    throw new Error("Unauthorized");
+  }
 
-  // noStore();
-  const project = await prisma.project.findFirst({
-    where: {
-      published: false,
-      AND: {
-        authorId: session?.user?.id,
+  try {
+    const project = await prisma.project.findFirst({
+      where: {
+        published: false,
+        authorId: session.user.id,
       },
-    },
 
-    include: {
-      technologies: {
-        include: {
-          technology: true,
+      include: {
+        languages: {
+          include: {
+            language: true,
+          },
         },
       },
-    },
-  });
-  return project;
-}
-
-export async function updateProject({
-  data,
-  technologiesSelected,
-  id,
-}: {
-  data: z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-  id: string;
-}): Promise<{
-  message: string;
-  data: Project;
-}> {
-  noStore();
-  const res = await fetch(`/api/projects/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: data.name,
-      liveUrl: data.liveUrl,
-      githubUrl: data.githubUrl,
-      description: data.description,
-      technologies: technologiesSelected.map((t) => t.id),
-    }),
-  });
-
-  return res.json();
-}
-
-export async function upsertProject({
-  data,
-  technologiesSelected,
-}: {
-  data: {
-    id?: string;
-  } & z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-}) {
-  noStore();
-  try {
-    const res = await fetch(`/api/projects`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...data,
-        technologies: technologiesSelected.map((t) => t.id),
-      }),
-      next: {
-        tags: ["project"],
-      },
     });
-    return res.json();
+    return project;
   } catch (error) {
-    return { error };
+    throw error;
   }
 }
 
+// export async function updateProject({
+//   data,
+//   id,
+// }: {
+//   data: z.infer<typeof projectSchema>;
+//   id: string;
+// }): Promise<{
+//   message: string;
+//   data: Project;
+// }> {
+//   noStore();
+//   const res = await fetch(`/api/projects/${id}`, {
+//     method: "PUT",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       name: data.name,
+//       liveUrl: data.liveUrl,
+//       githubUrl: data.githubUrl,
+//       description: data.description,
+//       technologies: technologiesSelected.map((t) => t.id),
+//     }),
+//   });
+
+//   return res.json();
+// }
+
 export async function getProjectById(projectId: string) {
-  noStore();
   const res = await prisma.project.findUnique({
     where: {
       id: projectId,
     },
     include: {
-      technologies: {
-        include: {
-          technology: true,
-        },
-      },
       gallery: {
         select: {
           id: true,
@@ -169,11 +131,6 @@ export async function getProjectsByUserId(userId: string) {
       authorId: userId,
     },
     include: {
-      technologies: {
-        include: {
-          technology: true,
-        },
-      },
       gallery: {
         select: {
           id: true,
@@ -200,11 +157,6 @@ export async function getProjectsByUsername(username: string) {
         authorId: user.id,
       },
       include: {
-        technologies: {
-          include: {
-            technology: true,
-          },
-        },
         gallery: {
           select: {
             id: true,

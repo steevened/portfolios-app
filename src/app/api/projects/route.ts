@@ -18,8 +18,6 @@ export async function POST(request: NextRequest) {
       }
     );
 
-  console.log(body);
-
   try {
     const userDraft = await prisma.draft.upsert({
       where: {
