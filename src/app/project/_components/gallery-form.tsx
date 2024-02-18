@@ -1,13 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { getProjectById } from "@/lib/services";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
-import UploadImageCard from "./upload-image-card";
-import { FilePlusIcon } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
-import { getProjectById } from "@/lib/services";
 import ImageCard from "./image-card";
+import UploadImageCard from "./upload-image-card";
 
 export default function GalleryForm({
   projectId,

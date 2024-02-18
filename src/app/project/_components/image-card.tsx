@@ -1,7 +1,3 @@
-import Image from "next/image";
-import ImageCardContainer from "./image-card-container";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Cross1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +9,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { deleteProjectImage } from "@/lib/actions";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import Image from "next/image";
+import ImageCardContainer from "./image-card-container";
 
 export default function ImageCard({ url, id }: { url: string; id: string }) {
   const handlConfirmDelete = async () => {
