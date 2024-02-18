@@ -6,6 +6,13 @@ export default function ProjectList({
 }: {
   projects: Awaited<ReturnType<typeof getAllProjects>>;
 }) {
+  if (projects && projects.length === 0) {
+    return (
+      <div className="text-center mt-10">
+        <h5>No projects found.</h5>
+      </div>
+    );
+  }
   return (
     <ul className="flex flex-col gap-5">
       {projects.map((project) => (

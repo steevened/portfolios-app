@@ -33,6 +33,7 @@ import { getLanguages } from "@/lib/services/languages.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Language } from "@prisma/client";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,6 +48,7 @@ export default function ProjectFormSection({
   initialProject?: Awaited<ReturnType<typeof getProjectUnpublished>>;
   action: "create" | "update";
 }) {
+  const router = useRouter();
   const [languagesSelected, setLanguagesSelected] = useState<Language[]>(
     initialProject
       ? initialProject.languages.map((l) => ({
@@ -76,11 +78,12 @@ export default function ProjectFormSection({
         languages: languagesSelected.map((l) => l.id),
       };
 
-      await upsertProject({
+      const project = await upsertProject({
         ...projectData,
         isOnDraft: true,
         published: false,
       });
+      router.push(`/project/create/${project.id}/gallery`);
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong, please try again");

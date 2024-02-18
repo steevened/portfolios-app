@@ -35,7 +35,7 @@ export async function upsertProject(data: ProjectData) {
       throw new Error("Something went wrong, please try again");
     }
 
-    await prisma.project.upsert({
+    const project = await prisma.project.upsert({
       where: {
         unique_project_name: {
           name: data.name,
@@ -82,8 +82,9 @@ export async function upsertProject(data: ProjectData) {
         },
       },
     });
+    revalidatePath(`/create`);
+    return project;
   } catch (error) {
     throw error;
   }
-  revalidatePath(`/create`);
 }

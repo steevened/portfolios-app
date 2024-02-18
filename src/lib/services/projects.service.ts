@@ -9,32 +9,32 @@ export async function getAllProjects({
     [key: string]: string;
   };
 }) {
-  const { tech } = searchParams;
+  const { languages: languagesParams } = searchParams;
 
-  const technologies = tech ? tech.split("_") : undefined;
+  const languages = languagesParams ? languagesParams.split("_") : undefined;
 
   try {
-    noStore();
     const projects = await prisma.project.findMany({
       where: {
         published: true,
         isOnDraft: false,
-        // technologies: {
-        //   some: {
-        //     technology: {
-        //       slug: {
-        //         in: technologies,
-        //       },
-        //     },
-        //   },
-        // },
+        languages: {
+          some: {
+            language: {
+              slug: {
+                in: languages,
+              },
+            },
+          },
+        },
       },
       include: {
-        // technologies: {
-        //   include: {
-        //     technology: true,
-        //   },
-        // },
+        languages: {
+          include: {
+            language: true,
+          },
+        },
+
         gallery: {
           select: {
             id: true,
@@ -108,20 +108,29 @@ export async function getProjectUnpublished() {
 // }
 
 export async function getProjectById(projectId: string) {
-  const res = await prisma.project.findUnique({
-    where: {
-      id: projectId,
-    },
-    include: {
-      gallery: {
-        select: {
-          id: true,
-          url: true,
+  try {
+    const res = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      include: {
+        languages: {
+          include: {
+            language: true,
+          },
+        },
+        gallery: {
+          select: {
+            id: true,
+            url: true,
+          },
         },
       },
-    },
-  });
-  return res;
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getProjectsByUserId(userId: string) {
