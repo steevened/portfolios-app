@@ -1,22 +1,21 @@
 import UserAvatar from "@/components/user-avatar";
-import { getUserById } from "@/lib/services/user.service";
+import { getUserById } from "@/lib/services";
+import { User } from "@prisma/client";
 import Link from "next/link";
 
-export default async function UserCard({
-  userId,
+export default async function ProjectUserSection({
+  user,
   updatedAt,
 }: {
-  userId: string;
+  user: User;
   updatedAt: Date;
 }) {
-  const user = await getUserById(userId);
-
   return (
-    <div className="flex items-start gap-2">
-      {user ? <UserAvatar user={user} /> : null}
+    <div className="flex items-start gap-2.5">
+      <UserAvatar user={user} />
       <div>
         <div className="w-min">
-          <Link href={`/user/${user?.id}`} className="">
+          <Link href={`/${user.username}`}>
             <h5 className="text-sm font-medium leading-none hover:text-primary transition-colors hover:underline whitespace-nowrap">
               {user?.name}
             </h5>

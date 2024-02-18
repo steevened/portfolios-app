@@ -1,4 +1,4 @@
-import ProjectItemCard from "@/app/feed/_components/project-item-card";
+import ProjectItemCard from "@/components/molecules/project/project-item-card";
 import { getAllProjects } from "@/lib/services/projects.service";
 
 export default function ProjectList({

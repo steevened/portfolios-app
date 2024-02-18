@@ -1,6 +1,6 @@
-import { unstable_noStore as noStore } from "next/cache";
-import { prisma } from "../db/prisma";
 import { getServerAuthSession } from "../auth";
+import { prisma } from "../db/prisma";
+import { getUserByUsername } from "./user.service";
 
 export async function getAllProjects({
   searchParams,
@@ -41,6 +41,7 @@ export async function getAllProjects({
             url: true,
           },
         },
+        author: true,
       },
       orderBy: {
         updatedAt: "desc",
@@ -79,34 +80,6 @@ export async function getProjectUnpublished() {
   }
 }
 
-// export async function updateProject({
-//   data,
-//   id,
-// }: {
-//   data: z.infer<typeof projectSchema>;
-//   id: string;
-// }): Promise<{
-//   message: string;
-//   data: Project;
-// }> {
-//   noStore();
-//   const res = await fetch(`/api/projects/${id}`, {
-//     method: "PUT",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       name: data.name,
-//       liveUrl: data.liveUrl,
-//       githubUrl: data.githubUrl,
-//       description: data.description,
-//       technologies: technologiesSelected.map((t) => t.id),
-//     }),
-//   });
-
-//   return res.json();
-// }
-
 export async function getProjectById(projectId: string) {
   try {
     const res = await prisma.project.findUnique({
@@ -133,38 +106,19 @@ export async function getProjectById(projectId: string) {
   }
 }
 
-export async function getProjectsByUserId(userId: string) {
-  noStore();
-  const res = await prisma.project.findMany({
-    where: {
-      authorId: userId,
-    },
-    include: {
-      gallery: {
-        select: {
-          id: true,
-          url: true,
-        },
-      },
-    },
-  });
-  return res;
-}
-
 export async function getProjectsByUsername(username: string) {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        username,
-      },
-    });
+    const user = await getUserByUsername(username);
 
-    if (!user) return null;
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     const projects = await prisma.project.findMany({
       where: {
         authorId: user.id,
       },
+
       include: {
         gallery: {
           select: {
@@ -172,6 +126,13 @@ export async function getProjectsByUsername(username: string) {
             url: true,
           },
         },
+        languages: {
+          include: {
+            language: true,
+          },
+        },
+
+        author: true,
       },
     });
 

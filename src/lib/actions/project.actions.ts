@@ -37,10 +37,14 @@ export async function upsertProject(data: ProjectData) {
 
     const project = await prisma.project.upsert({
       where: {
-        unique_project_name: {
-          name: data.name,
-          authorId: session.user.id,
-        },
+        ...(data.id
+          ? { id: data.id }
+          : {
+              unique_project_name: {
+                name: data.name,
+                authorId: session.user.id,
+              },
+            }),
       },
       create: {
         name: data.name,

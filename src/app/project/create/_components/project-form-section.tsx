@@ -33,7 +33,7 @@ import { getLanguages } from "@/lib/services/languages.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Language } from "@prisma/client";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -80,10 +80,16 @@ export default function ProjectFormSection({
 
       const project = await upsertProject({
         ...projectData,
-        isOnDraft: true,
-        published: false,
+        id: initialProject?.id,
+        isOnDraft: action === "create" ? true : false,
+        published: action === "create" ? false : true,
       });
-      router.push(`/project/create/${project.id}/gallery`);
+
+      router.push(
+        action === "create"
+          ? `/project/create/${project.id}/gallery`
+          : `/project/${project.id}/update/gallery`
+      );
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong, please try again");

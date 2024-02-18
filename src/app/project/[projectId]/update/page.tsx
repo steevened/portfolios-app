@@ -1,5 +1,6 @@
+import { getLanguages } from "@/lib/services";
 import { getProjectById } from "@/lib/services/projects.service";
-import ProjectFormProvider from "../../_components/project-form-provider";
+import ProjectFormSection from "../../create/_components/project-form-section";
 
 export default async function Page({
   params,
@@ -8,7 +9,14 @@ export default async function Page({
     projectId: string;
   };
 }) {
-  const projectById = await getProjectById(params.projectId);
+  const project = await getProjectById(params.projectId);
+  const languages = await getLanguages();
 
-  return <ProjectFormProvider origin="update" initialProject={projectById} />;
+  return (
+    <ProjectFormSection
+      initialProject={project}
+      languages={languages}
+      action="update"
+    />
+  );
 }

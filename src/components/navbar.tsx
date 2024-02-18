@@ -1,25 +1,21 @@
 import { getServerAuthSession } from "@/lib/auth";
-import { HamburgerMenuIcon, UploadIcon } from "@radix-ui/react-icons";
+import { UploadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import Menu from "./menu";
 import { ThemeToggle } from "./toggle-theme";
-import { Button, buttonVariants } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import UserButton from "./user-button";
+import { buttonVariants } from "./ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import UserButton from "./user-button";
 
 export default async function Navbar() {
-  // const technologies = await getAllTechnologies();
   const session = await getServerAuthSession();
-  // const projectUnpublished = await getProjectUnpublished();
   return (
     <header className="antialiased">
-      <nav className="px-2.5 sm:px-5 z-10 bg-background/90 backdrop-blur-sm lg:px-6 py-2.5 border-b w-full">
+      <nav className="px-2.5 sm:px-5 z-10 bg-background/90 backdrop-blur-lg lg:px-6 py-2.5 border-b w-full">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center gap-4">
             <Link href="/feed" className="flex ">
@@ -58,20 +54,3 @@ export default async function Navbar() {
     </header>
   );
 }
-
-const SideMenuSheet = () => {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button size={"icon"} variant={"ghost"}>
-          <HamburgerMenuIcon className="w-6 h-6" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side={"left"}>
-        <div className="my-1">
-          <Menu />
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-};
