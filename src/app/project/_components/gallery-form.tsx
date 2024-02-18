@@ -19,11 +19,7 @@ export default function GalleryForm({
   action: "create" | "update";
 }) {
   const [files, setFiles] = useState<File[]>([]);
-  const [initialImages, setInitialImages] = useState<string[]>(
-    project ? project.gallery.map((g) => g.url) : []
-  );
-
-  console.log({ initialImages });
+  const initialImages = project?.gallery || [];
 
   const router = useRouter();
 
@@ -75,8 +71,8 @@ export default function GalleryForm({
             : "grid-cols-1"
         }  gap-2.5 `}
       >
-        {initialImages.map((image, index) => (
-          <ImageCard key={index} url={image} />
+        {initialImages.map((image) => (
+          <ImageCard id={image.id} key={image.id} url={image.url} />
         ))}
         {files.map((file, index) => (
           <li

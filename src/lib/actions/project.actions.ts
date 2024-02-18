@@ -86,9 +86,24 @@ export async function upsertProject(data: ProjectData) {
         },
       },
     });
-    revalidatePath(`/create`);
+    revalidatePath(`/project`);
     return project;
   } catch (error) {
     throw error;
   }
+}
+
+export async function deleteProjectImage(imageId: string) {
+  try {
+    const deletedImage = await prisma.projectGallery.delete({
+      where: {
+        id: imageId,
+      },
+    });
+
+    // revalidatePath(`/project/${deletedImage.projectId}/update/gallery`);
+  } catch (error) {
+    throw error;
+  }
+  revalidatePath(`/project`);
 }

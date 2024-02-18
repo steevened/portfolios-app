@@ -81,7 +81,8 @@ export default function FiltersDrawer({
           <DrawerHeader>
             <DrawerTitle>Filters</DrawerTitle>
             <DrawerDescription>
-              Filters allow you to refine your search results
+              Filters allows you to refine your search results in order to find
+              your desired projects.
             </DrawerDescription>
           </DrawerHeader>
           <div className="py-2.5">
