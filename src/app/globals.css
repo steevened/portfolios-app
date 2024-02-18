@@ -12,6 +12,8 @@
     --popover-foreground: 204 100% 10%;
     --primary: 204 87.6% 52.7%;
     --primary-foreground: 0 0% 100%;
+    --primary-muted: 205 70% 87%;
+    --primary-muted-foreground: 204 5% 15%;
     --secondary: 220 13% 91%;
     --secondary-foreground: 0 0% 0%;
     --muted: 220 14.3% 95.9%;
@@ -34,6 +36,8 @@
     --popover-foreground: 204 5% 100%;
     --primary: 204 87.6% 52.7%;
     --primary-foreground: 0 0% 100%;
+    --primary-muted: 207 50% 15%;
+    --primary-muted-foreground: 204 5% 100%;
     --secondary: 210 28% 15%;
     --secondary-foreground: 0 0% 100%;
     --muted: 210 28% 15%;
@@ -56,8 +60,33 @@
   body {
     @apply bg-background text-foreground;
   }
+  h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+
+  h2 {
+    @apply scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0;
+  }
 
   h3 {
-    @apply text-xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  h5 {
+    @apply scroll-m-20 text-lg font-semibold tracking-tight;
+  }
+
+  h6 {
+    @apply scroll-m-20 text-base font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .inner-layout {
+    @apply mx-auto max-w-screen-sm;
   }
 }

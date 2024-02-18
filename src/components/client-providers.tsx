@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { ThemeProvider } from "./theme-provider";
-import { Toaster } from "./ui/toaster";
+import { Toaster } from "./ui/sonner";
 
 export default function ClientProviders({
   children,
@@ -20,7 +20,7 @@ export default function ClientProviders({
         enableSystem
         disableTransitionOnChange
       >
-        <Toaster />
+        <Toaster position="top-center" closeButton theme="system" />
         {children}
       </ThemeProvider>
     </QueryClientProvider>

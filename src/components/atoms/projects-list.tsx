@@ -1,4 +1,4 @@
-import ProjectItemCard from "@/app/feed/_components/project-item-card";
+import ProjectItemCard from "@/components/molecules/project/project-item-card";
 import { getAllProjects } from "@/lib/services/projects.service";
 
 export default function ProjectList({
@@ -6,6 +6,13 @@ export default function ProjectList({
 }: {
   projects: Awaited<ReturnType<typeof getAllProjects>>;
 }) {
+  if (projects && projects.length === 0) {
+    return (
+      <div className="text-center mt-10">
+        <h5>No projects found.</h5>
+      </div>
+    );
+  }
   return (
     <ul className="flex flex-col gap-5">
       {projects.map((project) => (

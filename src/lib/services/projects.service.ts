@@ -1,9 +1,6 @@
-import { Project, Technology } from "@prisma/client";
-import { unstable_noStore as noStore } from "next/cache";
-import { z } from "zod";
-import { prisma } from "../db/prisma";
-import { projectSchema } from "../schemas/project.schema";
 import { getServerAuthSession } from "../auth";
+import { prisma } from "../db/prisma";
+import { getUserByUsername } from "./user.service";
 
 export async function getAllProjects({
   searchParams,
@@ -12,38 +9,39 @@ export async function getAllProjects({
     [key: string]: string;
   };
 }) {
-  const { tech } = searchParams;
+  const { languages: languagesParams } = searchParams;
 
-  const technologies = tech ? tech.split("_") : undefined;
+  const languages = languagesParams ? languagesParams.split("_") : undefined;
 
   try {
-    noStore();
     const projects = await prisma.project.findMany({
       where: {
         published: true,
         isOnDraft: false,
-        technologies: {
+        languages: {
           some: {
-            technology: {
+            language: {
               slug: {
-                in: technologies,
+                in: languages,
               },
             },
           },
         },
       },
       include: {
-        technologies: {
+        languages: {
           include: {
-            technology: true,
+            language: true,
           },
         },
+
         gallery: {
           select: {
             id: true,
             url: true,
           },
         },
+        author: true,
       },
       orderBy: {
         updatedAt: "desc",
@@ -57,130 +55,89 @@ export async function getAllProjects({
 
 export async function getProjectUnpublished() {
   const session = await getServerAuthSession();
-  if (!session?.user?.id) return null;
+  if (!session || !session.user) {
+    throw new Error("Unauthorized");
+  }
 
-  noStore();
-  const project = await prisma.project.findFirst({
-    where: {
-      published: false,
-      AND: {
-        authorId: session?.user?.id,
+  try {
+    const project = await prisma.project.findFirst({
+      where: {
+        published: false,
+        authorId: session.user.id,
       },
-    },
 
-    include: {
-      technologies: {
-        include: {
-          technology: true,
+      include: {
+        languages: {
+          include: {
+            language: true,
+          },
         },
       },
-    },
-  });
-  return project;
-}
-
-export async function updateProject({
-  data,
-  technologiesSelected,
-  id,
-}: {
-  data: z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-  id: string;
-}): Promise<{
-  message: string;
-  data: Project;
-}> {
-  noStore();
-  const res = await fetch(`/api/projects/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: data.name,
-      liveUrl: data.liveUrl,
-      githubUrl: data.githubUrl,
-      description: data.description,
-      technologies: technologiesSelected.map((t) => t.id),
-    }),
-  });
-
-  return res.json();
-}
-
-export async function upsertProject({
-  data,
-  technologiesSelected,
-}: {
-  data: {
-    id?: string;
-  } & z.infer<typeof projectSchema>;
-  technologiesSelected: Technology[];
-}) {
-  noStore();
-  try {
-    const res = await fetch(`/api/projects`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...data,
-        technologies: technologiesSelected.map((t) => t.id),
-      }),
-      next: {
-        tags: ["project"],
-      },
     });
-    return res.json();
+    return project;
   } catch (error) {
-    return { error };
+    throw error;
   }
 }
 
 export async function getProjectById(projectId: string) {
-  noStore();
-  const res = await prisma.project.findUnique({
-    where: {
-      id: projectId,
-    },
-    include: {
-      technologies: {
-        include: {
-          technology: true,
+  try {
+    const res = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      include: {
+        languages: {
+          include: {
+            language: true,
+          },
+        },
+        gallery: {
+          select: {
+            id: true,
+            url: true,
+          },
         },
       },
-      gallery: {
-        select: {
-          id: true,
-          url: true,
-        },
-      },
-    },
-  });
-  return res;
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
 }
 
-export async function getProjectsByUserId(userId: string) {
-  noStore();
-  const res = await prisma.project.findMany({
-    where: {
-      authorId: userId,
-    },
-    include: {
-      technologies: {
-        include: {
-          technology: true,
-        },
+export async function getProjectsByUsername(username: string) {
+  try {
+    const user = await getUserByUsername(username);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const projects = await prisma.project.findMany({
+      where: {
+        authorId: user.id,
       },
-      gallery: {
-        select: {
-          id: true,
-          url: true,
+
+      include: {
+        gallery: {
+          select: {
+            id: true,
+            url: true,
+          },
         },
+        languages: {
+          include: {
+            language: true,
+          },
+        },
+
+        author: true,
       },
-    },
-  });
-  return res;
+    });
+
+    return projects;
+  } catch (error) {
+    throw new Error("Error getting projects from the database.");
+  }
 }

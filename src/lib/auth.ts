@@ -11,53 +11,46 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      // username: string;
+      // role: "user" | "admin";
     } & DefaultSession["user"];
   }
 }
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "database",
+  },
   providers: [
     GithubProvider({
+      profile(profile) {
+        return {
+          role: profile.role ?? "user",
+          id: profile.id,
+          username: profile.login ?? "",
+          name: profile.name,
+          email: profile.email,
+          image: profile.avatar_url,
+        };
+      },
       clientId: process.env.GITHUB_CLIENT_ID || "",
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
     }),
   ],
   callbacks: {
-    session: async ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
-    async signIn({ user }) {
-      try {
-        await prisma.draft.upsert({
-          where: {
-            userId: user.id,
-          },
-          update: {},
-          create: {
-            userId: user.id,
-          },
-        });
-        await prisma.profile.upsert({
-          where: {
-            userId: user.id,
-          },
-          update: {},
-          create: {
-            userId: user.id,
-          },
-        });
-      } catch (error) {
-        throw new Error("Error on sign in. Please try again.");
-      }
-
-      return true;
+    session: async ({ session, user }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          // role: user.role,
+        },
+      };
     },
   },
+
   secret: process.env.NEXTAUTH_SECRET,
 };
 

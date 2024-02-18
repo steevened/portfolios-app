@@ -1,9 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -17,15 +13,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -38,19 +33,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  profile       Profile?
-  projects      Project[]
-  draft         Draft?
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -59,47 +41,56 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Profile {
-  id       String          @id @default(cuid())
-  bio      String?
-  userId   String          @unique
-  user     User            @relation(fields: [userId], references: [id])
-  roles    DeveloperRole[]
-  links ProfileLinks?
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String?
+  username      String?    @unique
+  accounts      Account[]
+  developer     Developer?
+  draft         Draft?
+  projects      Project[]
+  sessions      Session[]
 }
 
-model ProfileLinks {
-  id String @id @default(cuid())
-  profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  github   String?
-  linkedin String?
-  twitter  String?
-  website  String?
-
-  @@unique([profileId])
+model Developer {
+  id          String                @id @default(cuid())
+  bio         String?
+  headline    String?              @db.VarChar(50)
+  userId      String                @unique
+  user        User                  @relation(fields: [userId], references: [id])
+  links       DeveloperLinks?
 }
 
-model DeveloperRole {
-  user   Profile @relation(fields: [userId], references: [id])
-  userId String  @unique
-  role   Role    @relation(fields: [roleId], references: [id])
-  roleId String
 
-  @@id([userId, roleId])
+model DeveloperLinks {
+  id          String    @id @default(cuid())
+  developerId String    @unique
+  github      String?
+  linkedin    String?
+  twitter     String?
+  website     String?
+  developer   Developer @relation(fields: [developerId], references: [id], onDelete: Cascade)
 }
 
-model Role {
-  id    String          @id @default(cuid())
-  name  String          @unique
-  users DeveloperRole[]
+
+model Language {
+  id       String            @id @default(cuid())
+  name     String            @unique
+  slug     String            @unique
+  projects ProjectLanguage[]
 }
 
-model Technology {
-  id       String              @id @default(cuid())
-  name     String              @unique
-  slug     String              @unique
-  projects ProjectTechnology[]
+model ProjectLanguage {
+  projectId   String
+  languageId String
+  language   Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, languageId])
 }
 
 model Project {
@@ -108,33 +99,26 @@ model Project {
   description  String?
   liveUrl      String?
   githubUrl    String?
-  technologies ProjectTechnology[]
   published    Boolean             @default(false)
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
   views        Int                 @default(0)
   authorId     String
-  author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  gallery      ProjectGallery[]
   isOnDraft    Boolean             @default(true)
   draftId      String?
+  author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   draft        Draft?              @relation(fields: [draftId], references: [id])
+  gallery      ProjectGallery[]
+  languages    ProjectLanguage[]
+
+  @@unique([name, authorId], name: "unique_project_name")
 }
 
 model Draft {
   id       String    @id @default(cuid())
-  userId   String    @unique
+  userId   String?   @unique
+  user     User?     @relation(fields: [userId], references: [id])
   projects Project[]
-  user     User      @relation(fields: [userId], references: [id])
-}
-
-model ProjectTechnology {
-  projectId    String
-  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  technologyId String
-  technology   Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
-
-  @@id([projectId, technologyId])
 }
 
 model ProjectGallery {

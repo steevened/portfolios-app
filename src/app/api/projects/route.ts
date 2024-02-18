@@ -18,11 +18,13 @@ export async function POST(request: NextRequest) {
       }
     );
 
-  console.log(body);
-
   try {
-    const userDraft = await prisma.draft.findFirst({
+    const userDraft = await prisma.draft.upsert({
       where: {
+        userId: session.user.id,
+      },
+      update: {},
+      create: {
         userId: session.user.id,
       },
     });
