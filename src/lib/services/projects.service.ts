@@ -119,6 +119,10 @@ export async function getProjectsByUsername(username: string) {
         authorId: user.id,
       },
 
+      orderBy: {
+        updatedAt: "desc",
+      },
+
       include: {
         gallery: {
           select: {

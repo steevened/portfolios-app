@@ -53,43 +53,27 @@ export default function GalleryForm({
 
       const bucket = "portfolios";
 
-      const testFile = files[0];
+      const uploadPromises = files.map(async (file) => {
+        const fileExt = file.name.split(".").pop();
+        const filePath = `${Math.random()}.${fileExt}`;
 
-      const fileExt = testFile.name.split(".").pop();
-      const filePath = `${id}-${Math.random()}.${fileExt}`;
+        const { error } = await supabase.storage
+          .from(bucket)
+          .upload(filePath, file);
 
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, testFile);
+        if (error) {
+          console.log(error);
+          return toast("Error!", {
+            description: "Something went wrong, please try again",
+          });
+        }
 
-      if (error) {
-        console.log(error);
-        return toast("Error!", {
-          description: "Something went wrong, please try again",
-        });
-      }
+        await publishProjectWithGallery(projectId, filePath);
+      });
 
-      await publishProjectWithGallery(projectId, filePath);
+      await Promise.all(uploadPromises);
+
       router.push(`/`);
-
-      // console.log({
-      //   storagePath: data?.path,
-      //   error,
-      //   filePath,
-      // });
-
-      // const formData = new FormData();
-      // files.forEach((file) => {
-      //   formData.append("files", file);
-      // });
-      // await fetch(`/api/projects/${projectId}/gallery?skip=${!!!files}`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
-      // router.push("/");
-      // return toast.success("Success!", {
-      //   description: "Your project has been successfully uploaded",
-      // });
     } catch (error) {
       return toast("Error!", {
         description: "Something went wrong, please try again",
