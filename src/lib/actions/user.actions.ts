@@ -5,6 +5,8 @@ import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { getDeveloperProfile } from "../services/developer.service";
 import { getUserById } from "../services/user.service";
+import { uploadImage } from "../helpers/upload-image";
+import { getStorageUrl } from "../helpers/get-storage-url";
 
 const authValidator = async (username: string) => {
   const session = await getServerAuthSession();
@@ -144,14 +146,42 @@ export const updateProfileLinks = async ({
   }
 };
 
+export const upsertAvatar = async (file: File) => {
+  if (!file) {
+    throw new Error("No file provided");
+  }
+
+  try {
+    const session = await getServerAuthSession();
+
+    const user = session && (await getUserById(session.user.id));
+    if (!session || !session.user || !user) {
+      throw new Error("Unauthorized");
+    }
+    const imageUploadedPath = await uploadImage(file);
+
+    const storageUrl = getStorageUrl();
+
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        image: `${storageUrl}/${imageUploadedPath}`,
+      },
+    });
+    revalidatePath(`${user.username}/settings`);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteUserImage = async () => {
   const session = await getServerAuthSession();
   if (!session) throw new Error("Unauthorized");
 
   const user = await getUserById(session.user.id);
   if (!user) throw new Error("User not found");
-
-  console.log(user);
 
   try {
     await prisma.user.update({

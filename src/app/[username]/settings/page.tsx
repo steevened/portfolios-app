@@ -18,20 +18,14 @@ export default async function Page({
   params: { username: string };
 }) {
   const session = await getServerAuthSession();
+  const userId = session?.user.id;
+  const user = userId && (await getUserById(userId));
+  const profile =
+    user && (await getDeveloperProfile({ username: params.username }));
 
-  if (!session) redirect("/");
-
-  const user = await getUserById(session?.user.id);
-
-  if (!user) redirect("/");
-
-  if (!isMyProfile(user.id)) redirect(`/user/${user.id}`);
-
-  const profile = await getDeveloperProfile({
-    username: params.username,
-  });
-
-  if (!profile) redirect("/");
+  if (!session || !user || !profile || !isMyProfile(user.id)) {
+    redirect("/");
+  }
 
   return (
     <div>

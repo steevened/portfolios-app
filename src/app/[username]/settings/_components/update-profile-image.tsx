@@ -25,7 +25,6 @@ export default function UpdateProfileImage({
       <label
         className={cn(
           buttonVariants({
-            // variant: "",
             className: "cursor-pointer",
           })
         )}

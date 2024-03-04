@@ -5,6 +5,7 @@ import { projectSchema } from "../schemas/project.schema";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { revalidatePath } from "next/cache";
+import { getStorageUrl } from "../helpers/get-storage-url";
 
 type ProjectData = z.infer<typeof projectSchema> & {
   id?: string;
@@ -128,16 +129,7 @@ export async function publishProjectWithGallery(
   projectId: string,
   filePath: string
 ) {
-  const supabaseProjectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
-
-  if (!supabaseProjectId) {
-    throw new Error("Supabase project id is not defined");
-  }
-
-  const budget = "portfolios";
-
-  const supabaseUrl = `https://${supabaseProjectId}.supabase.co/storage/v1/object/public/${budget}`;
-
+  const storageUrl = getStorageUrl();
   try {
     await prisma.project.update({
       where: {
@@ -148,7 +140,7 @@ export async function publishProjectWithGallery(
         isOnDraft: false,
         gallery: {
           create: {
-            url: `${supabaseUrl}/${filePath}`,
+            url: `${storageUrl}/${filePath}`,
           },
         },
       },

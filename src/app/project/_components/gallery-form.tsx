@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { publishProject, publishProjectWithGallery } from "@/lib/actions";
+import { uploadImage } from "@/lib/helpers/upload-image";
 import { getProjectById } from "@/lib/services";
 import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useId, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import ImageCard from "./image-card";
 import UploadImageCard from "./upload-image-card";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { publishProject, publishProjectWithGallery } from "@/lib/actions";
 
 export default function GalleryForm({
   projectId,
@@ -20,9 +20,6 @@ export default function GalleryForm({
   project?: Awaited<ReturnType<typeof getProjectById>>;
   action: "create" | "update";
 }) {
-  const supabase = createClientComponentClient();
-  const id = useId();
-
   const [files, setFiles] = useState<File[]>([]);
   const initialImages = project?.gallery || [];
 
@@ -51,24 +48,10 @@ export default function GalleryForm({
         return router.push(`/`);
       }
 
-      const bucket = "portfolios";
-
       const uploadPromises = files.map(async (file) => {
-        const fileExt = file.name.split(".").pop();
-        const filePath = `${Math.random()}.${fileExt}`;
+        const imageUploadedPath = await uploadImage(file);
 
-        const { error } = await supabase.storage
-          .from(bucket)
-          .upload(filePath, file);
-
-        if (error) {
-          console.log(error);
-          return toast("Error!", {
-            description: "Something went wrong, please try again",
-          });
-        }
-
-        await publishProjectWithGallery(projectId, filePath);
+        await publishProjectWithGallery(projectId, imageUploadedPath);
       });
 
       await Promise.all(uploadPromises);
@@ -128,10 +111,8 @@ export default function GalleryForm({
         >
           Back
         </Button>
-        {/* <Button onClick={() => setFiles([])} variant={"outline"}>
-          Skip
-        </Button> */}
-        <Button className="">Post</Button>
+
+        <Button className="">Upload</Button>
       </div>
     </form>
   );

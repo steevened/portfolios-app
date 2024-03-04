@@ -44,7 +44,7 @@ export async function getAllProjects({
         author: true,
       },
       orderBy: {
-        updatedAt: "desc",
+        createdAt: "desc",
       },
     });
     return projects;
@@ -120,7 +120,7 @@ export async function getProjectsByUsername(username: string) {
       },
 
       orderBy: {
-        updatedAt: "desc",
+        createdAt: "desc",
       },
 
       include: {
