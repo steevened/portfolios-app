@@ -107,3 +107,53 @@ export async function deleteProjectImage(imageId: string) {
   }
   revalidatePath(`/project`);
 }
+
+export async function publishProject(projectId: string) {
+  try {
+    await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        published: true,
+        isOnDraft: false,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function publishProjectWithGallery(
+  projectId: string,
+  filePath: string
+) {
+  const supabaseProjectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
+
+  if (!supabaseProjectId) {
+    throw new Error("Supabase project id is not defined");
+  }
+
+  const budget = "portfolios";
+
+  const supabaseUrl = `https://${supabaseProjectId}.supabase.co/storage/v1/object/public/${budget}`;
+
+  try {
+    await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        published: true,
+        isOnDraft: false,
+        gallery: {
+          create: {
+            url: `${supabaseUrl}/${filePath}`,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}

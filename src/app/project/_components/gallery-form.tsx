@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { getProjectById } from "@/lib/services";
 import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useId, useState } from "react";
 import { toast } from "sonner";
 import ImageCard from "./image-card";
 import UploadImageCard from "./upload-image-card";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { publishProject, publishProjectWithGallery } from "@/lib/actions";
 
 export default function GalleryForm({
   projectId,
@@ -18,12 +20,15 @@ export default function GalleryForm({
   project?: Awaited<ReturnType<typeof getProjectById>>;
   action: "create" | "update";
 }) {
+  const supabase = createClientComponentClient();
+  const id = useId();
+
   const [files, setFiles] = useState<File[]>([]);
   const initialImages = project?.gallery || [];
 
   const router = useRouter();
 
-  const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
 
     if (files.length >= 5) return;
@@ -41,27 +46,57 @@ export default function GalleryForm({
     e.preventDefault();
 
     try {
-      const formData = new FormData();
+      if (files.length === 0) {
+        await publishProject(projectId);
+        return router.push(`/`);
+      }
 
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
+      const bucket = "portfolios";
 
-      await fetch(`/api/projects/${projectId}/gallery?skip=${!!!files}`, {
-        method: "POST",
-        body: formData,
-      });
+      const testFile = files[0];
 
-      router.push("/");
-      return toast.success("Success!", {
-        description: "Your project has been successfully uploaded",
-      });
+      const fileExt = testFile.name.split(".").pop();
+      const filePath = `${id}-${Math.random()}.${fileExt}`;
+
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, testFile);
+
+      if (error) {
+        console.log(error);
+        return toast("Error!", {
+          description: "Something went wrong, please try again",
+        });
+      }
+
+      await publishProjectWithGallery(projectId, filePath);
+      router.push(`/`);
+
+      // console.log({
+      //   storagePath: data?.path,
+      //   error,
+      //   filePath,
+      // });
+
+      // const formData = new FormData();
+      // files.forEach((file) => {
+      //   formData.append("files", file);
+      // });
+      // await fetch(`/api/projects/${projectId}/gallery?skip=${!!!files}`, {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      // router.push("/");
+      // return toast.success("Success!", {
+      //   description: "Your project has been successfully uploaded",
+      // });
     } catch (error) {
       return toast("Error!", {
         description: "Something went wrong, please try again",
       });
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="@container space-y-5">
       <ul
@@ -95,19 +130,24 @@ export default function GalleryForm({
               onChange={handleAddImage}
               type="file"
               className="hidden"
+              multiple
             />
           </label>
         </li>
       </ul>
 
       <div className="flex gap-x-1.5">
-        <Button onClick={() => router.back()} type="button" variant={"outline"}>
+        <Button
+          onClick={() => router.back()}
+          type="button"
+          variant={"secondary"}
+        >
           Back
         </Button>
-        <Button onClick={() => setFiles([])} variant={"outline"}>
+        {/* <Button onClick={() => setFiles([])} variant={"outline"}>
           Skip
-        </Button>
-        <Button disabled={files.length <= 0}>Post</Button>
+        </Button> */}
+        <Button className="">Post</Button>
       </div>
     </form>
   );
