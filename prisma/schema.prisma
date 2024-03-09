@@ -54,6 +54,7 @@ model User {
   draft         Draft?
   projects      Project[]
   sessions      Session[]
+  bookmarks     Bookmarks?
 }
 
 model Developer {
@@ -110,8 +111,34 @@ model Project {
   draft        Draft?              @relation(fields: [draftId], references: [id])
   gallery      ProjectGallery[]
   languages    ProjectLanguage[]
+  bookmarks    Project_bookmark[]
+
+  
 
   @@unique([name, authorId], name: "unique_project_name")
+}
+
+
+model Project_bookmark {
+  projectId String
+bookmarkId String
+
+bookmark Bookmarks @relation(fields: [bookmarkId], references: [id])
+project Project @relation(fields: [projectId], references: [id])
+
+@@unique([projectId, bookmarkId])
+}
+
+
+
+
+model Bookmarks {
+id String @id @default(cuid())
+userId String @unique
+projects Project_bookmark[]
+
+user User @relation(fields: [userId], references: [id])
+
 }
 
 model Draft {

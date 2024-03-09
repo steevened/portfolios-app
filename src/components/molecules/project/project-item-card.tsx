@@ -1,6 +1,6 @@
 import ProjectDropDown from "@/components/project-dropdown";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -37,7 +37,7 @@ export default async function ProjectItemCard({
       {project.gallery.length > 0 ? (
         <ProjectGallery gallery={project.gallery} />
       ) : null}
-      <div className="px-2.5 space-y-5">
+      <div className="p-2.5 space-y-5">
         <ul className="flex items-center space-x-2.5">
           {project.liveUrl ? (
             <TooltipProvider>
@@ -107,7 +107,7 @@ export default async function ProjectItemCard({
             </TooltipProvider>
           ) : null}
         </ul>
-        <div className=" pb-2.5 flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1">
           {project.languages.length > 0 ? (
             <>
               {project.languages.map((l) => (
@@ -121,6 +121,20 @@ export default async function ProjectItemCard({
               ))}
             </>
           ) : null}
+        </div>
+        <div className="">
+          <Button size={"icon"} variant={"ghost"} className="rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M5 21V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v16l-7-3zm2-3.05l5-2.15l5 2.15V5H7zM7 5h10z"
+              ></path>
+            </svg>
+          </Button>
         </div>
       </div>
     </div>
