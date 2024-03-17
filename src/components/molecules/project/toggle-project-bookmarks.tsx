@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { toggleProjectToBookmark } from "@/lib/actions/bookmarks.action";
+import { toggleProjectToBookmark } from "@/lib/actions";
 
 export default function ToggleProjectBookmarks({
   projectId,

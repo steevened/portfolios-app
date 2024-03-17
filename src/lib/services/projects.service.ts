@@ -45,6 +45,7 @@ export async function getAllProjects({
         _count: {
           select: {
             likes: true,
+            comments: true,
           },
         },
       },
@@ -148,6 +149,7 @@ export async function getProjectsByUsername(username: string) {
         _count: {
           select: {
             likes: true,
+            comments: true,
           },
         },
         author: true,

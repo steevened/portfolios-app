@@ -1,3 +1,4 @@
+import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 
 export const getUserById = async (id: string) => {
@@ -7,18 +8,6 @@ export const getUserById = async (id: string) => {
       where: {
         id,
       },
-      // select: {
-      //   id: true,
-      //   name: true,
-      //   image: true,
-      //   role: true,
-      //   username: true,
-      //   developer: {
-      //     select: {
-      //       id: true,
-      //     },
-      //   },
-      // },
     });
 
     if (!user) {
@@ -42,5 +31,18 @@ export async function getUserByUsername(username: string) {
     return user;
   } catch (error) {
     throw new Error(error as string);
+  }
+}
+
+export async function getUserAuth() {
+  try {
+    const session = await getServerAuthSession();
+    if (!session) {
+      return null;
+    }
+    const user = await getUserById(session.user.id);
+    return user;
+  } catch (error) {
+    throw error;
   }
 }

@@ -140,6 +140,9 @@ model Comment {
 
   @@id([userId, projectId, createdAt])
 
+  @@unique([userId, projectId, createdAt], name: "unique_comment")
+
+
 }
 
 model Project_bookmark {

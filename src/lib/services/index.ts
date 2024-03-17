@@ -3,3 +3,4 @@ export * from "./user.service";
 export * from "./languages.service";
 export * from "./developer.service";
 export * from "./bookmark.service";
+export * from "./comments.service";
