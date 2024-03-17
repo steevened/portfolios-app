@@ -11,6 +11,8 @@ import isMyProfile from "@/lib/helpers/is-my-profile";
 import { getAllProjects } from "@/lib/services/projects.service";
 import ProjectGallery from "./project-gallery";
 import ProjectUserSection from "./project-user-section";
+import ToggleProjectBookmarks from "./toggle-project-bookmarks";
+import { isProjectBookmarked } from "@/lib/services";
 
 export default async function ProjectItemCard({
   project,
@@ -18,7 +20,7 @@ export default async function ProjectItemCard({
   project: Awaited<ReturnType<typeof getAllProjects>>[0];
 }) {
   return (
-    <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border hover:bg-muted transition-colors">
+    <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border  transition-colors">
       <div className="p-2.5 space-y-2.5 ">
         <div className=" flex items-start justify-between">
           <ProjectUserSection
@@ -37,7 +39,7 @@ export default async function ProjectItemCard({
       {project.gallery.length > 0 ? (
         <ProjectGallery gallery={project.gallery} />
       ) : null}
-      <div className="px-2.5 space-y-5">
+      <div className="p-2.5 space-y-5">
         <ul className="flex items-center space-x-2.5">
           {project.liveUrl ? (
             <TooltipProvider>
@@ -107,20 +109,26 @@ export default async function ProjectItemCard({
             </TooltipProvider>
           ) : null}
         </ul>
-        <div className=" pb-2.5 flex flex-wrap gap-1">
-          {project.languages.length > 0 ? (
-            <>
-              {project.languages.map((l) => (
-                <Badge
-                  key={l.language.id}
-                  variant="secondary"
-                  className="!bg-foreground/10 font-medium"
-                >
-                  {l.language.name}
-                </Badge>
-              ))}
-            </>
-          ) : null}
+        <div className="grid gap-2.5">
+          <div className="flex flex-wrap gap-1">
+            {project.languages.length > 0 ? (
+              <>
+                {project.languages.map((l) => (
+                  <Badge
+                    key={l.language.id}
+                    variant="secondary"
+                    className="!bg-foreground/10 font-medium"
+                  >
+                    {l.language.name}
+                  </Badge>
+                ))}
+              </>
+            ) : null}
+          </div>
+          <ToggleProjectBookmarks
+            isBookmarked={await isProjectBookmarked(project.id)}
+            projectId={project.id}
+          />
         </div>
       </div>
     </div>

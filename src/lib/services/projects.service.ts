@@ -44,7 +44,7 @@ export async function getAllProjects({
         author: true,
       },
       orderBy: {
-        updatedAt: "desc",
+        createdAt: "desc",
       },
     });
     return projects;
@@ -117,6 +117,10 @@ export async function getProjectsByUsername(username: string) {
     const projects = await prisma.project.findMany({
       where: {
         authorId: user.id,
+      },
+
+      orderBy: {
+        createdAt: "desc",
       },
 
       include: {

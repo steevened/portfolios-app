@@ -5,6 +5,7 @@ import { projectSchema } from "../schemas/project.schema";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { revalidatePath } from "next/cache";
+import { getStorageUrl } from "../helpers/get-storage-url";
 
 type ProjectData = z.infer<typeof projectSchema> & {
   id?: string;
@@ -106,4 +107,45 @@ export async function deleteProjectImage(imageId: string) {
     throw error;
   }
   revalidatePath(`/project`);
+}
+
+export async function publishProject(projectId: string) {
+  try {
+    await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        published: true,
+        isOnDraft: false,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function publishProjectWithGallery(
+  projectId: string,
+  filePath: string
+) {
+  const storageUrl = getStorageUrl();
+  try {
+    await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        published: true,
+        isOnDraft: false,
+        gallery: {
+          create: {
+            url: `${storageUrl}/${filePath}`,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
 }

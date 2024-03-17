@@ -59,10 +59,11 @@ export default function FiltersDrawer({
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <DrawerTrigger asChild>
         <Button
-          className="rounded-full shadow-lg"
-          size={"icon"}
+          className="rounded-full shadow-lg flex items-center text-xs gap-1 "
+          // size={"icon"}
           variant={"default"}
         >
+          Filter
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="1em"

@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { publishProject, publishProjectWithGallery } from "@/lib/actions";
+import { uploadImage } from "@/lib/helpers/upload-image";
 import { getProjectById } from "@/lib/services";
 import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
@@ -23,7 +25,7 @@ export default function GalleryForm({
 
   const router = useRouter();
 
-  const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
 
     if (files.length >= 5) return;
@@ -41,27 +43,27 @@ export default function GalleryForm({
     e.preventDefault();
 
     try {
-      const formData = new FormData();
+      if (files.length === 0) {
+        await publishProject(projectId);
+        return router.push(`/`);
+      }
 
-      files.forEach((file) => {
-        formData.append("files", file);
+      const uploadPromises = files.map(async (file) => {
+        const imageUploadedPath = await uploadImage(file);
+
+        await publishProjectWithGallery(projectId, imageUploadedPath);
       });
 
-      await fetch(`/api/projects/${projectId}/gallery?skip=${!!!files}`, {
-        method: "POST",
-        body: formData,
-      });
+      await Promise.all(uploadPromises);
 
-      router.push("/");
-      return toast.success("Success!", {
-        description: "Your project has been successfully uploaded",
-      });
+      router.push(`/`);
     } catch (error) {
       return toast("Error!", {
         description: "Something went wrong, please try again",
       });
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="@container space-y-5">
       <ul
@@ -95,19 +97,22 @@ export default function GalleryForm({
               onChange={handleAddImage}
               type="file"
               className="hidden"
+              multiple
             />
           </label>
         </li>
       </ul>
 
       <div className="flex gap-x-1.5">
-        <Button onClick={() => router.back()} type="button" variant={"outline"}>
+        <Button
+          onClick={() => router.back()}
+          type="button"
+          variant={"secondary"}
+        >
           Back
         </Button>
-        <Button onClick={() => setFiles([])} variant={"outline"}>
-          Skip
-        </Button>
-        <Button disabled={files.length <= 0}>Post</Button>
+
+        <Button className="">Upload</Button>
       </div>
     </form>
   );
