@@ -15,11 +15,30 @@ export async function getMyBookmarks() {
       create: {
         userId: session.user.id,
       },
-      select: {
+      include: {
         projects: true,
       },
     });
     return bookmarks;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function isProjectBookmarked(projectId: string): Promise<boolean> {
+  try {
+    const session = await getServerAuthSession();
+    if (!session || !session.user) {
+      return false;
+    }
+    const bookmarks = await getMyBookmarks();
+    if (!bookmarks) {
+      return false;
+    }
+    const isBookmarked = bookmarks.projects.some(
+      (p) => p.projectId === projectId
+    );
+    return isBookmarked;
   } catch (error) {
     throw error;
   }

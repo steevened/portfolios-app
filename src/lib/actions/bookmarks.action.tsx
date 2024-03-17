@@ -1,44 +1,60 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
-import { getMyBookmarks, getProjectById } from "../services";
+import {
+  getMyBookmarks,
+  getProjectById,
+  isProjectBookmarked,
+} from "../services";
 
 export async function toggleProjectToBookmark({
-  projectID,
+  projectId,
 }: {
-  projectID: string;
+  projectId: string;
 }) {
-  const session = await getServerAuthSession();
-  if (!session || !session.user) {
-    return null;
-  }
-
-  const myBookmarksStore = await getMyBookmarks();
-
   try {
-    const project = await getProjectById(projectID);
+    const session = await getServerAuthSession();
+    if (!session || !session.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const myBookmarksStore = await getMyBookmarks();
+
+    if (!myBookmarksStore) {
+      throw new Error("Bookmarks not found");
+    }
+    const project = await getProjectById(projectId);
     if (!project) {
       throw new Error("Project not found");
     }
 
-    const isBookmarked = myBookmarksStore?.projects.some(
-      (p) => p.projectId === project.id
-    );
+    const isBookmarked = await isProjectBookmarked(projectId);
 
-    await prisma.project.update({
+    await prisma.bookmarks.update({
       where: {
-        id: project.id,
-        authorId: session.user.id,
+        userId: session.user.id,
       },
+
       data: {
-        bookmarks: {
-          [isBookmarked ? "disconnect" : "connect"]: {
-            userId: session.user.id,
-          },
-        },
+        projects: isBookmarked
+          ? {
+              delete: {
+                projectId_bookmarkId: {
+                  projectId: project.id,
+                  bookmarkId: myBookmarksStore.id,
+                },
+              },
+            }
+          : {
+              create: {
+                projectId: project.id,
+              },
+            },
       },
     });
+    revalidatePath("/");
   } catch (error) {
     throw error;
   }

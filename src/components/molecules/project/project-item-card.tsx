@@ -1,6 +1,6 @@
 import ProjectDropDown from "@/components/project-dropdown";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +11,8 @@ import isMyProfile from "@/lib/helpers/is-my-profile";
 import { getAllProjects } from "@/lib/services/projects.service";
 import ProjectGallery from "./project-gallery";
 import ProjectUserSection from "./project-user-section";
+import ToggleProjectBookmarks from "./toggle-project-bookmarks";
+import { isProjectBookmarked } from "@/lib/services";
 
 export default async function ProjectItemCard({
   project,
@@ -18,7 +20,7 @@ export default async function ProjectItemCard({
   project: Awaited<ReturnType<typeof getAllProjects>>[0];
 }) {
   return (
-    <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border hover:bg-muted transition-colors">
+    <div className="sm:rounded-lg bg-card  space-y-2.5 border-y sm:border  transition-colors">
       <div className="p-2.5 space-y-2.5 ">
         <div className=" flex items-start justify-between">
           <ProjectUserSection
@@ -107,34 +109,26 @@ export default async function ProjectItemCard({
             </TooltipProvider>
           ) : null}
         </ul>
-        <div className="flex flex-wrap gap-1">
-          {project.languages.length > 0 ? (
-            <>
-              {project.languages.map((l) => (
-                <Badge
-                  key={l.language.id}
-                  variant="secondary"
-                  className="!bg-foreground/10 font-medium"
-                >
-                  {l.language.name}
-                </Badge>
-              ))}
-            </>
-          ) : null}
-        </div>
-        <div className="">
-          <Button size={"icon"} variant={"ghost"} className="rounded-full">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M5 21V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v16l-7-3zm2-3.05l5-2.15l5 2.15V5H7zM7 5h10z"
-              ></path>
-            </svg>
-          </Button>
+        <div className="grid gap-2.5">
+          <div className="flex flex-wrap gap-1">
+            {project.languages.length > 0 ? (
+              <>
+                {project.languages.map((l) => (
+                  <Badge
+                    key={l.language.id}
+                    variant="secondary"
+                    className="!bg-foreground/10 font-medium"
+                  >
+                    {l.language.name}
+                  </Badge>
+                ))}
+              </>
+            ) : null}
+          </div>
+          <ToggleProjectBookmarks
+            isBookmarked={await isProjectBookmarked(project.id)}
+            projectId={project.id}
+          />
         </div>
       </div>
     </div>
