@@ -16,7 +16,27 @@ export async function getMyBookmarks() {
         userId: session.user.id,
       },
       include: {
-        projects: true,
+        projects: {
+          include: {
+            project: {
+              include: {
+                languages: {
+                  include: {
+                    language: true,
+                  },
+                },
+
+                gallery: {
+                  select: {
+                    id: true,
+                    url: true,
+                  },
+                },
+                author: true,
+              },
+            },
+          },
+        },
       },
     });
     return bookmarks;

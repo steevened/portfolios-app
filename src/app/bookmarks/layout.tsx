@@ -10,7 +10,7 @@ export default async function Layout({
       <div className="fixed right-5 bottom-20 md:bottom-5 ">
         <FiltersContainer />
       </div>
-      <main>{children}</main>
+      <main className="mx-auto max-w-screen-sm flex flex-col">{children}</main>
     </div>
   );
 }
