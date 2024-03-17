@@ -42,6 +42,11 @@ export async function getAllProjects({
           },
         },
         author: true,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -98,6 +103,11 @@ export async function getProjectById(projectId: string) {
             url: true,
           },
         },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
     });
     return res;
@@ -135,7 +145,11 @@ export async function getProjectsByUsername(username: string) {
             language: true,
           },
         },
-
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
         author: true,
       },
     });
@@ -143,5 +157,25 @@ export async function getProjectsByUsername(username: string) {
     return projects;
   } catch (error) {
     throw new Error("Error getting projects from the database.");
+  }
+}
+
+export async function isProjectLiked(projectId: string): Promise<boolean> {
+  try {
+    const session = await getServerAuthSession();
+    if (!session || !session.user) {
+      return false;
+    }
+
+    const projectLiked = await prisma.like.findFirst({
+      where: {
+        projectId,
+        userId: session.user.id,
+      },
+    });
+
+    return !!projectLiked;
+  } catch (error) {
+    throw error;
   }
 }

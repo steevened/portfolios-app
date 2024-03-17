@@ -48,8 +48,8 @@ const ProjectDropDown = ({ projectId }: { projectId: string }) => {
         <DropdownMenuTrigger asChild>
           <Button
             size={"icon"}
-            variant={"ghost"}
-            className="hover:bg-foreground/10"
+            variant={"ghostSecondary"}
+            // className="hover:bg-foreground/10"
           >
             <DotsVerticalIcon />
           </Button>

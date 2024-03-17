@@ -33,6 +33,11 @@ export async function getMyBookmarks() {
                   },
                 },
                 author: true,
+                _count: {
+                  select: {
+                    likes: true,
+                  },
+                },
               },
             },
           },

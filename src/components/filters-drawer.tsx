@@ -59,7 +59,7 @@ export default function FiltersDrawer({
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <DrawerTrigger asChild>
         <Button
-          className="rounded-full shadow-lg flex items-center text-xs gap-1 "
+          className="rounded-full shadow-md flex items-center text-xs gap-1 border "
           // size={"icon"}
           variant={"default"}
         >

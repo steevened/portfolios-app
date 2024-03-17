@@ -6,6 +6,7 @@ import { getServerAuthSession } from "../auth";
 import { prisma } from "../db/prisma";
 import { revalidatePath } from "next/cache";
 import { getStorageUrl } from "../helpers/get-storage-url";
+import { isProjectLiked } from "../services";
 
 type ProjectData = z.infer<typeof projectSchema> & {
   id?: string;
@@ -145,6 +146,42 @@ export async function publishProjectWithGallery(
         },
       },
     });
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function toggleLike(projectId: string) {
+  try {
+    const session = await getServerAuthSession();
+    if (!session || !session.user) {
+      throw new Error("Unauthorized");
+    }
+    const isLiked = await isProjectLiked(projectId);
+
+    await prisma.project.update({
+      where: {
+        authorId: session.user.id,
+        id: projectId,
+      },
+      data: {
+        likes: isLiked
+          ? {
+              delete: {
+                userId_projectId: {
+                  userId: session.user.id,
+                  projectId,
+                },
+              },
+            }
+          : {
+              create: {
+                userId: session.user.id,
+              },
+            },
+      },
+    });
+    revalidatePath(`/`);
   } catch (error) {
     throw error;
   }

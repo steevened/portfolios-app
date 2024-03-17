@@ -8,11 +8,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import isMyProfile from "@/lib/helpers/is-my-profile";
-import { getAllProjects } from "@/lib/services/projects.service";
+import {
+  getAllProjects,
+  isProjectLiked,
+} from "@/lib/services/projects.service";
 import ProjectGallery from "./project-gallery";
 import ProjectUserSection from "./project-user-section";
 import ToggleProjectBookmarks from "./toggle-project-bookmarks";
 import { isProjectBookmarked } from "@/lib/services";
+import ToggleLike from "./toggle-like";
+import Link from "next/link";
 
 export default async function ProjectItemCard({
   project,
@@ -27,9 +32,27 @@ export default async function ProjectItemCard({
             user={project.author}
             updatedAt={project.updatedAt}
           />
-          {(await isMyProfile(project.authorId)) ? (
-            <ProjectDropDown projectId={project.id} />
-          ) : null}
+          <div className="flex items-center gap-2.5">
+            <div className="flex flex-col items-end text-xs text-muted-foreground">
+              {project.liveUrl ? (
+                <Link target="_blank" href={project.liveUrl}>
+                  <small className="hover:underline underline-offset-2 hover:text-primary">
+                    Live url
+                  </small>
+                </Link>
+              ) : null}
+              {project.githubUrl ? (
+                <Link target="_blank" href={project.githubUrl}>
+                  <small className="hover:underline underline-offset-2 hover:text-primary">
+                    Github url
+                  </small>
+                </Link>
+              ) : null}
+            </div>
+            {(await isMyProfile(project.authorId)) ? (
+              <ProjectDropDown projectId={project.id} />
+            ) : null}
+          </div>
         </div>
         <div className="">
           <h6 className="font-medium">{project.name}</h6>
@@ -40,75 +63,6 @@ export default async function ProjectItemCard({
         <ProjectGallery gallery={project.gallery} />
       ) : null}
       <div className="p-2.5 space-y-5">
-        <ul className="flex items-center space-x-2.5">
-          {project.liveUrl ? (
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <a
-                    rel="noopener noreferrer"
-                    className={buttonVariants({
-                      size: "icon",
-                      className: "",
-                    })}
-                    href={project.liveUrl}
-                    target="_blank"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5"
-                      viewBox="0 0 24 24"
-                    >
-                      <g
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                      >
-                        <path d="M19.5 7A9 9 0 0 0 12 3a8.991 8.991 0 0 0-7.484 4"></path>
-                        <path d="M11.5 3a16.989 16.989 0 0 0-1.826 4M12.5 3a16.989 16.989 0 0 1 1.828 4M19.5 17a9 9 0 0 1-7.5 4a8.991 8.991 0 0 1-7.484-4"></path>
-                        <path d="M11.5 21a16.989 16.989 0 0 1-1.826-4m2.826 4a16.989 16.989 0 0 0 1.828-4M2 10l1 4l1.5-4L6 14l1-4m10 0l1 4l1.5-4l1.5 4l1-4M9.5 10l1 4l1.5-4l1.5 4l1-4"></path>
-                      </g>
-                    </svg>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent>Live URL</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : null}
-          {project.githubUrl ? (
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <a
-                    rel="noopener noreferrer"
-                    className={buttonVariants({
-                      size: "icon",
-                      className: "",
-                    })}
-                    target="_blank"
-                    href={project.githubUrl}
-                  >
-                    <svg
-                      viewBox="0 0 256 250"
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      xmlns="http://www.w3.org/2000/svg"
-                      preserveAspectRatio="xMidYMid"
-                    >
-                      <path
-                        d="M128.001 0C57.317 0 0 57.307 0 128.001c0 56.554 36.676 104.535 87.535 121.46 6.397 1.185 8.746-2.777 8.746-6.158 0-3.052-.12-13.135-.174-23.83-35.61 7.742-43.124-15.103-43.124-15.103-5.823-14.795-14.213-18.73-14.213-18.73-11.613-7.944.876-7.78.876-7.78 12.853.902 19.621 13.19 19.621 13.19 11.417 19.568 29.945 13.911 37.249 10.64 1.149-8.272 4.466-13.92 8.127-17.116-28.431-3.236-58.318-14.212-58.318-63.258 0-13.975 5-25.394 13.188-34.358-1.329-3.224-5.71-16.242 1.24-33.874 0 0 10.749-3.44 35.21 13.121 10.21-2.836 21.16-4.258 32.038-4.307 10.878.049 21.837 1.47 32.066 4.307 24.431-16.56 35.165-13.12 35.165-13.12 6.967 17.63 2.584 30.65 1.255 33.873 8.207 8.964 13.173 20.383 13.173 34.358 0 49.163-29.944 59.988-58.447 63.157 4.591 3.972 8.682 11.762 8.682 23.704 0 17.126-.148 30.91-.148 35.126 0 3.407 2.304 7.398 8.792 6.14C219.37 232.5 256 184.537 256 128.002 256 57.307 198.691 0 128.001 0Zm-80.06 182.34c-.282.636-1.283.827-2.194.39-.929-.417-1.45-1.284-1.15-1.922.276-.655 1.279-.838 2.205-.399.93.418 1.46 1.293 1.139 1.931Zm6.296 5.618c-.61.566-1.804.303-2.614-.591-.837-.892-.994-2.086-.375-2.66.63-.566 1.787-.301 2.626.591.838.903 1 2.088.363 2.66Zm4.32 7.188c-.785.545-2.067.034-2.86-1.104-.784-1.138-.784-2.503.017-3.05.795-.547 2.058-.055 2.861 1.075.782 1.157.782 2.522-.019 3.08Zm7.304 8.325c-.701.774-2.196.566-3.29-.49-1.119-1.032-1.43-2.496-.726-3.27.71-.776 2.213-.558 3.315.49 1.11 1.03 1.45 2.505.701 3.27Zm9.442 2.81c-.31 1.003-1.75 1.459-3.199 1.033-1.448-.439-2.395-1.613-2.103-2.626.301-1.01 1.747-1.484 3.207-1.028 1.446.436 2.396 1.602 2.095 2.622Zm10.744 1.193c.036 1.055-1.193 1.93-2.715 1.95-1.53.034-2.769-.82-2.786-1.86 0-1.065 1.202-1.932 2.733-1.958 1.522-.03 2.768.818 2.768 1.868Zm10.555-.405c.182 1.03-.875 2.088-2.387 2.37-1.485.271-2.861-.365-3.05-1.386-.184-1.056.893-2.114 2.376-2.387 1.514-.263 2.868.356 3.061 1.403Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent>Github URL</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : null}
-        </ul>
         <div className="grid gap-2.5">
           <div className="flex flex-wrap gap-1">
             {project.languages.length > 0 ? (
@@ -125,12 +79,53 @@ export default async function ProjectItemCard({
               </>
             ) : null}
           </div>
-          <ToggleProjectBookmarks
-            isBookmarked={await isProjectBookmarked(project.id)}
-            projectId={project.id}
-          />
+          <div className="flex gap-5 items-center text-muted-foreground">
+            <div className="flex gap-1 items-center ">
+              <ToggleLike
+                projectId={project.id}
+                isLiked={await isProjectLiked(project.id)}
+              />
+              <small aria-label="Likes" title="Likes">
+                {project._count.likes}
+              </small>
+            </div>
+            <ToggleProjectBookmarks
+              isBookmarked={await isProjectBookmarked(project.id)}
+              projectId={project.id}
+            />
+
+            <div className="flex gap-1 items-center ">
+              {1 + 1 === 2 ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  viewBox="0 0 640 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M88.2 309.1c9.8-18.3 6.8-40.8-7.5-55.8C59.4 230.9 48 204 48 176c0-63.5 63.8-128 160-128s160 64.5 160 128s-63.8 128-160 128c-13.1 0-25.8-1.3-37.8-3.6c-10.4-2-21.2-.6-30.7 4.2c-4.1 2.1-8.3 4.1-12.6 6c-16 7.2-32.9 13.5-49.9 18c2.8-4.6 5.4-9.1 7.9-13.6c1.1-1.9 2.2-3.9 3.2-5.9zM0 176c0 41.8 17.2 80.1 45.9 110.3c-.9 1.7-1.9 3.5-2.8 5.1c-10.3 18.4-22.3 36.5-36.6 52.1c-6.6 7-8.3 17.2-4.6 25.9C5.8 378.3 14.4 384 24 384c43 0 86.5-13.3 122.7-29.7c4.8-2.2 9.6-4.5 14.2-6.8c15.1 3 30.9 4.5 47.1 4.5c114.9 0 208-78.8 208-176S322.9 0 208 0S0 78.8 0 176m432 304c16.2 0 31.9-1.6 47.1-4.5c4.6 2.3 9.4 4.6 14.2 6.8C529.5 498.7 573 512 616 512c9.6 0 18.2-5.7 22-14.5c3.8-8.8 2-19-4.6-25.9c-14.2-15.6-26.2-33.7-36.6-52.1c-.9-1.7-1.9-3.4-2.8-5.1c28.8-30.3 46-68.6 46-110.4c0-94.4-87.9-171.5-198.2-175.8c4.1 15.2 6.2 31.2 6.2 47.8v.6c87.2 6.7 144 67.5 144 127.4c0 28-11.4 54.9-32.7 77.2c-14.3 15-17.3 37.6-7.5 55.8c1.1 2 2.2 4 3.2 5.9c2.5 4.5 5.2 9 7.9 13.6c-17-4.5-33.9-10.7-49.9-18c-4.3-1.9-8.5-3.9-12.6-6c-9.5-4.8-20.3-6.2-30.7-4.2c-12.1 2.4-24.7 3.6-37.8 3.6c-61.7 0-110-26.5-136.8-62.3c-16 5.4-32.8 9.4-50 11.8C279 439.8 350 480 432 480"
+                  ></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  viewBox="0 0 640 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M208 352c114.9 0 208-78.8 208-176S322.9 0 208 0S0 78.8 0 176c0 38.6 14.7 74.3 39.6 103.4c-3.5 9.4-8.7 17.7-14.2 24.7c-4.8 6.2-9.7 11-13.3 14.3c-1.8 1.6-3.3 2.9-4.3 3.7c-.5.4-.9.7-1.1.8l-.2.2C1 327.2-1.4 334.4.8 340.9S9.1 352 16 352c21.8 0 43.8-5.6 62.1-12.5c9.2-3.5 17.8-7.4 25.3-11.4C134.1 343.3 169.8 352 208 352m240-176c0 112.3-99.1 196.9-216.5 207c24.3 74.4 104.9 129 200.5 129c38.2 0 73.9-8.7 104.7-23.9c7.5 4 16 7.9 25.2 11.4c18.3 6.9 40.3 12.5 62.1 12.5c6.9 0 13.1-4.5 15.2-11.1c2.1-6.6-.2-13.8-5.8-17.9l-.2-.2c-.2-.2-.6-.4-1.1-.8c-1-.8-2.5-2-4.3-3.7c-3.6-3.3-8.5-8.1-13.3-14.3c-5.5-7-10.7-15.4-14.2-24.7c24.9-29 39.6-64.7 39.6-103.4c0-92.8-84.9-168.9-192.6-175.5c.4 5.1.6 10.3.6 15.5z"
+                  ></path>
+                </svg>
+              )}
+              <small aria-label="Comments" title="Comments">
+                2
+              </small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+``;

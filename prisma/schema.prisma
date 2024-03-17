@@ -55,6 +55,8 @@ model User {
   projects      Project[]
   sessions      Session[]
   bookmarks     Bookmarks?
+  likes         Like[]
+  comments      Comment[]
 }
 
 model Developer {
@@ -110,8 +112,34 @@ model Project {
   gallery     ProjectGallery[]
   languages   ProjectLanguage[]
   bookmarks   Project_bookmark[]
+  likes       Like[]
+  comments    Comment[]
+
 
   @@unique([name, authorId], name: "unique_project_name")
+}
+
+model Like {
+  userId String
+  projectId String
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId])
+}
+
+model Comment {
+  userId String
+  projectId String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@id([userId, projectId, createdAt])
+
 }
 
 model Project_bookmark {
@@ -130,6 +158,11 @@ model Bookmarks {
   projects Project_bookmark[]
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model GuestBookmarks {
+  id       String    @id @default(cuid())
+  // projects Project[]
 }
 
 model Draft {
