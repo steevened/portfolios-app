@@ -1,6 +1,6 @@
 import SettingsButton from "@/components/atoms/settings-button";
 import { buttonVariants } from "@/components/ui/button";
-import isMyProfile from "@/lib/helpers/is-my-profile";
+import { isMyProfile } from "@/lib/helpers";
 import { Developer, User } from "@prisma/client";
 import Link from "next/link";
 import DeveloperLinks from "./developer-links";

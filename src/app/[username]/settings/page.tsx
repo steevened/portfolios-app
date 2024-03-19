@@ -1,7 +1,7 @@
 import UserAvatar from "@/components/user-avatar";
 import BackButton from "@/components/atoms/back-button";
 import { getServerAuthSession } from "@/lib/auth";
-import isMyProfile from "@/lib/helpers/is-my-profile";
+import { isMyProfile } from "@/lib/helpers";
 import { getUserById } from "@/lib/services/user.service";
 import { redirect } from "next/navigation";
 import UpdateProfileImage from "./_components/update-profile-image";

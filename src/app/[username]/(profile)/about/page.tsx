@@ -1,5 +1,5 @@
 import NotFoundSection from "@/components/atoms/not-found-section";
-import isMyProfile from "@/lib/helpers/is-my-profile";
+import { isMyProfile } from "@/lib/helpers";
 import { getDeveloperProfile } from "@/lib/services/developer.service";
 import BioSection from "./_components/bio-section";
 export default async function Page({

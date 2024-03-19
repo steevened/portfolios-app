@@ -2,7 +2,7 @@ import ProjectList from "@/components/atoms/projects-list";
 import { getProjectsByUsername } from "@/lib/services/projects.service";
 import NotFound from "./not-found";
 import { getUserByUsername } from "@/lib/services/user.service";
-import isMyProfile from "@/lib/helpers/is-my-profile";
+import { isMyProfile } from "@/lib/helpers";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 

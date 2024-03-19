@@ -1,6 +1,6 @@
 import ProjectDropDown from "@/components/project-dropdown";
 import { Badge } from "@/components/ui/badge";
-import isMyProfile from "@/lib/helpers/is-my-profile";
+import { isMyProfile } from "@/lib/helpers";
 import { isProjectBookmarked } from "@/lib/services";
 import {
   getAllProjects,
