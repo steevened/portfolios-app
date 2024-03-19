@@ -18,7 +18,8 @@ export default async function CreateCommentSection({
       <form
         action={async (formData) => {
           "use server";
-          const content = formData.get("content") as string;
+          const content = formData.get("content")?.toString().trim();
+          if (!content) return;
 
           await createComment({
             projectId,
@@ -32,7 +33,7 @@ export default async function CreateCommentSection({
           <Textarea name="content" className="w-full" placeholder="Reply" />
         </div>
         <div className="text-end">
-          <Button>Post yout comment</Button>
+          <Button>Post your comment</Button>
         </div>
       </form>
     </div>

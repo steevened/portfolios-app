@@ -1,7 +1,6 @@
-import { Avatar } from "@/components/ui/avatar";
-import UserAvatar from "@/components/user-avatar";
 import { prisma } from "@/lib/db/prisma";
 import ProjectUserSection from "./project-user-section";
+import CommentMenu from "./comment-menu";
 
 async function getComments(projectId: string) {
   try {
@@ -11,6 +10,9 @@ async function getComments(projectId: string) {
       },
       include: {
         user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return comments;
@@ -32,7 +34,10 @@ export default async function CommentList({
           key={c.createdAt.toISOString()}
           className="bg-muted p-2.5 rounded-lg flex flex-col gap-2.5"
         >
-          <ProjectUserSection user={c.user} updatedAt={c.updatedAt} />
+          <div className="flex items-center justify-between">
+            <ProjectUserSection user={c.user} updatedAt={c.updatedAt} />
+            <CommentMenu commentId={c.id} />
+          </div>
           <p className="text-sm">{c.content}</p>
         </li>
       ))}
